@@ -8,6 +8,14 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Array<T> {
+		/**
+		 * @description extended method used to send classes though
+		 * sveltekit load function (you can't just send a instanciated object)
+		 */
+		serilize(): Array<T>;
+	}
 }
 
 export {};
