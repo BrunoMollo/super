@@ -11,8 +11,9 @@ export interface User_Repo {
 export class User_Controller {
 	constructor(private user_repo: User_Repo) {}
 
-	list_all() {
-		return this.user_repo.get_all();
+	async list_all() {
+		const list = await this.user_repo.get_all();
+		return list;
 	}
 
 	create(user: Create_user_dto) {
