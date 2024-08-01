@@ -3,6 +3,7 @@ import type { Login_Response, User_Repo } from '$lib/use-cases/users-logic';
 
 export class Mock_User_Repo implements User_Repo {
 	constructor(private arr: User[]) {}
+
 	async validate(creds: { username: string; password: string }): Promise<Login_Response> {
 		const user = this.arr.find((x) => {
 			if (x.username != creds.username) {
