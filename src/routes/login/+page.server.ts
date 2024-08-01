@@ -4,8 +4,9 @@ import type { Actions, PageServerLoad } from './$types.js';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { LayoutRouteId } from '../$types.js';
-import { user_controller } from '$lib';
+import { token_service, user_controller } from '$lib';
 import { LoginError } from '$lib/errors.js';
+import { dev } from '$app/environment';
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -26,6 +27,13 @@ export const actions: Actions = {
 		if (res instanceof LoginError) {
 			return error(res.status, res);
 		}
+
+		event.cookies.set('token', res.token, {
+			httpOnly: true,
+			path: '/',
+			secure: !dev,
+			maxAge: token_service.get_max_age_seconds()
+		});
 
 		const url = '/admin/users' satisfies LayoutRouteId;
 		return redirect(302, url);

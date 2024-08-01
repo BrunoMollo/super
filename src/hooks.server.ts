@@ -1,8 +1,31 @@
 import type { Handle } from '@sveltejs/kit';
 import type { LayoutRouteId } from './routes/$types';
+import { token_service } from '$lib';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	if (event.url.pathname === '/') {
+	const { pathname } = event.url;
+
+	if (pathname === '/') {
+		return hook_redirect('/login');
+	}
+
+	if (pathname == '/login') {
+		const respose = await resolve(event);
+		return respose;
+	}
+
+	const token = event.cookies.get('token');
+
+	if (!token) {
+		console.log('Unauthenticated');
+		return hook_redirect('/login');
+	}
+
+	const res = await token_service.validate(token);
+	console.log(res);
+
+	if (!res.valid) {
+		console.log('Unauthenticated');
 		return hook_redirect('/login');
 	}
 
