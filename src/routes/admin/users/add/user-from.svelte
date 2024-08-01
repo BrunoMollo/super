@@ -2,7 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { create_user_dto, type Create_user_dto } from '$lib/entities/user';
+	import { create_user_validator, type Create_user_dto } from '$lib/entities/user';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import type { LayoutRouteId } from '../../../$types';
@@ -11,7 +11,7 @@
 	export let back: LayoutRouteId;
 
 	const form = superForm(data, {
-		validators: zodClient(create_user_dto)
+		validators: zodClient(create_user_validator)
 	});
 
 	const { form: formData, enhance } = form;

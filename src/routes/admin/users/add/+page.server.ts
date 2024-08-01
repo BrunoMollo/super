@@ -1,4 +1,4 @@
-import { create_user_dto } from '$lib/entities/user.js';
+import { create_user_validator } from '$lib/entities/user.js';
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types.js';
 import { fail, superValidate } from 'sveltekit-superforms';
@@ -8,13 +8,13 @@ import { user_controller } from '$lib';
 
 export const load: PageServerLoad = async () => {
 	return {
-		form: await superValidate(zod(create_user_dto))
+		form: await superValidate(zod(create_user_validator))
 	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event, zod(create_user_dto));
+		const form = await superValidate(event, zod(create_user_validator));
 		if (!form.valid) {
 			return fail(400, {
 				form

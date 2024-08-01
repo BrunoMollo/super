@@ -19,23 +19,23 @@ export class User {
 /**
  *
  */
-export const create_user_dto = z
+export const create_user_validator = z
 	.object({
 		username: z.string().min(4).max(36),
 		password: z.string().min(4).max(36)
 	})
 	.brand('create_user_dto');
 
-export type Create_user_dto = Infer<typeof create_user_dto>;
+export type Create_user_dto = Infer<typeof create_user_validator>;
 
 /**
  *
  */
-export const login_dto = z
+export const login_validator = z
 	.object({
 		username: z.string().min(4).max(36),
 		password: z.string().min(4).max(36)
 	})
 	.brand('login_dto');
 
-export type Login_dto = Infer<typeof login_dto>;
+export type Login_dto = Infer<typeof login_validator>;
