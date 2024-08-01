@@ -1,3 +1,4 @@
+import type { Infer } from 'sveltekit-superforms';
 import { z } from 'zod';
 
 export type Role = 'ADMIN' | 'SELLER';
@@ -11,6 +12,13 @@ export class User {
 	) {}
 }
 
+//
+// Validators
+//
+
+/**
+ *
+ */
 export const create_user_dto = z
 	.object({
 		username: z.string().min(4).max(36),
@@ -18,8 +26,16 @@ export const create_user_dto = z
 	})
 	.brand('create_user_dto');
 
-export type Create_user_dto = Prettify<typeof create_user_dto._type>;
+export type Create_user_dto = Infer<typeof create_user_dto>;
 
-type Prettify<T> = {
-	[K in keyof T]: T[K];
-} & {};
+/**
+ *
+ */
+export const login_dto = z
+	.object({
+		username: z.string().min(4).max(36),
+		password: z.string().min(4).max(36)
+	})
+	.brand('login_dto');
+
+export type Login_dto = Infer<typeof login_dto>;

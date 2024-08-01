@@ -16,6 +16,10 @@ declare global {
 		 */
 		serilize(): Array<T>;
 	}
+
+	type Prettify<T> = {
+		[K in keyof T]: T[K];
+	} & {};
 }
 
 export {};
