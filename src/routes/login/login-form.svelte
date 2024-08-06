@@ -30,7 +30,7 @@
 	<Form.Field {form} name="password">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Password</Form.Label>
-			<Input {...attrs} bind:value={$formData.password} class="w-64" />
+			<Input {...attrs} bind:value={$formData.password} class="w-64" type="password" />
 			<Form.FieldErrors />
 		</Form.Control>
 	</Form.Field>
