@@ -22,7 +22,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	const res = await token_service.validate(token);
-	console.log(res);
 
 	if (!res.valid) {
 		console.log('Unauthenticated');

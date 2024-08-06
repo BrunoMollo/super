@@ -1,17 +1,38 @@
 <script lang="ts">
+	import * as Sheet from '$lib/components/ui/sheet';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { LayoutRouteId } from '../../$types';
 	import UsersTable from './users-table.svelte';
+	import UserFrom from './user-from.svelte';
 
 	export let data;
 
-	const create_url = '/admin/users/add' satisfies LayoutRouteId;
+	let is_open = false;
+	function on_user_added() {
+		is_open = false;
+	}
 </script>
 
 <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Admin Users</h1>
 <div class="mt-4 flex flex-col gap-5">
 	<div class="flex justify-end">
-		<Button href={create_url}>Add new user</Button>
+		<Button on:click={() => (is_open = true)}>Add new user</Button>
 	</div>
-	<UsersTable users={data.users}></UsersTable>
+	{#key data.users}
+		<UsersTable users={data.users}></UsersTable>
+	{/key}
 </div>
+
+<Sheet.Root bind:open={is_open}>
+	<Sheet.Content>
+		<Sheet.Header>
+			<Sheet.Title>Are you sure absolutely sure?</Sheet.Title>
+			<Sheet.Description>
+				This action cannot be undone. This will permanently delete your account and remove your data
+				from our servers.
+			</Sheet.Description>
+		</Sheet.Header>
+		<Sheet.Portal>
+			<UserFrom data={data.form} on:success={on_user_added}></UserFrom>
+		</Sheet.Portal>
+	</Sheet.Content>
+</Sheet.Root>
