@@ -5,7 +5,7 @@
 	export let data;
 </script>
 
-<main class="flex h-screen w-screen flex-col items-center justify-center pt-20 align-middle">
+<main class="flex h-screen w-screen flex-col items-center justify-center align-middle">
 	<Card.Root class="w-[350px]">
 		<Card.Header>
 			<Card.Title class="text-3xl">Login</Card.Title>
