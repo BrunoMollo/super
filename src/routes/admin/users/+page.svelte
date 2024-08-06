@@ -3,12 +3,17 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import UsersTable from './users-table.svelte';
 	import UserFrom from './user-from.svelte';
+	import { toast } from 'svelte-sonner';
 
 	export let data;
 
 	let is_open = false;
 	function on_user_added() {
+		const description = new Date().toLocaleString();
 		is_open = false;
+		toast.success('User has been created', {
+			description
+		});
 	}
 </script>
 
@@ -25,11 +30,8 @@
 <Sheet.Root bind:open={is_open}>
 	<Sheet.Content>
 		<Sheet.Header>
-			<Sheet.Title>Are you sure absolutely sure?</Sheet.Title>
-			<Sheet.Description>
-				This action cannot be undone. This will permanently delete your account and remove your data
-				from our servers.
-			</Sheet.Description>
+			<Sheet.Title>New User</Sheet.Title>
+			<Sheet.Description>By compleating this from you'll create a new User</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
 			<UserFrom data={data.form} on:success={on_user_added}></UserFrom>
