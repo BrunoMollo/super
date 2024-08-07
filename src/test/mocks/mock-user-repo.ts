@@ -1,8 +1,22 @@
-import { User } from '$lib/entities/user';
+import { User, type Role } from '$lib/entities/user';
 import type { Login_Response, User_Repo } from '$lib/use-cases/users-logic';
+import { roles } from '$lib/entities/user';
 
 export class Mock_User_Repo implements User_Repo {
 	constructor(private arr: User[]) {}
+
+	async get_by_id(id: number) {
+		return this.arr.find((x) => x.id == id);
+	}
+
+	async add_role(data: { user_id: number; role_id: number }): Promise<Role> {
+		const role = roles.find((x) => x.id == data.role_id)!;
+		const user = await this.get_by_id(data.user_id);
+		if (user) {
+			user.roles.push(role);
+		}
+		return role;
+	}
 
 	async validate(creds: { username: string; password: string }): Promise<Login_Response> {
 		const user = this.arr.find((x) => {

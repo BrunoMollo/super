@@ -25,7 +25,7 @@
 		table.column({
 			accessor: 'roles',
 			header: 'Roles',
-			cell: (x) => x.value.join(', ')
+			cell: (x) => x.value.map((x) => x.name).join(', ')
 		}),
 
 		table.column({

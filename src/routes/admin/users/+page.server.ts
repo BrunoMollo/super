@@ -25,7 +25,6 @@ export const actions: Actions = {
 		}
 		await user_controller.create(form.data);
 
-		//const url = '/admin/users' satisfies LayoutRouteId;
 		return { form };
 	}
 };

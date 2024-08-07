@@ -6,6 +6,7 @@ export interface User_Repo {
 	get_all(): Promise<User[]>;
 	create(user: { username: string; password: string }): Promise<User>;
 	validate(user: { username: string; password: string }): Promise<Login_Response>;
+	add_role(data: { user_id: number; role_id: number }): Promise<Role>;
 }
 
 export type Payload = {
@@ -31,8 +32,14 @@ export class User_Controller {
 		return list;
 	}
 
-	create(user: Create_user_dto) {
-		return this.user_repo.create(user);
+	async create(user: Create_user_dto) {
+		const new_user = await this.user_repo.create(user);
+		const user_id = new_user.id;
+
+		for (const role_id of user.roles_id) {
+			await this.user_repo.add_role({ user_id, role_id });
+		}
+		return new_user;
 	}
 
 	async login(creds: Login_dto) {
