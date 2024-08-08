@@ -18,6 +18,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - uses: pnpm/action-setup@v4
+        with:
+          version: 8
       - name: Setup Node
         run: mv .env.example .env; pnpm install
       - name: Eslint Checks
@@ -36,6 +38,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - uses: pnpm/action-setup@v4
+        with:
+          version: 8
       - name: Setup Node
         run: mv .env.example .env; pnpm install
       - name: Typescript Checks
@@ -54,6 +58,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - uses: pnpm/action-setup@v4
+        with:
+          version: 8
       - name: Setup Node
         run: mv .env.example .env; pnpm install
       - name: Run Vitest
