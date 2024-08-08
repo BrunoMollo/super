@@ -17,7 +17,7 @@
 	</Card.Root>
 </main>
 
-<style>
+<style lang="postcss">
 	main {
 		@apply bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500;
 	}
