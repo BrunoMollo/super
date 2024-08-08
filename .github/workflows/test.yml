@@ -21,7 +21,7 @@ jobs:
         with:
           version: 8
       - name: Setup Node
-        run: mv .env.example .env; pnpm install
+        run: rm pnpm-lock.yaml; mv .env.example .env; pnpm install
       - name: Eslint Checks
         run: pnpm lint
 
@@ -41,7 +41,7 @@ jobs:
         with:
           version: 8
       - name: Setup Node
-        run: mv .env.example .env; pnpm install
+        run: rm pnpm-lock.yaml;mv .env.example .env; pnpm install
       - name: Typescript Checks
         run: pnpm run check
 
@@ -61,6 +61,6 @@ jobs:
         with:
           version: 8
       - name: Setup Node
-        run: mv .env.example .env; pnpm install
+        run: rm pnpm-lock.yaml;mv .env.example .env; pnpm install
       - name: Run Vitest
         run: pnpm run test:ci
