@@ -3,7 +3,7 @@ import type { LayoutRouteId } from './routes/$types';
 import { token_service } from '$lib';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	        const { pathname } = event.url;
+	const { pathname } = event.url;
 
 	if (pathname === '/') {
 		return hook_redirect('/login');
