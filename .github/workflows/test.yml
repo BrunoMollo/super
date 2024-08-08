@@ -17,8 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - name: Install pnpm
-        run: curl -fsSL https://get.pnpm.io/install.sh | sh -
+      - uses: pnpm/action-setup@v4
       - name: Setup Node
         run: mv .env.example .env; pnpm install
       - name: Eslint Checks
@@ -36,8 +35,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Install pnpm
-        run: curl -fsSL https://get.pnpm.io/install.sh | sh -
+      - uses: pnpm/action-setup@v4
       - name: Setup Node
         run: mv .env.example .env; pnpm install
       - name: Typescript Checks
@@ -55,8 +53,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - name: Install pnpm
-        run: curl -fsSL https://get.pnpm.io/install.sh | sh -
+      - uses: pnpm/action-setup@v4
       - name: Setup Node
         run: mv .env.example .env; pnpm install
       - name: Run Vitest
