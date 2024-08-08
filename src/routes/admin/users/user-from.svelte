@@ -6,6 +6,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { toProperCase } from '$lib/utils';
 
 	export let data: SuperValidated<Create_user_dto>;
 
@@ -70,7 +71,7 @@
 								}}
 							/>
 							<Form.Label class="text-sm font-normal">
-								{role.name}
+								{toProperCase(role.name)}
 							</Form.Label>
 							<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
 						</Form.Control>
