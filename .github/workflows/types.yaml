@@ -21,6 +21,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install; mv .env.example .env
       - name: Check Types
         run: pnpm check
