@@ -22,5 +22,7 @@ jobs:
           cache: 'pnpm'
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: Copy env
+        run: mv .env.example .env
       - name: Build
         run: pnpm build
