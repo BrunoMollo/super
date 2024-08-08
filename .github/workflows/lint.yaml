@@ -22,5 +22,5 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
-      - name: Format
+      - name: Run Linter
         run: pnpm lint
