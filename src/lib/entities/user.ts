@@ -12,13 +12,14 @@ export const roles = [
 	}
 ] satisfies {
 	id: (typeof roles_ids)[number];
-	name: (typeof roles_names)[number];
+	name: Role_Name;
 }[];
 
 export const roles_ids = [1, 2] as const;
 export const roles_names = ['ADMIN', 'SELLER'] as const;
 
 export type Role = (typeof roles)[number];
+export type Role_Name = (typeof roles_names)[number];
 
 export class User {
 	constructor(
@@ -27,6 +28,16 @@ export class User {
 		public password_hash: string,
 		public roles: Role[]
 	) {}
+
+	has_role(role_name: Role_Name) {
+		return !!this.roles.find((x) => x.name === role_name);
+	}
+}
+
+export class Emplty_User {
+	has_role() {
+		return false;
+	}
 }
 
 //
