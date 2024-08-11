@@ -51,11 +51,9 @@
 
 	function navigate(url: string) {
 		open = false;
-		setTimeout(() => {
-			goto(url, {
-				replaceState: true
-			});
-		}, 100);
+		goto(url, {
+			replaceState: true
+		});
 	}
 </script>
 
