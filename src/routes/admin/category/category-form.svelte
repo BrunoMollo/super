@@ -24,7 +24,6 @@
 
 		onError: (res) => {
 			error_message = res.result.error.message;
-
 		}
 	});
 
@@ -53,4 +52,3 @@
 		</Alert.Root>
 	</div>
 {/if}
-

@@ -7,7 +7,6 @@ import { fail, superValidate } from 'sveltekit-superforms';
 import { PublicError } from '$lib/errors';
 import { error } from '@sveltejs/kit';
 
-
 export const load: PageServerLoad = async () => {
 	const categories = await category_controller.list_all().then(serilize);
 	return {
@@ -29,7 +28,6 @@ export const actions: Actions = {
 		if (res instanceof PublicError) {
 			return error(res.status, res.message);
 		}
-
 
 		return { form };
 	}
