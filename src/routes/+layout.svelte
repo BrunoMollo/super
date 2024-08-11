@@ -7,6 +7,7 @@
 	import { goto, onNavigate } from '$app/navigation';
 	import * as Command from '$lib/components/ui/command/index.js';
 	import type { LayoutRouteId } from './$types';
+	import { page } from '$app/stores';
 
 	onNavigate((navigation) => {
 		// @ts-expect-error STILL BEING ADDED TO BROWSERS
@@ -24,6 +25,7 @@
 	let open = false;
 
 	onMount(() => {
+		if ($page.url.pathname === '/login') return;
 		function handleKeydown(e: KeyboardEvent) {
 			if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
 				e.preventDefault();
