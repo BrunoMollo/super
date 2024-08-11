@@ -1,25 +1,7 @@
-import type { Create_user_dto, Login_dto, Role, User } from '$lib/entities/user';
+import type { Create_user_dto, Login_dto } from '$lib/entities/user';
 import { LoginError } from '$lib/errors';
-
-export type Login_Response = { pass: true; user: User } | { pass: false };
-export interface User_Repo {
-	get_all(): Promise<User[]>;
-	create(user: { username: string; password: string }): Promise<User>;
-	validate(user: { username: string; password: string }): Promise<Login_Response>;
-	add_role(data: { user_id: number; role_id: number }): Promise<Role>;
-}
-
-export type Payload = {
-	id: number;
-	username: string;
-	roles: Role[];
-};
-export type Token_Validate_Res = { valid: false } | { valid: true; user: Payload };
-export interface Token_Service {
-	create_token(user: User): Promise<string>;
-	get_max_age_seconds(): number;
-	validate(token: string): Promise<Token_Validate_Res>;
-}
+import type { Token_Service } from './ports/i-token-service';
+import type { User_Repo } from './ports/i-user-repo';
 
 export class User_Controller {
 	constructor(

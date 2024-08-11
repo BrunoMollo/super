@@ -1,6 +1,10 @@
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { User } from '$lib/entities/user';
-import type { Payload, Token_Service, Token_Validate_Res } from '$lib/use-cases/users-logic';
+import type {
+	Payload,
+	Token_Service,
+	Token_Validate_Res
+} from '$lib/use-cases/ports/i-token-service';
 import { jwtVerify, SignJWT } from 'jose';
 
 export class JWT_Service implements Token_Service {
