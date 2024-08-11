@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import * as Command from '$lib/components/ui/command/index.js';
+	import { toast } from 'svelte-sonner';
 
 	type Commands = Array<{
 		name: string;
@@ -52,6 +53,9 @@
 		}
 
 		document.addEventListener('keydown', handleKeydown);
+
+		toast.info('Press Ctrl+K to navigate');
+
 		return () => {
 			document.removeEventListener('keydown', handleKeydown);
 		};

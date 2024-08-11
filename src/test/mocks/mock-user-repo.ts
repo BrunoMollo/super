@@ -1,17 +1,12 @@
 import { User, type Role } from '$lib/entities/user';
 import { roles } from '$lib/entities/user';
 import type { Login_Response, User_Repo } from '$lib/use-cases/ports/i-user-repo';
+import { Basic_Mock_Repo } from './basic-mock-repo';
 
-export class Mock_User_Repo implements User_Repo {
-	constructor(private arr: User[]) {}
-
-	async get_by_id(id: number) {
-		return this.arr.find((x) => x.id == id);
-	}
-
+export class Mock_User_Repo extends Basic_Mock_Repo<User> implements User_Repo {
 	async add_role(data: { user_id: number; role_id: number }): Promise<Role> {
 		const role = roles.find((x) => x.id == data.role_id)!;
-		const user = await this.get_by_id(data.user_id);
+		const user = await this.get_one(data.user_id);
 		if (user) {
 			user.roles.push(role);
 		}
@@ -32,10 +27,6 @@ export class Mock_User_Repo implements User_Repo {
 			return { user, pass: true };
 		}
 		return { pass: false };
-	}
-
-	async get_all(): Promise<User[]> {
-		return this.arr;
 	}
 
 	async create(data: { username: string; password: string }): Promise<User> {

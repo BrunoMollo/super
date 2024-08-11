@@ -8,6 +8,7 @@
 	export let data;
 
 	let is_open = false;
+
 	function on_user_added() {
 		const description = new Date().toLocaleString();
 		is_open = false;

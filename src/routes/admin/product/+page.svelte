@@ -9,4 +9,5 @@
 			<Button>Add new Product</Button>
 		</div>
 	</div>
+	<b class="text-4xl">//TODO</b>
 </main>
