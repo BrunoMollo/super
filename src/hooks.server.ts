@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import type { LayoutRouteId } from './routes/$types';
 import { token_service } from '$lib';
-import { Emplty_User, User } from '$lib/entities/user';
+import { Empty_User, User } from '$lib/entities/user';
 
 /**
  * This function handels every incomming request (similar to a middelware)
@@ -50,12 +50,12 @@ export const handle: Handle = async ({ event, resolve }) => {
  */
 async function get_user_from_token(token: string | undefined) {
 	if (!token) {
-		return new Emplty_User();
+		return new Empty_User();
 	}
 
 	const res = await token_service.validate(token);
 	if (!res.valid) {
-		return new Emplty_User();
+		return new Empty_User();
 	}
 	const { id, username, roles } = res.user;
 	return new User(id, username, '', roles);

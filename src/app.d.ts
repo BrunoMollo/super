@@ -1,4 +1,4 @@
-import type { Emplty_User, User } from '$lib/entities/user';
+import type { Empty_User, User } from '$lib/entities/user';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -6,7 +6,7 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			user: User | Emplty_User;
+			user: User | Empty_User;
 		}
 		// interface PageData {}
 		// interface PageState {}

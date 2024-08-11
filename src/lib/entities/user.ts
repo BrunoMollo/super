@@ -34,7 +34,7 @@ export class User {
 	}
 }
 
-export class Emplty_User {
+export class Empty_User {
 	has_role() {
 		return false;
 	}
