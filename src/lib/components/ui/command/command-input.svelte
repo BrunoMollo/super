@@ -3,6 +3,7 @@
 	import Search from 'lucide-svelte/icons/search';
 	import { cn } from '$lib/utils.js';
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type $$Props = CommandPrimitive.InputProps;
 
 	let className: string | undefined | null = undefined;
