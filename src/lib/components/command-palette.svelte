@@ -1,40 +1,48 @@
-<script context="module" lang="ts">
+<script lang="ts">
 	import type { LayoutRouteId } from '../../routes/$types';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import * as Command from '$lib/components/ui/command/index.js';
 
 	type Commands = Array<{
-		url: LayoutRouteId;
 		name: string;
+		action: () => unknown;
 	}>;
+
+	let open = false;
+	function navigate(url: NonNullable<LayoutRouteId>) {
+		open = false;
+		goto(url, {
+			replaceState: true
+		});
+	}
 
 	const commands_admin = [
 		{
-			url: '/admin/category',
-			name: 'Categoria'
+			name: 'Categoria',
+			action: () => navigate('/admin/category')
 		},
 		{
-			url: '/admin/users',
-			name: 'Usuarios'
+			name: 'Usuarios',
+			action: () => navigate('/admin/users')
 		},
 		{
-			url: '/admin/product',
-			name: 'Productos'
+			name: 'Productos',
+			action: () => navigate('/admin/product')
 		}
 	] satisfies Commands;
 
 	const commands_general = [
 		{
-			url: '/logout',
-			name: 'Logout'
+			name: 'Logout',
+			action: () => {
+				if (confirm('seguro que quieres cerrar session?')) {
+					navigate('/login');
+				}
+			}
 		}
 	] satisfies Commands;
-</script>
 
-<script lang="ts">
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
-	import * as Command from '$lib/components/ui/command/index.js';
-
-	let open = false;
 	onMount(() => {
 		function handleKeydown(e: KeyboardEvent) {
 			if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -48,13 +56,6 @@
 			document.removeEventListener('keydown', handleKeydown);
 		};
 	});
-
-	function navigate(url: string) {
-		open = false;
-		goto(url, {
-			replaceState: true
-		});
-	}
 </script>
 
 <Command.Dialog bind:open>
@@ -62,15 +63,15 @@
 	<Command.List>
 		<Command.Empty>No results found.</Command.Empty>
 		<Command.Group heading="Admin">
-			{#each commands_admin as { url, name }}
-				<Command.Item onSelect={() => navigate(url)}>
+			{#each commands_admin as { name, action }}
+				<Command.Item onSelect={action}>
 					<span>{name}</span>
 				</Command.Item>
 			{/each}
 		</Command.Group>
 		<Command.Group heading="General">
-			{#each commands_general as { url, name }}
-				<Command.Item onSelect={() => navigate(url)}>
+			{#each commands_general as { name, action }}
+				<Command.Item onSelect={action}>
 					<span>{name}</span>
 				</Command.Item>
 			{/each}
