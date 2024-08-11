@@ -1,25 +1,10 @@
-<script lang="ts">
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
-	import * as Command from '$lib/components/ui/command/index.js';
-	import { page } from '$app/stores';
+<script context="module" lang="ts">
 	import type { LayoutRouteId } from '../../routes/$types';
 
-	let open = false;
-	onMount(() => {
-		if ($page.url.pathname === '/login') return;
-		function handleKeydown(e: KeyboardEvent) {
-			if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-				e.preventDefault();
-				open = !open;
-			}
-		}
-
-		document.addEventListener('keydown', handleKeydown);
-		return () => {
-			document.removeEventListener('keydown', handleKeydown);
-		};
-	});
+	type Commands = Array<{
+		url: LayoutRouteId;
+		name: string;
+	}>;
 
 	const commands_admin = [
 		{
@@ -34,20 +19,35 @@
 			url: '/admin/product',
 			name: 'Productos'
 		}
-	] satisfies Array<{
-		url: LayoutRouteId;
-		name: string;
-	}>;
+	] satisfies Commands;
 
 	const commands_general = [
 		{
 			url: '/logout',
 			name: 'Logout'
 		}
-	] satisfies Array<{
-		url: LayoutRouteId;
-		name: string;
-	}>;
+	] satisfies Commands;
+</script>
+
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import * as Command from '$lib/components/ui/command/index.js';
+
+	let open = false;
+	onMount(() => {
+		function handleKeydown(e: KeyboardEvent) {
+			if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+				e.preventDefault();
+				open = !open;
+			}
+		}
+
+		document.addEventListener('keydown', handleKeydown);
+		return () => {
+			document.removeEventListener('keydown', handleKeydown);
+		};
+	});
 
 	function navigate(url: string) {
 		open = false;
