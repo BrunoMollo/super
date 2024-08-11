@@ -1,5 +1,5 @@
 import type { Create_user_dto, Login_dto } from '$lib/entities/user';
-import { LoginError } from '$lib/errors';
+import { IntegrityError, LoginError } from '$lib/errors';
 import type { Token_Service } from './ports/i-token-service';
 import type { User_Repo } from './ports/i-user-repo';
 
@@ -15,6 +15,11 @@ export class User_Controller {
 	}
 
 	async create(user: Create_user_dto) {
+		const match_username = await this.user_repo.get_by_username(user.username);
+		if (match_username) {
+			return new IntegrityError(`Duplicated username "${user.username}"`);
+		}
+
 		const new_user = await this.user_repo.create(user);
 		const user_id = new_user.id;
 
