@@ -5,6 +5,13 @@ export class PublicError {
 	) {}
 }
 
+export class IntegrityError extends PublicError {
+	constructor(message: string) {
+		const status = 400 as const;
+		super(message, status);
+	}
+}
+
 export class AuthenticationError extends PublicError {
 	constructor(message?: string) {
 		const base = 'You must be logged in to view this content' as const;
