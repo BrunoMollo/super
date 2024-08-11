@@ -1,6 +1,6 @@
 import { User, type Role } from '$lib/entities/user';
-import type { Login_Response, User_Repo } from '$lib/use-cases/users-logic';
 import { roles } from '$lib/entities/user';
+import type { Login_Response, User_Repo } from '$lib/use-cases/ports/i-user-repo';
 
 export class Mock_User_Repo implements User_Repo {
 	constructor(private arr: User[]) {}
