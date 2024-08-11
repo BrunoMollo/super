@@ -4,6 +4,8 @@ import { serilize } from '$lib/utils/parsing';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from '../users/$types';
 import { fail, superValidate } from 'sveltekit-superforms';
+import { PublicError } from '$lib/errors';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	const categories = await category_controller.list_all().then(serilize);
@@ -21,7 +23,11 @@ export const actions: Actions = {
 				form
 			});
 		}
-		await category_controller.create(form.data);
+		const res = await category_controller.create(form.data);
+
+		if (res instanceof PublicError) {
+			return error(res.status, res.message);
+		}
 
 		return { form };
 	}
