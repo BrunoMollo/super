@@ -5,8 +5,8 @@
 		url: LayoutRouteId;
 		name: string;
 	}>;
-    
-   const commands_admin = [
+
+	const commands_admin = [
 		{
 			url: '/admin/category',
 			name: 'Categoria'
@@ -21,7 +21,6 @@
 		}
 	] satisfies Commands;
 
-
 	const commands_general = [
 		{
 			url: '/logout',
@@ -29,7 +28,6 @@
 		}
 	] satisfies Commands;
 </script>
-  
 
 <script lang="ts">
 	import { onMount } from 'svelte';
@@ -50,7 +48,6 @@
 			document.removeEventListener('keydown', handleKeydown);
 		};
 	});
-
 
 	function navigate(url: string) {
 		open = false;
