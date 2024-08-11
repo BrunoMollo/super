@@ -38,6 +38,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (pathname == '/login') {
 		return await resolve(event);
 	}
+	if (pathname == '/logout') {
+		return await resolve(event);
+	}
 
 	/**
 	 * ELSE REDIRECT TO LOGIN

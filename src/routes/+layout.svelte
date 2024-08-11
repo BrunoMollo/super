@@ -57,6 +57,16 @@
 		name: string;
 	}>;
 
+	const commands_general = [
+		{
+			url: '/logout',
+			name: 'Logout'
+		}
+	] satisfies Array<{
+		url: LayoutRouteId;
+		name: string;
+	}>;
+
 	function navigate(url: string) {
 		open = false;
 		setTimeout(() => {
@@ -79,6 +89,13 @@
 		<Command.Empty>No results found.</Command.Empty>
 		<Command.Group heading="Admin">
 			{#each commands_admin as { url, name }}
+				<Command.Item onSelect={() => navigate(url)}>
+					<span>{name}</span>
+				</Command.Item>
+			{/each}
+		</Command.Group>
+		<Command.Group heading="General">
+			{#each commands_general as { url, name }}
 				<Command.Item onSelect={() => navigate(url)}>
 					<span>{name}</span>
 				</Command.Item>
