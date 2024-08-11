@@ -35,4 +35,8 @@ export class Mock_User_Repo extends Basic_Mock_Repo<User> implements User_Repo {
 		this.arr.push(user);
 		return user;
 	}
+
+	async get_by_username(username: string): Promise<User | undefined> {
+		return this.arr.find((x) => x.username === username);
+	}
 }
