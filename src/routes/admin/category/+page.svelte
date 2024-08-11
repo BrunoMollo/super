@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
+	import CategoryTable from './category-table.svelte';
+	export let data;
 </script>
 
 <main class="container pt-6">
@@ -9,4 +11,8 @@
 			<Button>Add new Category</Button>
 		</div>
 	</div>
+
+	{#key data.categories}
+		<CategoryTable categories={data.categories} />
+	{/key}
 </main>

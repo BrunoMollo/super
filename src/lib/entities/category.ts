@@ -1,3 +1,6 @@
+import type { Infer } from 'sveltekit-superforms';
+import { z } from 'zod';
+
 export class Category {
 	constructor(
 		public id: number,
