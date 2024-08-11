@@ -13,7 +13,7 @@ export class Category_Controller {
 	async create(category: Create_Category_Dto) {
 		const match = await this.category_repo.get_by_name(category.name);
 		if (match) {
-			return new IntegrityError(`Category with name ${category.name} already exist`);
+			return new IntegrityError(`Duplicated name "${category.name}"`);
 		}
 		return this.category_repo.create(category);
 	}
