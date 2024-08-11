@@ -1,8 +1,38 @@
+<script context="module" lang="ts">
+	import type { LayoutRouteId } from '../../routes/$types';
+
+	type Commands = Array<{
+		url: LayoutRouteId;
+		name: string;
+	}>;
+
+	const commands_admin = [
+		{
+			url: '/admin/category',
+			name: 'Categoria'
+		},
+		{
+			url: '/admin/users',
+			name: 'Usuarios'
+		},
+		{
+			url: '/admin/product',
+			name: 'Productos'
+		}
+	] satisfies Commands;
+
+	const commands_general = [
+		{
+			url: '/logout',
+			name: 'Logout'
+		}
+	] satisfies Commands;
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import * as Command from '$lib/components/ui/command/index.js';
-	import type { LayoutRouteId } from '../../routes/$types';
 
 	let open = false;
 	onMount(() => {
@@ -18,34 +48,6 @@
 			document.removeEventListener('keydown', handleKeydown);
 		};
 	});
-
-	const commands_admin = [
-		{
-			url: '/admin/category',
-			name: 'Categoria'
-		},
-		{
-			url: '/admin/users',
-			name: 'Usuarios'
-		},
-		{
-			url: '/admin/product',
-			name: 'Productos'
-		}
-	] satisfies Array<{
-		url: LayoutRouteId;
-		name: string;
-	}>;
-
-	const commands_general = [
-		{
-			url: '/logout',
-			name: 'Logout'
-		}
-	] satisfies Array<{
-		url: LayoutRouteId;
-		name: string;
-	}>;
 
 	function navigate(url: string) {
 		open = false;
