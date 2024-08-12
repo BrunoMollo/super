@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { Category } from '$lib/entities/category';
+import type { Category_Repo } from '$lib/logic/ports/i-category-repo';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category } from '$lib/server/drizzle/schema';
-import type { Category_Repo } from '$lib/logic/ports/i-category-repo';
 
 export class Category_Repo_Drizzle implements Category_Repo {
 	constructor(private ctx: DB_Context) {}
