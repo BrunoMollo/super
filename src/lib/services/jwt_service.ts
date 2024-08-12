@@ -5,7 +5,7 @@ import type {
 	Payload,
 	Token_Service,
 	Token_Validate_Res
-} from '$lib/use-cases/ports/i-token-service';
+} from '$lib/logic/ports/i-token-service';
 
 export class JWT_Service implements Token_Service {
 	async validate(token: string): Promise<Token_Validate_Res> {
