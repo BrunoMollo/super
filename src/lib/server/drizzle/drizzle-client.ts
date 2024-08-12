@@ -1,16 +1,12 @@
 import { DATABASE_URI } from '$env/static/private';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import pg from 'pg';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
 import { dev } from '$app/environment';
 
-const { Pool } = pg;
+const pg_client = postgres(DATABASE_URI, { prepare: false });
 
-const pool = new Pool({
-	connectionString: DATABASE_URI
-});
-
-export const db = drizzle(pool);
+export const db = drizzle(pg_client);
 export type DB_Context = typeof db;
 
 if (dev) {
