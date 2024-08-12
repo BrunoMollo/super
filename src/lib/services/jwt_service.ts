@@ -1,11 +1,7 @@
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { SignJWT, jwtVerify } from 'jose';
 import { User } from '$lib/entities/user';
-import type {
-	Payload,
-	Token_Service,
-	Token_Validate_Res
-} from '$lib/use-cases/ports/i-token-service';
+import type { Payload, Token_Service, Token_Validate_Res } from '$lib/logic/ports/i-token-service';
 
 export class JWT_Service implements Token_Service {
 	async validate(token: string): Promise<Token_Validate_Res> {

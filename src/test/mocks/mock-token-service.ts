@@ -1,5 +1,5 @@
 import { User } from '$lib/entities/user';
-import type { Token_Service, Token_Validate_Res } from '$lib/use-cases/ports/i-token-service';
+import type { Token_Service, Token_Validate_Res } from '$lib/logic/ports/i-token-service';
 
 export class Mock_Token_Service implements Token_Service {
 	async validate(token: string): Promise<Token_Validate_Res> {
