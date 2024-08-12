@@ -1,5 +1,4 @@
 // place files you want to import through the `$lib` alias in this folder.
-import { Mock_Category_Repo } from '../test/mocks/mock-category-repo';
 import { Mock_User_Repo } from '../test/mocks/mock-user-repo';
 import { create_category_validator } from './entities/category';
 import { create_user_validator } from './entities/user';

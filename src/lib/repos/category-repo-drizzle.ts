@@ -52,11 +52,20 @@ export class Category_Repo_Drizzle implements Category_Repo {
 		return new Category(id, name);
 	}
 
-	remove(id: number): Promise<Category | undefined> {
-		throw new Error('Method not implemented.');
+	async remove(id: number): Promise<Category | undefined> {
+		const target = await this.get_one(id);
+		if (target) {
+			await this.ctx.delete(t_category).where(eq(t_category.id, id));
+		}
+		return target;
 	}
 
-	update(user: Category): Promise<Category | undefined> {
-		throw new Error('Method not implemented.');
+	async update(modified: Category): Promise<Category | undefined> {
+		const { id, name } = modified;
+		const target = await this.get_one(id);
+		if (target) {
+			await this.ctx.update(t_category).set({ name }).where(eq(t_category.id, id));
+			return new Category(id, name);
+		}
 	}
 }
