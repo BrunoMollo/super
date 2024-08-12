@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import drizzle from 'eslint-plugin-drizzle';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import ts from 'typescript-eslint';
@@ -29,5 +30,15 @@ export default [
 	},
 	{
 		ignores: ['build/', '.svelte-kit/', 'dist/']
+	},
+	{
+		files: ['**/*.ts'],
+		plugins: {
+			drizzle
+		},
+		rules: {
+			'drizzle/enforce-delete-with-where': 'error',
+			'drizzle/enforce-update-with-where': 'error'
+		}
 	}
 ];
