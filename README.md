@@ -4,6 +4,13 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 
 ## Developing
 
+Requirements:
+
+- git
+- node
+- pnpm
+- docker
+
 Once you've cloned a project and installed dependencies with `pnpm install` ,
 
 Copy the environment variable file
