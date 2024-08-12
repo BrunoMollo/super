@@ -28,6 +28,8 @@ jobs:
         run: mv .env.example .env
       - name: Docker UP
         run: docker compose up -d
+      - name: Run Migrations
+        run: pnpm tsx src/lib/server/drizzle/migrate.ts
       - name: Build
         run: pnpm build
       - name: Docker Down
