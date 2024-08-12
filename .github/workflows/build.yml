@@ -26,5 +26,9 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Copy env
         run: mv .env.example .env
+      - name: Docker UP
+        run: docker compose up -d
       - name: Build
         run: pnpm build
+      - name: Docker Down
+        run: docker compose down
