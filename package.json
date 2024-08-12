@@ -11,7 +11,8 @@
 		"test": "vitest",
 		"test:ci": "vitest --run",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"generate": "pnpm drizzle-kit generate"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -20,7 +21,9 @@
 		"@tailwindcss/typography": "^0.5.13",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/eslint": "^9.6.0",
+		"@types/pg": "^8.11.6",
 		"autoprefixer": "^10.4.19",
+		"drizzle-kit": "^0.24.0",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -44,10 +47,13 @@
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
 		"cmdk-sv": "^0.0.18",
+		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.33.0",
 		"formsnap": "^1.0.1",
 		"jose": "^5.6.3",
 		"lucide-svelte": "^0.424.0",
 		"mode-watcher": "^0.4.1",
+		"pg": "^8.12.0",
 		"svelte-radix": "^1.1.0",
 		"svelte-sonner": "^0.3.27",
 		"sveltekit-superforms": "^2.16.1",
