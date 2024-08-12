@@ -10,6 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
 		"test:ci": "vitest --run",
+		"coverage": "vitest run --coverage",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"generate": "pnpm drizzle-kit generate"
@@ -22,6 +23,7 @@
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/eslint": "^9.6.0",
 		"@types/pg": "^8.11.6",
+		"@vitest/coverage-istanbul": "^2.0.5",
 		"autoprefixer": "^10.4.19",
 		"drizzle-kit": "^0.24.0",
 		"eslint": "^9.0.0",
