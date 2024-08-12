@@ -1,4 +1,4 @@
-import { User, type Role } from '$lib/entities/user';
+import { type Role, User } from '$lib/entities/user';
 import { roles } from '$lib/entities/user';
 import type { Login_Response, User_Repo } from '$lib/use-cases/ports/i-user-repo';
 import { Basic_Mock_Repo } from './basic-mock-repo';

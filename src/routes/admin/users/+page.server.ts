@@ -1,11 +1,11 @@
 import { user_controller } from '$lib';
-import { serilize } from '$lib/utils/parsing';
 import { superValidate } from 'sveltekit-superforms';
-import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_user_validator } from '$lib/entities/user';
-import { error, fail } from '@sveltejs/kit';
 import { PublicError } from '$lib/errors';
+import { serilize } from '$lib/utils/parsing';
+import type { Actions, PageServerLoad } from './$types';
+import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	const users = await user_controller.list_all().then(serilize);

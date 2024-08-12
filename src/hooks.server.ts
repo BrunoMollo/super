@@ -1,7 +1,7 @@
-import type { Handle } from '@sveltejs/kit';
-import type { LayoutRouteId } from './routes/$types';
 import { token_service } from '$lib';
 import { Empty_User, User } from '$lib/entities/user';
+import type { LayoutRouteId } from './routes/$types';
+import type { Handle } from '@sveltejs/kit';
 
 /**
  * This function handels every incomming request (similar to a middelware)
