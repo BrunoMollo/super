@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 import { login_validator } from '$lib/entities/user';
 import { User, create_user_validator } from '$lib/entities/user';
 import { IntegrityError, LoginError } from '$lib/errors';
