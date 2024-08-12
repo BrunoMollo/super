@@ -1,6 +1,5 @@
 import type { Create_Category_Dto } from '$lib/entities/category';
 import { IntegrityError } from '$lib/errors';
-
 import type { Category_Repo } from './ports/i-category-repo';
 
 export class Category_Controller {

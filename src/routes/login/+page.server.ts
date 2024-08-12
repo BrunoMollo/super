@@ -1,12 +1,12 @@
-import { login_validator } from '$lib/entities/user.js';
-import { error, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types.js';
+import { token_service, user_controller } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { LayoutRouteId } from '../$types.js';
-import { token_service, user_controller } from '$lib';
-import { LoginError } from '$lib/errors.js';
 import { dev } from '$app/environment';
+import { login_validator } from '$lib/entities/user.js';
+import { LoginError } from '$lib/errors.js';
+import type { LayoutRouteId } from '../$types.js';
+import type { Actions, PageServerLoad } from './$types.js';
+import { error, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	return {
