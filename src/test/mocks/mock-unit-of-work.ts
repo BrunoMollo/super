@@ -1,4 +1,4 @@
-import type { TransactionDatabaseError } from '$lib/errors';
+import { TransactionDatabaseError } from '$lib/errors';
 import type { Transacionalize, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
 
 export class Mock_Unit_of_Work implements Unit_of_Work {
@@ -9,7 +9,10 @@ export class Mock_Unit_of_Work implements Unit_of_Work {
 		const rollback = () => {
 			throw new Error('mock rollback');
 		};
-
-		return callback(as_tx, rollback);
+		try {
+			return callback(as_tx, rollback);
+		} catch {
+			return new TransactionDatabaseError('mock rollback');
+		}
 	}
 }
