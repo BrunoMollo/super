@@ -4,15 +4,17 @@ import { User, create_user_validator } from '$lib/entities/user';
 import { IntegrityError, LoginError } from '$lib/errors';
 import { User_Controller } from '$lib/logic/users-controller';
 import { Mock_Token_Service } from '../mocks/mock-token-service';
+import { Mock_Unit_of_Work } from '../mocks/mock-unit-of-work';
 import { Mock_User_Repo } from '../mocks/mock-user-repo';
 
 let user_ctrl: User_Controller;
 
 beforeEach(() => {
 	const data = [new User(1, 'bruno', 'some-psw', [{ id: 1, name: 'ADMIN' }])];
-	const mock = new Mock_User_Repo(data);
+	const mock_repo = new Mock_User_Repo(data);
+	const mock_uow = new Mock_Unit_of_Work();
 	const token_service = new Mock_Token_Service();
-	user_ctrl = new User_Controller(mock, token_service);
+	user_ctrl = new User_Controller(mock_repo, token_service, mock_uow);
 });
 
 describe('user creation', () => {
