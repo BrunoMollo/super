@@ -1,12 +1,14 @@
 import type { Create_user_dto, Login_dto } from '$lib/entities/user';
 import { IntegrityError, LoginError } from '$lib/errors';
 import type { Token_Service } from './ports/i-token-service';
+import type { Unit_of_Work } from './ports/i-unit-of-work';
 import type { User_Repo } from './ports/i-user-repo';
 
 export class User_Controller {
 	constructor(
 		private user_repo: User_Repo,
-		private token_service: Token_Service
+		private token_service: Token_Service,
+		private uow: Unit_of_Work
 	) {}
 
 	async list_all() {
@@ -20,13 +22,19 @@ export class User_Controller {
 			return new IntegrityError(`Duplicated username "${user.username}"`);
 		}
 
-		const new_user = await this.user_repo.create(user);
-		const user_id = new_user.id;
+		//TODO: check
+		return this.uow.do(async (as_tx) => {
+			const tx_user_repo = as_tx(this.user_repo);
 
-		for (const role_id of user.roles_id) {
-			await this.user_repo.add_role({ user_id, role_id });
-		}
-		return new_user;
+			const new_user = await tx_user_repo.create(user);
+			const user_id = new_user.id;
+
+			for (const role_id of user.roles_id) {
+				await tx_user_repo.add_role({ user_id, role_id });
+			}
+
+			return new_user;
+		});
 	}
 
 	async login(creds: Login_dto) {

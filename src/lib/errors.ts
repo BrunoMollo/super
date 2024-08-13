@@ -12,6 +12,13 @@ export class IntegrityError extends PublicError {
 	}
 }
 
+export class TransactionDatabaseError extends PublicError {
+	constructor(message: string) {
+		const status = 500 as const;
+		super(message, status);
+	}
+}
+
 export class AuthenticationError extends PublicError {
 	constructor(message?: string) {
 		const base = 'You must be logged in to view this content' as const;
