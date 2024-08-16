@@ -1,16 +1,15 @@
-import { type Role, User } from '$lib/entities/user';
+import { User } from '$lib/entities/user';
 import { roles } from '$lib/entities/user';
 import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
 import { Basic_Mock_Repo } from './basic-mock-repo';
 
 export class Mock_User_Repo extends Basic_Mock_Repo<User> implements User_Repo {
-	async add_role(data: { user_id: number; role_id: number }): Promise<Role> {
+	async add_role(data: { user_id: number; role_id: number }): Promise<void> {
 		const role = roles.find((x) => x.id == data.role_id)!;
 		const user = await this.get_one(data.user_id);
 		if (user) {
 			user.roles.push(role);
 		}
-		return role;
 	}
 
 	async validate(creds: { username: string; password: string }): Promise<Login_Response> {
