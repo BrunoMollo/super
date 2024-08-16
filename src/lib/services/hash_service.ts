@@ -1,11 +1,18 @@
 import type { Hash_Service } from '$lib/repos/user-repo-drizzle';
+import bcrypt from "bcrypt"
 
-//TODO: add library
-export class Hash_Service_IMPL implements Hash_Service {
-	async check(x: string, y: string): Promise<{ pass: boolean }> {
-		return { pass: true };
-	}
-	async hash(data: string): Promise<string> {
-		return data;
-	}
+export class Hash_Service_Bcrypt implements Hash_Service {
+
+  async check(password: string, hash: string): Promise<{ pass: boolean }> {
+    console.log({ password, hash })
+    const pass = await bcrypt.compare(password, hash);
+    return { pass };
+  }
+
+  async hash(data: string): Promise<string> {
+    const salt = await bcrypt.genSalt(9)
+    const hash = bcrypt.hash(data, salt)
+    return hash;
+  }
+
 }
