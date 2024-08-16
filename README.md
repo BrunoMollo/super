@@ -43,4 +43,5 @@ If you want to see what is stored in your local database, you can use drizzle-st
 ```bash
 pnpm drizzle-kit studio
 ```
+
 :)
