@@ -44,4 +44,4 @@ If you want to see what is stored in your local database, you can use drizzle-st
 pnpm drizzle-kit studio
 ```
 
-:)
+:-)
