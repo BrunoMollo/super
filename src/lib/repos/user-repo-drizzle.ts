@@ -59,7 +59,6 @@ export class User_Repo_Drizzle implements User_Repo {
 			return { pass: false };
 		}
 		const { pass } = await this.hash_service.check(user.password_hash, password);
-		console.log(pass);
 		if (pass) {
 			return { pass: true, user };
 		} else {

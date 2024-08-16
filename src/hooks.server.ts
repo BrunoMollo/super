@@ -11,7 +11,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get('token');
 	const user = await get_user_from_token(token);
 	event.locals.user = user;
-	console.log(user);
 
 	/**
 	 * ADMIN GUARD
