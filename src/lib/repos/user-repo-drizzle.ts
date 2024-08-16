@@ -3,11 +3,8 @@ import { type Role, User } from '$lib/entities/user';
 import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_role, t_user, t_user_has_role } from '$lib/server/drizzle/schema';
+import type { Hash_Service } from '$lib/logic/ports/i-hash-service';
 
-export interface Hash_Service {
-  hash(data: string): Promise<string>;
-  check(x: string, y: string): Promise<{ pass: boolean }>;
-}
 
 export class User_Repo_Drizzle implements User_Repo {
   constructor(

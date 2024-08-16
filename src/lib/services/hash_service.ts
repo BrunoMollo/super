@@ -1,4 +1,4 @@
-import type { Hash_Service } from '$lib/repos/user-repo-drizzle';
+import type { Hash_Service } from "$lib/logic/ports/i-hash-service";
 import bcrypt from "bcrypt"
 
 export class Hash_Service_Bcrypt implements Hash_Service {

@@ -13,7 +13,7 @@ import { JWT_Service } from './services/jwt_service';
 
 // Serivces
 const hash_service = new Hash_Service_Bcrypt();
-const token_service = new JWT_Service();
+export const token_service = new JWT_Service();
 
 //Repos
 const role_repo = new Role_Repo_Drizzle(db);
