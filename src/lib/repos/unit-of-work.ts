@@ -1,22 +1,25 @@
 import { TransactionDatabaseError } from '$lib/errors';
-import type { Transacionalize, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
+import type { Repos, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
+import { Mock_User_Repo } from '../../test/mocks/mock-user-repo';
+import { Category_Repo_Drizzle } from './category-repo-drizzle';
 
 export class Unit_of_Work_Drizzle implements Unit_of_Work {
 	constructor(private ctx: DB_Context) {}
-	private get_constructor(obj: unknown) {
-		return Object.getPrototypeOf(obj).constructor;
+
+	private create_repos(tx: DB_Context & { rollback: () => never }) {
+		return {
+			category_repo: new Category_Repo_Drizzle(tx),
+			user_repo: new Mock_User_Repo([]), //TODO change
+			rollback: () => tx.rollback()
+		} satisfies Repos;
 	}
 
-	async do<R>(callback: (as_tx: Transacionalize, rollback: () => never) => R) {
+	async do<R>(callback: (repos: Repos) => R): Promise<R | TransactionDatabaseError> {
 		try {
 			return await this.ctx.transaction(async (tx) => {
-				const transactionize = <T>(repo: T) => {
-					const Repo_Constructor = this.get_constructor(repo);
-					const copy = new Repo_Constructor(tx);
-					return copy as T;
-				};
-				return callback(transactionize, tx.rollback);
+				const repos = this.create_repos(tx);
+				return await callback(repos);
 			});
 		} catch (err) {
 			console.log(err);
