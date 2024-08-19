@@ -12,7 +12,7 @@ export const load: PageServerLoad = async () => {
 
 	return {
 		users,
-		form: await superValidate(zod(create_user_validator))
+		form: await superValidate({}, zod(create_user_validator))
 	};
 };
 
