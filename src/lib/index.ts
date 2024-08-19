@@ -22,7 +22,7 @@ const user_repo = new User_Repo_Drizzle(db, hash_service);
 const category_repo = new Category_Repo_Drizzle(db);
 
 // Unit of Work
-const uow = new Unit_of_Work_Drizzle(db);
+const uow = new Unit_of_Work_Drizzle(db, hash_service);
 
 //Controllers
 export const role_controller = new Role_Controller(role_repo);

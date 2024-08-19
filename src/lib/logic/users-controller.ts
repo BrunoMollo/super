@@ -22,9 +22,10 @@ export class User_Controller {
 			return new IntegrityError(`Duplicated username "${user.username}"`);
 		}
 
-		return this.uow.do(async (repos) => {
+		return await this.uow.do(async (repos) => {
 			const new_user = await repos.user_repo.create(user);
 			const user_id = new_user.id;
+
 			for (const role_id of user.roles_id) {
 				await repos.user_repo.add_role({ user_id, role_id });
 			}
