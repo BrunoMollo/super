@@ -1,7 +1,5 @@
 # Super
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte)
-
 ## Developing
 
 Requirements:
@@ -31,10 +29,19 @@ Then, start a development server:
 pnpm dev
 ```
 
-## Database Inspection
+## Database
+
+When you change something in the `./lib/server/drizzle/schema.ts` file, you need to generate the migrations.
+Use the following command:
+
+```bash
+pnpm generate
+```
 
 If you want to see what is stored in your local database, you can use drizzle-studio
 
 ```bash
 pnpm drizzle-kit studio
 ```
+
+:-)
