@@ -13,6 +13,7 @@ beforeEach(() => {
 	const data = [new User(1, 'bruno', 'some-psw', [{ id: 1, name: 'ADMIN' }])];
 	const mock_repo = new Mock_User_Repo(data);
 	const mock_uow = new Mock_Unit_of_Work();
+	mock_uow.user_repo = mock_repo;
 	const token_service = new Mock_Token_Service();
 	user_ctrl = new User_Controller(mock_repo, token_service, mock_uow);
 });
