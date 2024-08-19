@@ -60,7 +60,6 @@ export class User_Repo_Drizzle implements User_Repo {
 		}
 
 		const { pass } = await this.hash_service.check(password, db_user.password_hash);
-		console.log('pass', pass);
 		if (pass) {
 			const user = await this.populate_roles([db_user]).then((x) => x[0]);
 			return { pass: true, user };

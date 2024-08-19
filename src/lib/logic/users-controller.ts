@@ -23,7 +23,6 @@ export class User_Controller {
 		}
 
 		return this.uow.do(async (repos) => {
-			console.log(repos);
 			const new_user = await repos.user_repo.create(user);
 			const user_id = new_user.id;
 			for (const role_id of user.roles_id) {
