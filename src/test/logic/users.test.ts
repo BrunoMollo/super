@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import { login_validator } from '$lib/entities/user';
+import { edit_user_validator, login_validator } from '$lib/entities/user';
 import { User, create_user_validator } from '$lib/entities/user';
-import { IntegrityError, LoginError } from '$lib/errors';
+import { IntegrityError, LoginError, NotFoundError } from '$lib/errors';
 import { User_Controller } from '$lib/logic/users-controller';
 import { Mock_Token_Service } from '../mocks/mock-token-service';
 import { Mock_Unit_of_Work } from '../mocks/mock-unit-of-work';
@@ -98,5 +98,51 @@ describe('user login', () => {
 		const res = await user_ctrl.login(creds);
 		expect(res).instanceof(LoginError);
 		expect(res).not.toHaveProperty('token');
+	});
+});
+
+describe('user edition', () => {
+	test('happy path (1)->(1,2)', async () => {
+		const modified = edit_user_validator.parse({
+			user_id: 1,
+			roles_id: [1, 2]
+		});
+		const res_edit = await user_ctrl.edit(modified);
+		expect(res_edit).toBe(undefined);
+		const check = (await user_ctrl.get_one(1)) as User;
+		expect(check.roles.map((x) => x.id)).toEqual([1, 2]);
+	});
+
+	test('happy path (1)->(2)', async () => {
+		const modified = edit_user_validator.parse({
+			user_id: 1,
+			roles_id: [2]
+		});
+		const res_edit = await user_ctrl.edit(modified);
+		expect(res_edit).toBe(undefined);
+		const check = (await user_ctrl.get_one(1)) as User;
+		expect(check.roles.map((x) => x.id)).toEqual([2]);
+	});
+
+	test('happy path (1)->()', async () => {
+		const modified = edit_user_validator.parse({
+			user_id: 1,
+			roles_id: []
+		});
+		const res_edit = await user_ctrl.edit(modified);
+		expect(res_edit).toBe(undefined);
+		const check = (await user_ctrl.get_one(1)) as User;
+		expect(check.roles.map((x) => x.id)).toEqual([]);
+	});
+
+	test('user not found', async () => {
+		const modified = edit_user_validator.parse({
+			user_id: 100000,
+			roles_id: [1, 2]
+		});
+		const res_edit = await user_ctrl.edit(modified);
+		expect(res_edit).toBeInstanceOf(NotFoundError);
+		const check = (await user_ctrl.get_one(1)) as User;
+		expect(check.roles.map((x) => x.id)).toEqual([1]);
 	});
 });
