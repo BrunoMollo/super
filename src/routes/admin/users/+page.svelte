@@ -2,7 +2,7 @@
 	import * as Sheet from '$lib/components/ui/sheet';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import UsersTable from './users-table.svelte';
-	import UserFrom from './user-from.svelte';
+	import UserForm from './user-form.svelte';
 	import { toast } from 'svelte-sonner';
 
 	export let data;
@@ -37,7 +37,7 @@
 			<Sheet.Description>By compleating this from you'll create a new User</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
-			<UserFrom data={data.form} on:success={on_user_added}></UserFrom>
+			<UserForm data={data.form} on:success={on_user_added} />
 		</Sheet.Portal>
 	</Sheet.Content>
 </Sheet.Root>

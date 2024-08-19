@@ -11,6 +11,10 @@ export class User_Controller {
 		private uow: Unit_of_Work
 	) {}
 
+	get_one(id: number) {
+		return this.user_repo.get_one(id);
+	}
+
 	async list_all() {
 		const list = await this.user_repo.get_all();
 		return list;
