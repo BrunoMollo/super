@@ -6,7 +6,7 @@ import { dev } from '$app/environment';
 
 const pg_client = postgres(DATABASE_URI, { prepare: false });
 
-export const db = drizzle(pg_client);
+export const db = drizzle(pg_client, { logger: dev });
 export type DB_Context = typeof db;
 
 if (dev) {
