@@ -3,8 +3,9 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/client';
 import { edit_user_validator } from '$lib/entities/user';
 import { serilize_one } from '$lib/utils/parsing';
-import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
+import type { LayoutRouteId } from '../../$types';
+import type { Actions, PageServerLoad } from './$types';
+import { error, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const id = Number(params.user_id);
@@ -19,4 +20,16 @@ export const load: PageServerLoad = async ({ params }) => {
 		user: serilize_one(user),
 		form: await superValidate(populated_form, zod(edit_user_validator))
 	};
+};
+
+export const actions: Actions = {
+	default: async ({ request }) => {
+		const form = await superValidate(request, zod(edit_user_validator));
+		if (!form.valid) {
+			return { form };
+		}
+		console.log(form.data);
+		const url = '/admin/users' satisfies LayoutRouteId;
+		return redirect(302, url);
+	}
 };

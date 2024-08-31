@@ -1,12 +1,14 @@
 <script lang="ts">
 	import EditUserForm from './edit-user-form.svelte';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+
 	export let data;
 </script>
 
-<h2
-	class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
->
-	{data.user.id}: {data.user.username}
-</h2>
-
+<Dialog.Header>
+	<Dialog.Title>Edit: {data.user.username} (id: {data.user.id})</Dialog.Title>
+	<Dialog.Description>
+		Make changes to your profile here. Click save when you're done.
+	</Dialog.Description>
+</Dialog.Header>
 <EditUserForm data={data.form} />
