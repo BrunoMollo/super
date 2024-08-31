@@ -35,7 +35,5 @@ export const actions: Actions = {
 		}
 
 		return { form };
-		const url = '/admin/users' satisfies LayoutRouteId;
-		return redirect(302, url);
 	}
 };
