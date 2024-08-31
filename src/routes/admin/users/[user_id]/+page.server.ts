@@ -2,6 +2,7 @@ import { user_controller } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/client';
 import { edit_user_validator } from '$lib/entities/user';
+import { PublicError } from '$lib/errors';
 import { serilize_one } from '$lib/utils/parsing';
 import type { LayoutRouteId } from '../../$types';
 import type { Actions, PageServerLoad } from './$types';
@@ -28,7 +29,11 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return { form };
 		}
-		console.log(form.data);
+		const res = await user_controller.edit(form.data);
+		if (res instanceof PublicError) {
+			return error(res.status, res.message);
+		}
+
 		const url = '/admin/users' satisfies LayoutRouteId;
 		return redirect(302, url);
 	}

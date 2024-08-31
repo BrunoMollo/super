@@ -16,9 +16,14 @@
 
 	$: open = $page.state.edit_user_state ? true : false;
 
-	const goto_profile = shallow_navigate<PageData>((data) => {
-		const edit_user_state = data;
-		pushState(href, { edit_user_state });
+	const goto_profile = shallow_navigate<PageData>({
+		on_load: (data) => {
+			const edit_user_state = data;
+			pushState(href, { edit_user_state });
+		},
+		on_redirect: () => {
+			pushState(href, { edit_user_state: undefined });
+		}
 	});
 </script>
 

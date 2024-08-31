@@ -2,7 +2,10 @@ import { goto, preloadData } from '$app/navigation';
 
 type CallBack<Data> = (data: Data) => void;
 
-export function shallow_navigate<Data>(callback: CallBack<Data>) {
+export function shallow_navigate<Data>(callbacks: {
+	on_load: CallBack<Data>;
+	on_redirect: (location: string) => void;
+}) {
 	return async (e: MouseEvent & { currentTarget: HTMLAnchorElement }) => {
 		if (
 			innerWidth < 640 || // bail if the screen is too small
@@ -25,9 +28,10 @@ export function shallow_navigate<Data>(callback: CallBack<Data>) {
 
 		if (result.type === 'loaded' && result.status === 200) {
 			const data = result.data as Data;
-			callback(data);
+			callbacks.on_load(data);
+		} else if (result.type === 'redirect') {
+			callbacks.on_redirect(result.location);
 		} else {
-			// something bad happened! try navigating
 			goto(href);
 		}
 	};
