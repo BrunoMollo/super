@@ -20,9 +20,6 @@
 		on_load: (data) => {
 			const edit_user_state = data;
 			pushState(href, { edit_user_state });
-		},
-		on_redirect: () => {
-			pushState(href, { edit_user_state: undefined });
 		}
 	});
 </script>
