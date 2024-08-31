@@ -4,9 +4,8 @@ import { superValidate } from 'sveltekit-superforms/client';
 import { edit_user_validator } from '$lib/entities/user';
 import { PublicError } from '$lib/errors';
 import { serilize_one } from '$lib/utils/parsing';
-import type { LayoutRouteId } from '../../$types';
 import type { Actions, PageServerLoad } from './$types';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const id = Number(params.user_id);
