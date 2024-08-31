@@ -39,7 +39,7 @@
 	}
 </script>
 
-<form method="POST" use:enhance class="flex flex-col gap-4">
+<form method="POST" use:enhance class="flex max-w-sm flex-col gap-4">
 	<input type="hidden" value={$formData.user_id} name="user_id" />
 	<Form.Fieldset {form} name="roles_id" class="space-y-0">
 		<div class="mb-4">
@@ -73,7 +73,7 @@
 		</div>
 	</Form.Fieldset>
 
-	<div class="mt-4 flex w-64 justify-end gap-3">
+	<div class="mt-4 flex justify-end gap-3">
 		<Form.Button class="w-6/12 ">Submit</Form.Button>
 	</div>
 </form>
