@@ -1,5 +1,5 @@
-import type { Create_user_dto, Login_dto } from '$lib/entities/user';
-import { IntegrityError, LoginError } from '$lib/errors';
+import { type Create_user_dto, type Edit_User_Dto, type Login_dto } from '$lib/entities/user';
+import { IntegrityError, LoginError, NotFoundError } from '$lib/errors';
 import type { Token_Service } from './ports/i-token-service';
 import type { Unit_of_Work } from './ports/i-unit-of-work';
 import type { User_Repo } from './ports/i-user-repo';
@@ -10,6 +10,10 @@ export class User_Controller {
 		private token_service: Token_Service,
 		private uow: Unit_of_Work
 	) {}
+
+	get_one(id: number) {
+		return this.user_repo.get_one(id);
+	}
 
 	async list_all() {
 		const list = await this.user_repo.get_all();
@@ -42,5 +46,19 @@ export class User_Controller {
 		const { user } = res;
 		const token = await this.token_service.create_token(user);
 		return { token };
+	}
+
+	async edit(modified: Edit_User_Dto) {
+		const { user_id, roles_id } = modified;
+		const user = await this.user_repo.get_one(user_id);
+		if (!user) {
+			return new NotFoundError('User not Found');
+		}
+		return await this.uow.do(async (repos) => {
+			await repos.user_repo.remove_all_roles({ user_id });
+			for (const role_id of roles_id) {
+				await repos.user_repo.add_role({ user_id, role_id });
+			}
+		});
 	}
 }

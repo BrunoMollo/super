@@ -73,6 +73,12 @@ export class User_Repo_Drizzle implements User_Repo {
 		await this.ctx.insert(t_user_has_role).values({ user_id, role_id });
 	}
 
+	async remove_all_roles(data: { user_id: number }): Promise<void> {
+		const { user_id } = data;
+		const match_user_id = eq(t_user_has_role.user_id, user_id);
+		await this.ctx.delete(t_user_has_role).where(match_user_id);
+	}
+
 	async get_by_username(username: string): Promise<User | undefined> {
 		const users_data = await this.ctx.select().from(t_user).where(eq(t_user.username, username));
 		const users = await this.populate_roles(users_data);

@@ -9,7 +9,12 @@ declare global {
 			user: User | Empty_User;
 		}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			edit_user_state?: {
+				user: User;
+				form: SuperValidated<Edit_User_Dto>;
+			};
+		}
 		// interface Platform {}
 	}
 

@@ -12,6 +12,13 @@ export class Mock_User_Repo extends Basic_Mock_Repo<User> implements User_Repo {
 		}
 	}
 
+	async remove_all_roles(data: { user_id: number }): Promise<void> {
+		const user = await this.get_one(data.user_id);
+		if (user) {
+			user.roles = [];
+		}
+	}
+
 	async validate(creds: { username: string; password: string }): Promise<Login_Response> {
 		const user = this.arr.find((x) => {
 			if (x.username != creds.username) {
