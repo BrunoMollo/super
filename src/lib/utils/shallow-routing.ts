@@ -4,7 +4,7 @@ type CallBack<Data> = (data: Data) => void;
 
 export function shallow_navigate<Data>(callbacks: {
 	on_load: CallBack<Data>;
-	on_redirect: (location: string) => void;
+	on_redirect?: (location: string) => void;
 }) {
 	return async (e: MouseEvent & { currentTarget: HTMLAnchorElement }) => {
 		if (
@@ -30,7 +30,11 @@ export function shallow_navigate<Data>(callbacks: {
 			const data = result.data as Data;
 			callbacks.on_load(data);
 		} else if (result.type === 'redirect') {
-			callbacks.on_redirect(result.location);
+			if (callbacks.on_redirect) {
+				callbacks.on_redirect(result.location);
+			} else {
+				goto(result.location);
+			}
 		} else {
 			goto(href);
 		}

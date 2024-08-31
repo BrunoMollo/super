@@ -9,6 +9,7 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
+	import { toast } from 'svelte-sonner';
 
 	export let data: SuperValidated<Edit_User_Dto>;
 	let error_message = '';
@@ -18,6 +19,7 @@
 		validators: zodClient(edit_user_validator),
 		onUpdate: (res) => {
 			if (res.result.type == 'success') {
+				toast.success('User has been modified');
 				dispatch('success', {
 					ok: true
 				});
@@ -30,6 +32,13 @@
 
 	const { form: formData, enhance } = form;
 
+	const original = { ...$formData };
+	const original_roles_id = original.roles_id.sort();
+	$: current_roles_id = $formData.roles_id.sort();
+
+	$: changed =
+		original_roles_id[0] === current_roles_id[0] && original_roles_id[1] === current_roles_id[1];
+
 	function addItem(id: number) {
 		$formData.roles_id = [...$formData.roles_id, id];
 	}
@@ -39,7 +48,7 @@
 	}
 </script>
 
-<form method="POST" use:enhance class="flex flex-col gap-4">
+<form method="POST" use:enhance class="flex max-w-sm flex-col gap-4">
 	<input type="hidden" value={$formData.user_id} name="user_id" />
 	<Form.Fieldset {form} name="roles_id" class="space-y-0">
 		<div class="mb-4">
@@ -73,8 +82,8 @@
 		</div>
 	</Form.Fieldset>
 
-	<div class="mt-4 flex w-64 justify-end gap-3">
-		<Form.Button class="w-6/12 ">Submit</Form.Button>
+	<div class="mt-4 flex justify-end gap-3">
+		<Form.Button class="w-6/12 " disabled={changed}>Submit Changes</Form.Button>
 	</div>
 </form>
 
