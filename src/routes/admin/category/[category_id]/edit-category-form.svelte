@@ -6,14 +6,16 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import { edit_category_validator, type Edit_Cateogory_Dto } from '$lib/entities/category';
+	import { invalidateAll } from '$app/navigation';
 
 	export let form_data: SuperValidated<Edit_Cateogory_Dto>;
 
 	const dispatch = createEventDispatcher();
 	const super_form = superForm(form_data.data, {
 		validators: zodClient(edit_category_validator),
-		onUpdate: (res) => {
+		onUpdate: async (res) => {
 			if (res.result.type == 'success') {
+				await invalidateAll();
 				toast.success('Category has been modified');
 				dispatch('success', {
 					ok: true
