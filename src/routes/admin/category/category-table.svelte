@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { readable } from 'svelte/store';
-	import { createTable, Render, Subscribe } from 'svelte-headless-table';
+	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import * as Table from '$lib/components/ui/table';
+	import CategoryTableActions from './category-table-actions.svelte';
 
 	export let categories: Array<{
 		id: number;
@@ -18,6 +19,11 @@
 		table.column({
 			accessor: 'name',
 			header: 'Name'
+		}),
+		table.column({
+			accessor: ({ id }) => id,
+			header: '',
+			cell: ({ value }) => createRender(CategoryTableActions, { id: value })
 		})
 	]);
 

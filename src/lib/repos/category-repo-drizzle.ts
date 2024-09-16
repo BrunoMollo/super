@@ -34,7 +34,7 @@ export class Category_Repo_Drizzle implements Category_Repo {
 	}
 
 	get_all(): Promise<Category[]> {
-		return this.ctx.select().from(t_category);
+		return this.ctx.select().from(t_category).orderBy(t_category.id);
 	}
 
 	async get_one(id: number): Promise<Category | undefined> {
