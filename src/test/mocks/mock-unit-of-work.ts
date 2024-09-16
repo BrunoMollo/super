@@ -18,14 +18,14 @@ export class Mock_Unit_of_Work implements Unit_of_Work {
 		} satisfies Repos;
 	}
 
-	async do<R>(callback: (repos: Repos) => R): Promise<R | TransactionDatabaseError> {
+	async do<R>(callback: (repos: Repos) => R): Promise<R> {
 		try {
 			const repos = this.create_repos();
 			return await callback(repos);
 		} catch (err) {
 			console.log(err);
 			const msj = JSON.stringify(err);
-			return new TransactionDatabaseError(msj);
+			throw new TransactionDatabaseError(msj);
 		}
 	}
 }
