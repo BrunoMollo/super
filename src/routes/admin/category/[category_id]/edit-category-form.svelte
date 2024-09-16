@@ -7,10 +7,10 @@
 	import { toast } from 'svelte-sonner';
 	import { edit_category_validator, type Edit_Cateogory_Dto } from '$lib/entities/category';
 
-	export let data: SuperValidated<Edit_Cateogory_Dto>;
+	export let form_data: SuperValidated<Edit_Cateogory_Dto>;
 
 	const dispatch = createEventDispatcher();
-	const super_form = superForm(data, {
+	const super_form = superForm(form_data.data, {
 		validators: zodClient(edit_category_validator),
 		onUpdate: (res) => {
 			if (res.result.type == 'success') {

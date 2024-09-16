@@ -1,6 +1,7 @@
 <script lang="ts">
 	import EditCategoryForm from './edit-category-form.svelte';
 	export let data;
+	const { form } = data;
 </script>
 
 <slot name="header" category={data.form.data}>
@@ -10,4 +11,4 @@
 		Edit : {data.form.data.name} )
 	</h2>
 </slot>
-<EditCategoryForm data={data.form} on:success={() => history.back()} />
+<EditCategoryForm form_data={form} on:success={() => history.back()} />
