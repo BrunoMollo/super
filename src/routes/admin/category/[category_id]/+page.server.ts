@@ -2,6 +2,7 @@ import { category_controller } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/client';
 import { edit_category_validator } from '$lib/entities/category';
+import { PublicError } from '$lib/errors';
 import type { Actions, PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 
@@ -22,7 +23,11 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return { form };
 		}
-		await category_controller.edit(form.data);
+		const res = await category_controller.edit(form.data);
+
+		if (res instanceof PublicError) {
+			return error(res.status, res.message);
+		}
 		return { form };
 	}
 };
