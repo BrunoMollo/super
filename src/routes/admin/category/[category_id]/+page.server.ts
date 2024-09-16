@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	const { name } = category;
-	return { form: await superValidate({ name }, zod(edit_category_validator)) };
+	return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
 };
 
 export const actions: Actions = {
@@ -22,7 +22,7 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return { form };
 		}
-		console.log(form.data);
+		await category_controller.edit(form.data);
 		return { form };
 	}
 };

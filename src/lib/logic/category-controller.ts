@@ -1,5 +1,5 @@
-import type { Create_Category_Dto } from '$lib/entities/category';
-import { IntegrityError } from '$lib/errors';
+import type { Create_Category_Dto, Edit_Cateogory_Dto } from '$lib/entities/category';
+import { IntegrityError, NotFoundError } from '$lib/errors';
 import type { Category_Repo } from './ports/i-category-repo';
 
 export class Category_Controller {
@@ -19,5 +19,14 @@ export class Category_Controller {
 			return new IntegrityError(`Duplicated name "${category.name}"`);
 		}
 		return this.category_repo.create(category);
+	}
+
+	async edit(input: Edit_Cateogory_Dto) {
+		const { id, name } = input;
+		const category = await this.category_repo.get_one(id);
+		if (!category) {
+			return new NotFoundError('Category not found');
+		}
+		await this.category_repo.update({ id, name });
 	}
 }

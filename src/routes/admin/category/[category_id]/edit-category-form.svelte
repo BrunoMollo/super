@@ -31,6 +31,7 @@
 </script>
 
 <form method="POST" use:enhance class="flex max-w-sm flex-col gap-4">
+	<input type="hidden" name="id" value={$form.id} />
 	<Form.Field form={super_form} name="name">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Name</Form.Label>

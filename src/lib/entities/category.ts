@@ -21,6 +21,7 @@ export const create_category_validator = z
 export type Create_Category_Dto = Infer<typeof create_category_validator>;
 
 export const edit_category_validator = z.object({
+	id: z.number().int().positive(),
 	name: z.string().min(4).max(36)
 });
 
