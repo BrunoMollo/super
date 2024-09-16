@@ -55,7 +55,7 @@ export class User_Controller {
 		const { user_id, roles_id } = modified;
 		const user = await this.user_repo.get_one(user_id);
 		if (!user) {
-			throw new NotFoundError('User not Found');
+			throw new NotFoundError({ resource: 'user' });
 		}
 		return await this.uow.do(async (repos) => {
 			await repos.user_repo.remove_all_roles({ user_id });

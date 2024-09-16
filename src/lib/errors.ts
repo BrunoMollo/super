@@ -39,10 +39,10 @@ export class AuthenticationError extends CustomError {
 }
 
 export class NotFoundError extends CustomError {
-	constructor(message: string) {
-		const base = 'Resource Not Found' as const;
+	constructor({ resource }: { resource: string }) {
+		const base = `Not Found: ${resource}` as const;
 		const status = 404 as const;
-		super(message ?? base, status);
+		super(base, status);
 	}
 }
 

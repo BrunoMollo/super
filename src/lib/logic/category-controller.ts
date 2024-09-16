@@ -28,7 +28,7 @@ export class Category_Controller {
 		const { id, name } = input;
 		const category = await this.category_repo.get_one(id);
 		if (!category) {
-			throw new NotFoundError('Category not found');
+			new NotFoundError({ resource: 'category' });
 		}
 		await this.category_repo.update({ id, name });
 	}
