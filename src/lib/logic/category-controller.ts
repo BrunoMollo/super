@@ -5,6 +5,10 @@ import type { Category_Repo } from './ports/i-category-repo';
 export class Category_Controller {
 	constructor(private category_repo: Category_Repo) {}
 
+	async get_one(id: number) {
+		return this.category_repo.get_one(id);
+	}
+
 	async list_all() {
 		return this.category_repo.get_all();
 	}

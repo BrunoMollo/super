@@ -1,3 +1,4 @@
+import type { Edit_Cateogory_Dto } from '$lib/entities/category';
 import type { Empty_User, User } from '$lib/entities/user';
 
 // See https://kit.svelte.dev/docs/types#app
@@ -13,6 +14,9 @@ declare global {
 			edit_user_state?: {
 				user: User;
 				form: SuperValidated<Edit_User_Dto>;
+			};
+			edit_category_state?: {
+				form: SuperValidated<Edit_Cateogory_Dto>;
 			};
 		}
 		// interface Platform {}
