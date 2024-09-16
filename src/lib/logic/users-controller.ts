@@ -23,7 +23,7 @@ export class User_Controller {
 	async create(user: Create_user_dto) {
 		const match_username = await this.user_repo.get_by_username(user.username);
 		if (match_username) {
-			return new IntegrityError(`Duplicated username "${user.username}"`);
+			throw new IntegrityError(`Duplicated username "${user.username}"`);
 		}
 
 		return await this.uow.do(async (repos) => {
@@ -48,11 +48,14 @@ export class User_Controller {
 		return { token };
 	}
 
+	/**
+	 * @throws {NotFoundError}
+	 */
 	async edit(modified: Edit_User_Dto) {
 		const { user_id, roles_id } = modified;
 		const user = await this.user_repo.get_one(user_id);
 		if (!user) {
-			return new NotFoundError('User not Found');
+			throw new NotFoundError('User not Found');
 		}
 		return await this.uow.do(async (repos) => {
 			await repos.user_repo.remove_all_roles({ user_id });

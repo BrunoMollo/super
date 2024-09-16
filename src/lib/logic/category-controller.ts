@@ -13,10 +13,13 @@ export class Category_Controller {
 		return this.category_repo.get_all();
 	}
 
+	/**
+	 * @throws {IntegrityError}
+	 */
 	async create(category: Create_Category_Dto) {
 		const match = await this.category_repo.get_by_name(category.name);
 		if (match) {
-			return new IntegrityError(`Duplicated name "${category.name}"`);
+			throw new IntegrityError(`Duplicated name "${category.name}"`);
 		}
 		return this.category_repo.create(category);
 	}
@@ -25,7 +28,7 @@ export class Category_Controller {
 		const { id, name } = input;
 		const category = await this.category_repo.get_one(id);
 		if (!category) {
-			return new NotFoundError('Category not found');
+			throw new NotFoundError('Category not found');
 		}
 		await this.category_repo.update({ id, name });
 	}

@@ -1,8 +1,19 @@
-export class PublicError {
+import { error } from '@sveltejs/kit';
+
+export function handel_error(err: unknown) {
+	if (err instanceof PublicError) {
+		return error(err.status, err.message);
+	}
+	throw err;
+}
+
+export abstract class PublicError extends Error {
 	constructor(
 		public message: string,
 		public status: number
-	) {}
+	) {
+		super();
+	}
 }
 
 export class IntegrityError extends PublicError {

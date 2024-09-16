@@ -2,10 +2,10 @@ import { user_controller } from '$lib';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_user_validator } from '$lib/entities/user';
-import { PublicError } from '$lib/errors';
+import { handel_error } from '$lib/errors';
 import { serilize } from '$lib/utils/parsing';
 import type { Actions, PageServerLoad } from './$types';
-import { error, fail } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	const users = await user_controller.list_all().then(serilize);
@@ -25,11 +25,7 @@ export const actions: Actions = {
 			});
 		}
 
-		const res = await user_controller.create(form.data);
-
-		if (res instanceof PublicError) {
-			return error(res.status, res.message);
-		}
+		await user_controller.create(form.data).catch(handel_error);
 
 		return { form };
 	}
