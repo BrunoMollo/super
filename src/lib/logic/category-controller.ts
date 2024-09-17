@@ -24,11 +24,14 @@ export class Category_Controller {
 		return this.category_repo.create(category);
 	}
 
+	/**
+	 * @throws {NotFoundError}
+	 */
 	async edit(input: Edit_Cateogory_Dto) {
 		const { id, name } = input;
 		const category = await this.category_repo.get_one(id);
 		if (!category) {
-			new NotFoundError({ resource: 'category' });
+			throw new NotFoundError({ resource: 'category' });
 		}
 		await this.category_repo.update({ id, name });
 	}

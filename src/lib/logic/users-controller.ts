@@ -20,6 +20,10 @@ export class User_Controller {
 		return list;
 	}
 
+	/**
+	 * @throws {IntegrityError}
+	 * @throws {TransactionDatabaseError}
+	 */
 	async create(user: Create_user_dto) {
 		const match_username = await this.user_repo.get_by_username(user.username);
 		if (match_username) {
@@ -53,6 +57,7 @@ export class User_Controller {
 
 	/**
 	 * @throws {NotFoundError}
+	 * @throws {TransactionDatabaseError}
 	 */
 	async edit(modified: Edit_User_Dto) {
 		const { user_id, roles_id } = modified;
