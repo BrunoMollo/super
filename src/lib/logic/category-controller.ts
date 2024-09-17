@@ -5,8 +5,15 @@ import type { Category_Repo } from './ports/i-category-repo';
 export class Category_Controller {
 	constructor(private category_repo: Category_Repo) {}
 
+	/**
+	 * @throws {NotFoundError}
+	 */
 	async get_one(id: number) {
-		return this.category_repo.get_one(id);
+		const category = await this.category_repo.get_one(id);
+		if (!category) {
+			throw new NotFoundError({ resource: 'category' });
+		}
+		return category;
 	}
 
 	async list_all() {
