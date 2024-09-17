@@ -7,7 +7,7 @@ import { serilize } from '$lib/utils/parsing';
 import type { Actions, PageServerLoad } from '../users/$types';
 
 export const load: PageServerLoad = async () => {
-	const categories = await category_controller.list_all().then(serilize);
+	const categories = await category_controller.list_all().then(serilize).catch(handel_error);
 	return {
 		categories,
 		form: await superValidate(zod(create_category_validator))

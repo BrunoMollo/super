@@ -8,7 +8,7 @@ import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const id = Number(params.category_id);
-	const category = await category_controller.get_one(id);
+	const category = await category_controller.get_one(id).catch(handel_error);
 	if (!category) {
 		return error(404, 'User not Found');
 	}

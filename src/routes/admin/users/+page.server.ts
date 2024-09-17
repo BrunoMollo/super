@@ -8,7 +8,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
-	const users = await user_controller.list_all().then(serilize);
+	const users = await user_controller.list_all().then(serilize).catch(handel_error);
 
 	return {
 		users,
