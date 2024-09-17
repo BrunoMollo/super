@@ -38,10 +38,13 @@ export class User_Controller {
 		});
 	}
 
+	/**
+	 * @throws {LoginError}
+	 */
 	async login(creds: Login_dto) {
 		const res = await this.user_repo.validate(creds);
 		if (!res.pass) {
-			return new LoginError();
+			throw new LoginError();
 		}
 		const { user } = res;
 		const token = await this.token_service.create_token(user);
