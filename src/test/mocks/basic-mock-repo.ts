@@ -1,5 +1,3 @@
-import { Category } from '$lib/entities/category';
-
 export abstract class Basic_Mock_Repo<T extends { id: number }> {
 	constructor(protected arr: T[]) {}
 
