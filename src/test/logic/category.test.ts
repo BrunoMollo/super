@@ -27,8 +27,8 @@ describe('create category', () => {
 			name: 'Lacteos'
 		});
 
-		const res = await category_ctrl.create(input);
-		expect(res).instanceof(IntegrityError);
+		expect(async () => await category_ctrl.create(input)).rejects.toThrow(IntegrityError);
+
 		const all = await category_ctrl.list_all();
 		expect(all.length).toBe(1);
 	});

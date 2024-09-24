@@ -2,13 +2,12 @@ import { category_controller } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_category_validator } from '$lib/entities/category';
-import { PublicError } from '$lib/errors';
+import { handel_error } from '$lib/errors';
 import { serilize } from '$lib/utils/parsing';
 import type { Actions, PageServerLoad } from '../users/$types';
-import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
-	const categories = await category_controller.list_all().then(serilize);
+	const categories = await category_controller.list_all().then(serilize).catch(handel_error);
 	return {
 		categories,
 		form: await superValidate(zod(create_category_validator))
@@ -23,11 +22,7 @@ export const actions: Actions = {
 				form
 			});
 		}
-		const res = await category_controller.create(form.data);
-
-		if (res instanceof PublicError) {
-			return error(res.status, res.message);
-		}
+		await category_controller.create(form.data).catch(handel_error);
 
 		return { form };
 	}

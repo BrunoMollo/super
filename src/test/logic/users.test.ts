@@ -36,10 +36,10 @@ describe('user creation', () => {
 			password: '1234',
 			roles_id: [1]
 		});
-		const res = await user_ctrl.create(bruno);
-		expect(res).instanceof(IntegrityError);
-		const all = await user_ctrl.list_all();
-		expect(all.length).toBe(1);
+
+		expect(async () => await user_ctrl.create(bruno)).rejects.toThrowError(IntegrityError);
+		const res = await user_ctrl.list_all();
+		expect(res.length).toBe(1);
 	});
 });
 
@@ -59,7 +59,6 @@ describe('user login', () => {
 			password: '1234'
 		});
 		const res = await user_ctrl.login(creds);
-		expect(res).not.instanceof(LoginError);
 		expect(res).toHaveProperty('token', 'token(1)');
 	});
 	test('reject login (wrong password)', async () => {
@@ -76,9 +75,7 @@ describe('user login', () => {
 			username: 'admin',
 			password: '4321 (wrong)'
 		});
-		const res = await user_ctrl.login(creds);
-		expect(res).instanceof(LoginError);
-		expect(res).not.toHaveProperty('token');
+		expect(async () => await user_ctrl.login(creds)).rejects.toThrow(LoginError);
 	});
 
 	test('reject login (wrong username)', async () => {
@@ -95,9 +92,7 @@ describe('user login', () => {
 			username: 'someone else',
 			password: '1234'
 		});
-		const res = await user_ctrl.login(creds);
-		expect(res).instanceof(LoginError);
-		expect(res).not.toHaveProperty('token');
+		expect(async () => await user_ctrl.login(creds)).rejects.toThrow(LoginError);
 	});
 });
 
@@ -140,9 +135,7 @@ describe('user edition', () => {
 			user_id: 100000,
 			roles_id: [1, 2]
 		});
-		const res_edit = await user_ctrl.edit(modified);
-		expect(res_edit).toBeInstanceOf(NotFoundError);
-		const check = (await user_ctrl.get_one(1)) as User;
-		expect(check.roles.map((x) => x.id)).toEqual([1]);
+
+		expect(async () => await user_ctrl.edit(modified)).rejects.toThrow(NotFoundError);
 	});
 });

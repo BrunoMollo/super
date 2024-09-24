@@ -19,8 +19,10 @@ export class Unit_of_Work_Drizzle implements Unit_of_Work {
 		} satisfies Repos;
 	}
 
-	async do<R>(callback: (repos: Repos) => R): Promise<R | TransactionDatabaseError> {
-		console.log('dsadsadsa');
+	/**
+	 * @throws {TransactionDatabaseError}
+	 */
+	async do<R>(callback: (repos: Repos) => R): Promise<R> {
 		try {
 			return await this.ctx.transaction(async (tx) => {
 				const repos = this.create_repos(tx);
@@ -29,7 +31,7 @@ export class Unit_of_Work_Drizzle implements Unit_of_Work {
 		} catch (err) {
 			console.log(err);
 			const msj = JSON.stringify(err);
-			return new TransactionDatabaseError(msj);
+			throw new TransactionDatabaseError(msj);
 		}
 	}
 }

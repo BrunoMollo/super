@@ -3,10 +3,10 @@ import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { dev } from '$app/environment';
 import { login_validator } from '$lib/entities/user.js';
-import { LoginError } from '$lib/errors.js';
+import { handel_error } from '$lib/errors.js';
 import type { LayoutRouteId } from '../$types.js';
 import type { Actions, PageServerLoad } from './$types.js';
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -22,11 +22,7 @@ export const actions: Actions = {
 				form
 			});
 		}
-		const res = await user_controller.login(form.data);
-
-		if (res instanceof LoginError) {
-			return error(res.status, res);
-		}
+		const res = await user_controller.login(form.data).catch(handel_error);
 
 		event.cookies.set('token', res.token, {
 			httpOnly: true,

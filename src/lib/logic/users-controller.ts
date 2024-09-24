@@ -11,19 +11,29 @@ export class User_Controller {
 		private uow: Unit_of_Work
 	) {}
 
-	get_one(id: number) {
-		return this.user_repo.get_one(id);
+	/**
+	 * @throws {NotFoundError}
+	 */
+	async get_one(id: number) {
+		const user = await this.user_repo.get_one(id);
+		if (!user) {
+			throw new NotFoundError({ resource: 'user' });
+		}
+		return user;
 	}
 
 	async list_all() {
-		const list = await this.user_repo.get_all();
-		return list;
+		return await this.user_repo.get_all();
 	}
 
+	/**
+	 * @throws {IntegrityError}
+	 * @throws {TransactionDatabaseError}
+	 */
 	async create(user: Create_user_dto) {
 		const match_username = await this.user_repo.get_by_username(user.username);
 		if (match_username) {
-			return new IntegrityError(`Duplicated username "${user.username}"`);
+			throw new IntegrityError(`Duplicated username "${user.username}"`);
 		}
 
 		return await this.uow.do(async (repos) => {
@@ -38,21 +48,28 @@ export class User_Controller {
 		});
 	}
 
+	/**
+	 * @throws {LoginError}
+	 */
 	async login(creds: Login_dto) {
 		const res = await this.user_repo.validate(creds);
 		if (!res.pass) {
-			return new LoginError();
+			throw new LoginError();
 		}
 		const { user } = res;
 		const token = await this.token_service.create_token(user);
 		return { token };
 	}
 
+	/**
+	 * @throws {NotFoundError}
+	 * @throws {TransactionDatabaseError}
+	 */
 	async edit(modified: Edit_User_Dto) {
 		const { user_id, roles_id } = modified;
 		const user = await this.user_repo.get_one(user_id);
 		if (!user) {
-			return new NotFoundError('User not Found');
+			throw new NotFoundError({ resource: 'user' });
 		}
 		return await this.uow.do(async (repos) => {
 			await repos.user_repo.remove_all_roles({ user_id });
