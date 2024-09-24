@@ -1,8 +1,7 @@
 import { DrizzleError } from 'drizzle-orm';
 import { TransactionDatabaseError } from '$lib/errors';
-import type { Category_Repo } from '$lib/logic/ports/i-category-repo';
-import type { Repos, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
-import type { User_Repo } from '$lib/logic/ports/i-user-repo';
+import type { Category_Repo, User_Repo } from '$lib/logic/ports/repos-interfaces';
+import type { Repos, Unit_of_Work } from '$lib/logic/ports/unit-of-work-interface';
 
 export class Mock_Unit_of_Work implements Unit_of_Work {
 	public category_repo!: Category_Repo;

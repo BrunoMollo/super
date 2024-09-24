@@ -1,5 +1,4 @@
-import type { Category_Repo } from './i-category-repo';
-import type { User_Repo } from './i-user-repo';
+import type { Category_Repo, User_Repo } from './repos-interfaces';
 
 export type Repos = {
 	user_repo: User_Repo;

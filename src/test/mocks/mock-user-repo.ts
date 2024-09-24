@@ -1,6 +1,6 @@
 import { User } from '$lib/entities/user';
 import { roles } from '$lib/entities/user';
-import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
+import type { Login_Response, User_Repo } from '$lib/logic/ports/repos-interfaces';
 import { Basic_Mock_Repo } from './basic-mock-repo';
 
 export class Mock_User_Repo extends Basic_Mock_Repo<User> implements User_Repo {

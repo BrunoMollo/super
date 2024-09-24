@@ -1,5 +1,5 @@
 import { Category } from '$lib/entities/category';
-import type { Category_Repo } from '$lib/logic/ports/i-category-repo';
+import type { Category_Repo } from '$lib/logic/ports/repos-interfaces';
 import { Basic_Mock_Repo } from './basic-mock-repo';
 
 export class Mock_Category_Repo extends Basic_Mock_Repo<Category> implements Category_Repo {

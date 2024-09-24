@@ -1,6 +1,6 @@
 import type { Create_Category_Dto, Edit_Cateogory_Dto } from '$lib/entities/category';
 import { IntegrityError, NotFoundError } from '$lib/errors';
-import type { Category_Repo } from './ports/i-category-repo';
+import type { Category_Repo } from './ports/repos-interfaces';
 
 export class Category_Controller {
 	constructor(private category_repo: Category_Repo) {}

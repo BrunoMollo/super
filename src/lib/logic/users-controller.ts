@@ -1,8 +1,8 @@
 import { type Create_user_dto, type Edit_User_Dto, type Login_dto } from '$lib/entities/user';
 import { IntegrityError, LoginError, NotFoundError } from '$lib/errors';
-import type { Token_Service } from './ports/i-token-service';
-import type { Unit_of_Work } from './ports/i-unit-of-work';
-import type { User_Repo } from './ports/i-user-repo';
+import type { Token_Service } from './ports/auth-services-interfaces';
+import type { User_Repo } from './ports/repos-interfaces';
+import type { Unit_of_Work } from './ports/unit-of-work-interface';
 
 export class User_Controller {
 	constructor(

@@ -1,4 +1,4 @@
-import type { Role_Repo } from './ports/i-role-repo';
+import type { Role_Repo } from './ports/repos-interfaces';
 
 export class Role_Controller {
 	constructor(private roles_repo: Role_Repo) {}

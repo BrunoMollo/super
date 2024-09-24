@@ -1,6 +1,6 @@
-import type { Basic_Repo } from '$lib/logic/ports/i-basic-repo';
+import { Category } from '$lib/entities/category';
 
-export abstract class Basic_Mock_Repo<T extends { id: number }> implements Basic_Repo<T> {
+export abstract class Basic_Mock_Repo<T extends { id: number }> {
 	constructor(protected arr: T[]) {}
 
 	async get_all(): Promise<T[]> {
@@ -17,12 +17,11 @@ export abstract class Basic_Mock_Repo<T extends { id: number }> implements Basic
 		return target;
 	}
 
-	async update(user: T): Promise<T | undefined> {
+	async update(user: T): Promise<void> {
 		const index = this.arr.findIndex((x) => x.id === user.id);
 		if (index === -1) {
 			return undefined;
 		}
 		this.arr[index] = user;
-		return user;
 	}
 }

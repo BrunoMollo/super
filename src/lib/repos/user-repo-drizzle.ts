@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { type Role, User } from '$lib/entities/user';
-import type { Hash_Service } from '$lib/logic/ports/i-hash-service';
-import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
+import type { Hash_Service } from '$lib/logic/ports/auth-services-interfaces';
+import type { Login_Response, User_Repo } from '$lib/logic/ports/repos-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_role, t_user, t_user_has_role } from '$lib/server/drizzle/schema';
 
