@@ -1,3 +1,4 @@
+import { ok } from './helpers/results';
 import type { Role_Repo } from './ports/i-role-repo';
 
 export class Role_Controller {
@@ -9,6 +10,6 @@ export class Role_Controller {
 		if (!exists) {
 			this.roles_repo.create({ id, name });
 		}
-		return id;
+		return ok({ id });
 	}
 }

@@ -1,3 +1,4 @@
+import { DrizzleError } from 'drizzle-orm';
 import { TransactionDatabaseError } from '$lib/errors';
 import type { Hash_Service } from '$lib/logic/ports/i-hash-service';
 import type { Repos, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
@@ -29,6 +30,7 @@ export class Unit_of_Work_Drizzle implements Unit_of_Work {
 				return await callback(repos);
 			});
 		} catch (err) {
+			//TODO: SEE WHAT TO DO
 			console.log(err);
 			const msj = JSON.stringify(err);
 			throw new TransactionDatabaseError(msj);
