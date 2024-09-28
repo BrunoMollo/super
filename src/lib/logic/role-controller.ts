@@ -9,5 +9,6 @@ export class Role_Controller {
 		if (!exists) {
 			this.roles_repo.create({ id, name });
 		}
+		return id;
 	}
 }
