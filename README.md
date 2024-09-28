@@ -51,7 +51,7 @@ When you change something in the `./lib/server/drizzle/schema.ts` file, you need
 Use the following command:
 
 ```bash
-pnpm add-migrations
+pnpm add-migration
 ```
 
 Note: don't create the migration before pulling the latest version of main

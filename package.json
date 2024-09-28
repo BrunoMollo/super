@@ -13,7 +13,7 @@
 		"coverage": "vitest run --coverage",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"add-migrations": "pnpm drizzle-kit generate",
+		"add-migration": "pnpm drizzle-kit generate",
 		"inspect": "pnpm drizzle-kit studio",
 		"seed": "drizzle-kit push && vite-node --options.transformMode.ssr='/.*/'  src/lib/seeders/seed.ts"
 	},
