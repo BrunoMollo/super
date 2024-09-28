@@ -29,19 +29,29 @@ Then, start a development server:
 pnpm dev
 ```
 
-## Database
+## Local Database
 
-When you change something in the `./lib/server/drizzle/schema.ts` file, you need to generate the migrations.
+To run seeds for the database, use the following command:
+
+```bash
+pnpm seed
+```
+
+The seeding script can be found in `./src/lib/seeders/`
+
+If you want to see what is stored in your local database, you can use drizzle-studio:
+
+```bash
+npm run inspect
+```
+
+## Migrations
+
+When you change something in the `./lib/server/drizzle/schema.ts` file, you need to generate the migrations before merging to main.
 Use the following command:
 
 ```bash
-pnpm generate
+pnpm add-migrations
 ```
 
-If you want to see what is stored in your local database, you can use drizzle-studio
-
-```bash
-pnpm drizzle-kit studio
-```
-
-:-)
+Note: don't create the migration before pulling the latest version of main
