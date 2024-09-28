@@ -111,6 +111,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install; mv .env.example .env
       - name: Migrations Checks
         run: bash .github/workflows/migration-check.sh
