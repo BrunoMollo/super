@@ -1,5 +1,5 @@
 !#/bin/bash
-if npm run add-migration | grep "No schema changes, nothing to migrate"; then
+if pnpm add-migration | grep "No schema changes, nothing to migrate"; then
 	echo "Migrations OK"
 else
 	echo "Migrations Missing"
