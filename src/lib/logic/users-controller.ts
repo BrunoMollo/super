@@ -1,7 +1,7 @@
 import { type Create_user_dto, type Edit_User_Dto, type Login_dto } from '$lib/entities/user';
 import { err, ok, ok_empty } from './helpers/results';
 import type { Token_Service } from './ports/i-token-service';
-import type { Unit_of_Work } from './ports/i-unit-of-work';
+import { type Unit_of_Work } from './ports/i-unit-of-work';
 import type { User_Repo } from './ports/i-user-repo';
 
 export class User_Controller {
@@ -30,16 +30,16 @@ export class User_Controller {
 			return err('duplicated-username');
 		}
 
-		return await this.uow.do(async (repos) => {
+		await this.uow.do(async (repos) => {
 			const new_user = await repos.user_repo.create(user);
 			const user_id = new_user.id;
 
 			for (const role_id of user.roles_id) {
 				await repos.user_repo.add_role({ user_id, role_id });
 			}
-
-			return ok_empty();
 		});
+
+		return ok_empty();
 	}
 
 	async login(creds: Login_dto) {
