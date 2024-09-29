@@ -13,8 +13,7 @@ export class Unit_of_Work_Drizzle implements Unit_of_Work {
 	private create_repos(tx: DB_Context & { rollback: () => never }) {
 		return {
 			category_repo: new Category_Repo_Drizzle(tx),
-			user_repo: new User_Repo_Drizzle(tx, this.hash_service),
-			rollback: () => tx.rollback()
+			user_repo: new User_Repo_Drizzle(tx, this.hash_service)
 		} satisfies Repos;
 	}
 
