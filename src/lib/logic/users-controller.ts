@@ -24,10 +24,6 @@ export class User_Controller {
 		return ok(list);
 	}
 
-	/**
-	 * @throws {IntegrityError}
-	 * @throws {TransactionDatabaseError}
-	 */
 	async create(user: Create_user_dto) {
 		const match_username = await this.user_repo.get_by_username(user.username);
 		if (match_username) {
@@ -42,7 +38,7 @@ export class User_Controller {
 				await repos.user_repo.add_role({ user_id, role_id });
 			}
 
-			return ok(new_user);
+			return ok_empty();
 		});
 	}
 

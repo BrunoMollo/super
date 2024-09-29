@@ -9,7 +9,7 @@ export type Repos = {
 
 export interface Unit_of_Work {
 	/**
-	 * @throws {TransactionDatabaseError}
+	 * @throws {DrizzleError}
 	 */
 	do<R>(callback: (tx: Repos) => R): Promise<R>;
 }
