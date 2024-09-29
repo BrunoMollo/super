@@ -25,10 +25,10 @@ export class Role_Repo_Drizzle implements Role_Repo {
 		return { id, name } as Role;
 	}
 
-	async create(category: { id: number; name: string }): Promise<Role> {
+	async create(category: { id: number; name: string }): Promise<number> {
 		const { id, name } = category;
 		await this.ctx.insert(t_role).values({ id, name });
 
-		return { id, name } as Role;
+		return id;
 	}
 }

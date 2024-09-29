@@ -1,5 +1,3 @@
-import { DrizzleError } from 'drizzle-orm';
-import { TransactionDatabaseError } from '$lib/errors';
 import type { Category_Repo } from '$lib/logic/ports/i-category-repo';
 import type { Repos, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
 import type { User_Repo } from '$lib/logic/ports/i-user-repo';
@@ -11,21 +9,12 @@ export class Mock_Unit_of_Work implements Unit_of_Work {
 	private create_repos() {
 		return {
 			category_repo: this.category_repo,
-			user_repo: this.user_repo,
-			rollback: () => {
-				throw new DrizzleError({});
-			}
+			user_repo: this.user_repo
 		} satisfies Repos;
 	}
 
 	async do<R>(callback: (repos: Repos) => R): Promise<R> {
-		try {
-			const repos = this.create_repos();
-			return await callback(repos);
-		} catch (err) {
-			console.log(err);
-			const msj = JSON.stringify(err);
-			throw new TransactionDatabaseError(msj);
-		}
+		const repos = this.create_repos();
+		return await callback(repos);
 	}
 }

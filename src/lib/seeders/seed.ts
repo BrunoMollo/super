@@ -1,6 +1,8 @@
-import { category_controller, role_controller, user_controller } from '$lib';
+import { category_controller, user_controller } from '$lib';
 import { create_category_validator } from '$lib/entities/category';
 import { create_user_validator } from '$lib/entities/user';
+import { Role_Repo_Drizzle } from '$lib/repos/role-repo-drizzle';
+import { db } from '$lib/server/drizzle/drizzle-client';
 
 function title_seeder(thing: string) {
 	console.log('-----------------------------------');
@@ -10,8 +12,10 @@ function title_seeder(thing: string) {
 
 async function seed_roles() {
 	title_seeder('Roles');
-	const admin_id = await role_controller.create_or_skip({ id: 1, name: 'ADMIN' });
-	const seller_id = await role_controller.create_or_skip({ id: 2, name: 'SELLER' });
+
+	const repo = new Role_Repo_Drizzle(db);
+	const admin_id = await repo.create({ id: 1, name: 'ADMIN' });
+	const seller_id = await repo.create({ id: 2, name: 'SELLER' });
 	return { admin_id, seller_id };
 }
 
