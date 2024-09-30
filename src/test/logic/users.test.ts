@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { edit_user_validator, login_validator } from '$lib/entities/user';
-import { User, create_user_validator } from '$lib/entities/user';
+import { Authorized_User, create_user_validator } from '$lib/entities/user';
 import { User_Controller } from '$lib/logic/users-controller';
 import { Mock_Token_Service } from '../mocks/mock-token-service';
 import { Mock_Unit_of_Work } from '../mocks/mock-unit-of-work';
@@ -9,7 +9,7 @@ import { Mock_User_Repo } from '../mocks/mock-user-repo';
 let user_ctrl: User_Controller;
 
 beforeEach(() => {
-	const data = [new User(1, 'bruno', 'some-psw', [{ id: 1, name: 'ADMIN' }])];
+	const data = [new Authorized_User(1, 'bruno', 'some-psw', [{ id: 1, name: 'ADMIN' }])];
 	const mock_repo = new Mock_User_Repo(data);
 	const mock_uow = new Mock_Unit_of_Work();
 	mock_uow.user_repo = mock_repo;

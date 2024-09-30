@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { type Role, User } from '$lib/entities/user';
+import { Authorized_User, type Role } from '$lib/entities/user';
 import type { Hash_Service } from '$lib/logic/ports/i-hash-service';
 import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
@@ -28,16 +28,16 @@ export class User_Repo_Drizzle implements User_Repo {
 			const user_roles = roles
 				.filter((x) => x.user_id === id)
 				.map(({ id, name }) => ({ id, name }) as Role);
-			return new User(id, username, '', user_roles);
+			return new Authorized_User(id, username, '', user_roles);
 		});
 	}
 
-	async get_all(): Promise<User[]> {
+	async get_all(): Promise<Authorized_User[]> {
 		const users_data = await this.ctx.select().from(t_user);
 		return this.populate_roles(users_data);
 	}
 
-	async create(user: { username: string; password: string }): Promise<User> {
+	async create(user: { username: string; password: string }): Promise<Authorized_User> {
 		const { username, password } = user;
 		const password_hash = await this.hash_service.hash(password);
 		const { id } = await this.ctx
@@ -45,7 +45,7 @@ export class User_Repo_Drizzle implements User_Repo {
 			.values({ username, password_hash })
 			.returning({ id: t_user.id })
 			.then((x) => x[0]);
-		return new User(id, username, '', []);
+		return new Authorized_User(id, username, '', []);
 	}
 
 	async validate(creds: { username: string; password: string }): Promise<Login_Response> {
@@ -79,25 +79,25 @@ export class User_Repo_Drizzle implements User_Repo {
 		await this.ctx.delete(t_user_has_role).where(match_user_id);
 	}
 
-	async get_by_username(username: string): Promise<User | undefined> {
+	async get_by_username(username: string): Promise<Authorized_User | undefined> {
 		const users_data = await this.ctx.select().from(t_user).where(eq(t_user.username, username));
 		const users = await this.populate_roles(users_data);
 		return users.at(0);
 	}
 
-	async get_one(id: number): Promise<User | undefined> {
+	async get_one(id: number): Promise<Authorized_User | undefined> {
 		const users_data = await this.ctx.select().from(t_user).where(eq(t_user.id, id));
 		const users = await this.populate_roles(users_data);
 		return users.at(0);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	remove(_id: number): Promise<User | undefined> {
+	remove(_id: number): Promise<Authorized_User | undefined> {
 		throw new Error('Method not implemented.');
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	update(_user: User): Promise<User | undefined> {
+	update(_user: Authorized_User): Promise<Authorized_User | undefined> {
 		throw new Error('Method not implemented.');
 	}
 }
