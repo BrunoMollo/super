@@ -30,7 +30,6 @@ export class Authorized_User implements User {
 	constructor(
 		public id: number,
 		public username: string,
-		public password_hash: string,
 		public roles: Role[]
 	) {}
 

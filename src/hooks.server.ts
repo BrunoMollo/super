@@ -61,7 +61,7 @@ async function get_user_from_token(token: string | undefined) {
 		return new Empty_User();
 	}
 	const { id, username, roles } = res.user;
-	return new Authorized_User(id, username, '', roles);
+	return new Authorized_User(id, username, roles);
 }
 
 /**

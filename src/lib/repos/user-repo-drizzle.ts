@@ -28,7 +28,7 @@ export class User_Repo_Drizzle implements User_Repo {
 			const user_roles = roles
 				.filter((x) => x.user_id === id)
 				.map(({ id, name }) => ({ id, name }) as Role);
-			return new Authorized_User(id, username, '', user_roles);
+			return new Authorized_User(id, username, user_roles);
 		});
 	}
 
@@ -45,7 +45,7 @@ export class User_Repo_Drizzle implements User_Repo {
 			.values({ username, password_hash })
 			.returning({ id: t_user.id })
 			.then((x) => x[0]);
-		return new Authorized_User(id, username, '', []);
+		return new Authorized_User(id, username, []);
 	}
 
 	async validate(creds: { username: string; password: string }): Promise<Login_Response> {

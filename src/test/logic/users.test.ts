@@ -7,10 +7,10 @@ import { Mock_Unit_of_Work } from '../mocks/mock-unit-of-work';
 import { Mock_User_Repo } from '../mocks/mock-user-repo';
 
 let user_ctrl: User_Controller;
-const admin = new Authorized_User(1, 'admin', 'admin', [{ id: 1, name: 'ADMIN' }]);
+const admin = new Authorized_User(1, 'admin', [{ id: 1, name: 'ADMIN' }]);
 
 beforeEach(() => {
-	const data = [new Authorized_User(1, 'bruno', 'some-psw', [{ id: 1, name: 'ADMIN' }])];
+	const data = [new Authorized_User(1, 'bruno', [{ id: 1, name: 'ADMIN' }])];
 	const mock_repo = new Mock_User_Repo(data);
 	const mock_uow = new Mock_Unit_of_Work();
 	mock_uow.user_repo = mock_repo;

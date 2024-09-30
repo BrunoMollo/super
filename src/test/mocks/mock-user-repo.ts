@@ -4,6 +4,8 @@ import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
 import { Basic_Mock_Repo } from './basic-mock-repo';
 
 export class Mock_User_Repo extends Basic_Mock_Repo<Authorized_User> implements User_Repo {
+	passwords = new Map();
+
 	async add_role(data: { user_id: number; role_id: number }): Promise<void> {
 		const role = roles.find((x) => x.id == data.role_id)!;
 		const user = await this.get_one(data.user_id);
@@ -24,7 +26,7 @@ export class Mock_User_Repo extends Basic_Mock_Repo<Authorized_User> implements 
 			if (x.username != creds.username) {
 				return false;
 			}
-			if (x.password_hash != `hash(${creds.password})`) {
+			if (this.passwords.get(x.id) != creds.password) {
 				return false;
 			}
 			return true;
@@ -37,7 +39,8 @@ export class Mock_User_Repo extends Basic_Mock_Repo<Authorized_User> implements 
 
 	async create(data: { username: string; password: string }): Promise<Authorized_User> {
 		const id = this.arr.length;
-		const user = new Authorized_User(id, data.username, `hash(${data.password})`, []);
+		const user = new Authorized_User(id, data.username, []);
+		this.passwords.set(user.id, data.password);
 		this.arr.push(user);
 		return user;
 	}

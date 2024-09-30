@@ -4,7 +4,7 @@ import { Authorized_User } from '$lib/entities/user';
 import { Category_Controller } from '$lib/logic/category-controller';
 import { Mock_Category_Repo } from '../mocks/mock-category-repo';
 
-const admin = new Authorized_User(1, 'admin', 'admin', [{ id: 1, name: 'ADMIN' }]);
+const admin = new Authorized_User(1, 'admin', [{ id: 1, name: 'ADMIN' }]);
 let category_ctrl: Category_Controller;
 
 beforeEach(() => {
