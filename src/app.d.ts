@@ -1,5 +1,5 @@
 import type { Edit_Cateogory_Dto } from '$lib/entities/category';
-import type { Empty_User, User } from '$lib/entities/user';
+import type { Authorized_User, User } from '$lib/entities/user';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -7,12 +7,12 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			user: User | Empty_User;
+			user: User;
 		}
 		// interface PageData {}
 		interface PageState {
 			edit_user_state?: {
-				user: User;
+				user: Authorized_User;
 				form: SuperValidated<Edit_User_Dto>;
 			};
 			edit_category_state?: {

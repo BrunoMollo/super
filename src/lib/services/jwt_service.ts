@@ -1,6 +1,6 @@
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { SignJWT, jwtVerify } from 'jose';
-import { User } from '$lib/entities/user';
+import { Authorized_User } from '$lib/entities/user';
 import type { Payload, Token_Service, Token_Validate_Res } from '$lib/logic/ports/i-token-service';
 
 export class JWT_Service implements Token_Service {
@@ -17,7 +17,7 @@ export class JWT_Service implements Token_Service {
 		}
 	}
 
-	create_token(user: User): Promise<string> {
+	create_token(user: Authorized_User): Promise<string> {
 		const secret = new TextEncoder().encode(JWT_SECRET_KEY);
 		const alg = 'HS256';
 		const exp = `${this.get_max_age_minutes()}m`;

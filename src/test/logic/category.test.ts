@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { Category, create_category_validator } from '$lib/entities/category';
+import { Authorized_User } from '$lib/entities/user';
 import { Category_Controller } from '$lib/logic/category-controller';
 import { Mock_Category_Repo } from '../mocks/mock-category-repo';
 
+const admin = new Authorized_User(1, 'admin', [{ id: 1, name: 'ADMIN' }]);
 let category_ctrl: Category_Controller;
+
 beforeEach(() => {
 	const data = [new Category(1, 'Lacteos')];
 	const mock_repo = new Mock_Category_Repo(data);
@@ -15,10 +18,11 @@ describe('create category', () => {
 			name: 'Carnes'
 		});
 
-		const res = await category_ctrl.create(input);
+		const res = await category_ctrl.create(input, admin);
 		expect(res.status).toBe('ok');
 
-		const { output } = await category_ctrl.list_all();
+		//@ts-expect-error should be authorized
+		const { output } = await category_ctrl.list_all(admin);
 		expect(output.length).toBe(2);
 	});
 
@@ -26,10 +30,11 @@ describe('create category', () => {
 		const input = create_category_validator.parse({
 			name: 'Lacteos'
 		});
-		const res = await category_ctrl.create(input);
+		const res = await category_ctrl.create(input, admin);
 		expect(res.status).toBe('duplicated-name');
 
-		const { output } = await category_ctrl.list_all();
+		//@ts-expect-error should be authorized
+		const { output } = await category_ctrl.list_all(admin);
 		expect(output.length).toBe(1);
 	});
 });
