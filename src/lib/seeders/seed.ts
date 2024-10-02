@@ -1,8 +1,8 @@
-import { category_controller, user_controller } from '$lib';
-import { create_category_validator } from '$lib/entities/category';
-import { create_user_validator } from '$lib/entities/user';
+import { Category_Repo_Drizzle } from '$lib/repos/category-repo-drizzle';
 import { Role_Repo_Drizzle } from '$lib/repos/role-repo-drizzle';
+import { User_Repo_Drizzle } from '$lib/repos/user-repo-drizzle';
 import { db } from '$lib/server/drizzle/drizzle-client';
+import { Hash_Service_Bcrypt } from '$lib/services/hash_service';
 
 function title_seeder(thing: string) {
 	console.log('-----------------------------------');
@@ -21,20 +21,18 @@ async function seed_roles() {
 
 async function seed_users(admin_id: number) {
 	title_seeder('Users');
-	const bruno = create_user_validator.parse({
-		username: 'bruno',
-		password: '1234',
-		roles_id: [admin_id]
-	});
-	await user_controller.create(bruno);
+	const hash_service = new Hash_Service_Bcrypt();
+	const repo = new User_Repo_Drizzle(db, hash_service);
+
+	const admin_user = { username: 'bruno', password: '1234' };
+	const user_id = await repo.create(admin_user).then((x) => x.id);
+	await repo.add_role({ user_id, role_id: admin_id });
 }
 
 async function seed_categories() {
 	title_seeder('Categories');
-	const category = create_category_validator.parse({
-		name: 'Lacteos'
-	});
-	await category_controller.create(category);
+	const repo = new Category_Repo_Drizzle(db);
+	await repo.create({ name: 'Lacteos' });
 }
 
 async function seed() {

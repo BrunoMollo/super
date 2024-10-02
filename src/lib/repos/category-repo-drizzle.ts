@@ -19,18 +19,14 @@ export class Category_Repo_Drizzle implements Category_Repo {
 	}
 
 	async get_by_name(name: string): Promise<Category | undefined> {
-		const result = await this.ctx
+		const id = await this.ctx
 			.select()
 			.from(t_category)
 			.where(eq(t_category.name, name))
-			.then((x) => x.at(0));
+			.then((x) => x.at(0))
+			.then((x) => x?.id);
 
-		if (!result) {
-			return undefined;
-		}
-
-		const { id } = result;
-		return new Category(id, name);
+		return id ? new Category(id, name) : undefined;
 	}
 
 	get_all(): Promise<Category[]> {

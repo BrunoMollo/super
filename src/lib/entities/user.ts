@@ -21,21 +21,42 @@ export const roles_names = ['ADMIN', 'SELLER'] as const;
 export type Role = (typeof roles)[number];
 export type Role_Name = (typeof roles_names)[number];
 
-export class User {
+export interface User {
+	id: number;
+	has_role(role_name: Role_Name): boolean;
+	has_any_role(roles_names: Role_Name[]): boolean;
+}
+
+export class Authorized_User implements User {
 	constructor(
 		public id: number,
 		public username: string,
-		public password_hash: string,
 		public roles: Role[]
 	) {}
 
 	has_role(role_name: Role_Name) {
 		return !!this.roles.find((x) => x.name === role_name);
 	}
+
+	has_any_role(roles_names: Role_Name[]) {
+		for (const name of roles_names) {
+			if (this.has_role(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
-export class Empty_User {
+export class Empty_User implements User {
+	get id() {
+		return 0;
+	}
 	has_role() {
+		return false;
+	}
+
+	has_any_role() {
 		return false;
 	}
 }

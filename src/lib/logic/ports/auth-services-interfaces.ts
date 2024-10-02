@@ -1,4 +1,4 @@
-import type { Role, User } from '$lib/entities/user';
+import type { Authorized_User, Role } from '$lib/entities/user';
 
 export interface Hash_Service {
 	hash(data: string): Promise<string>;
@@ -14,7 +14,7 @@ export type Payload = {
 export type Token_Validate_Res = { valid: false } | { valid: true; user: Payload };
 
 export interface Token_Service {
-	create_token(user: User): Promise<string>;
+	create_token(user: Authorized_User): Promise<string>;
 	get_max_age_seconds(): number;
 	validate(token: string): Promise<Token_Validate_Res>;
 }

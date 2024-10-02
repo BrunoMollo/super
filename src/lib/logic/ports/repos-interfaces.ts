@@ -1,17 +1,17 @@
 import type { Category } from '$lib/entities/category';
-import type { User } from '$lib/entities/user';
+import type { Authorized_User } from '$lib/entities/user';
 import type { Role } from '$lib/entities/user';
 
-export type Login_Response = { pass: true; user: User } | { pass: false };
+export type Login_Response = { pass: true; user: Authorized_User } | { pass: false };
 
 export interface User_Repo {
-	get_one(id: number): Promise<User | undefined>;
-	get_all(): Promise<User[]>;
-	create(user: { username: string; password: string }): Promise<User>;
+	get_one(id: number): Promise<Authorized_User | undefined>;
+	get_all(): Promise<Authorized_User[]>;
+	create(user: { username: string; password: string }): Promise<Authorized_User>;
 	validate(user: { username: string; password: string }): Promise<Login_Response>;
 	add_role(data: { user_id: number; role_id: number }): Promise<void>;
 	remove_all_roles(data: { user_id: number }): Promise<void>;
-	get_by_username(username: string): Promise<User | undefined>;
+	get_by_username(username: string): Promise<Authorized_User | undefined>;
 }
 
 export interface Role_Repo {
