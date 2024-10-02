@@ -13,3 +13,8 @@ export interface Token_Service {
 	get_max_age_seconds(): number;
 	validate(token: string): Promise<Token_Validate_Res>;
 }
+
+export interface Hash_Service {
+	hash(data: string): Promise<string>;
+	check(x: string, y: string): Promise<{ pass: boolean }>;
+}

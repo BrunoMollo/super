@@ -1,10 +1,18 @@
 import { Authorized_User } from '$lib/entities/user';
 import { roles } from '$lib/entities/user';
-import type { Login_Response, User_Repo } from '$lib/logic/ports/i-user-repo';
-import { Basic_Mock_Repo } from './basic-mock-repo';
+import type { Login_Response, User_Repo } from '$lib/logic/ports/repos-interfaces';
 
-export class Mock_User_Repo extends Basic_Mock_Repo<Authorized_User> implements User_Repo {
+export class Mock_User_Repo implements User_Repo {
 	passwords = new Map();
+	constructor(protected arr: Authorized_User[]) {}
+
+	async get_one(id: number): Promise<Authorized_User | undefined> {
+		return this.arr.find((x) => x.id == id);
+	}
+
+	async get_all(): Promise<Authorized_User[]> {
+		return this.arr;
+	}
 
 	async add_role(data: { user_id: number; role_id: number }): Promise<void> {
 		const role = roles.find((x) => x.id == data.role_id)!;

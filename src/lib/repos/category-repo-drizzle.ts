@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { Category } from '$lib/entities/category';
-import type { Category_Repo } from '$lib/logic/ports/i-category-repo';
+import type { Category_Repo } from '$lib/logic/ports/repos-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category } from '$lib/server/drizzle/schema';
 
@@ -60,12 +60,12 @@ export class Category_Repo_Drizzle implements Category_Repo {
 		return target;
 	}
 
-	async update(modified: Category): Promise<Category | undefined> {
+	async update(modified: Category): Promise<void> {
 		const { id, name } = modified;
 		const target = await this.get_one(id);
 		if (target) {
 			await this.ctx.update(t_category).set({ name }).where(eq(t_category.id, id));
-			return new Category(id, name);
+			new Category(id, name);
 		}
 	}
 }

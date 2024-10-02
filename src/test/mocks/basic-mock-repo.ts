@@ -1,6 +1,4 @@
-import type { Basic_Repo } from '$lib/logic/ports/i-basic-repo';
-
-export abstract class Basic_Mock_Repo<T extends { id: number }> implements Basic_Repo<T> {
+export abstract class Basic_Mock_Repo<T extends { id: number }> {
 	constructor(protected arr: T[]) {}
 
 	async get_all(): Promise<T[]> {

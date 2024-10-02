@@ -5,9 +5,9 @@ import {
 	type User
 } from '$lib/entities/user';
 import { err, ok, ok_empty } from './helpers/results';
-import type { Token_Service } from './ports/i-token-service';
-import { type Unit_of_Work } from './ports/i-unit-of-work';
-import type { User_Repo } from './ports/i-user-repo';
+import type { User_Repo } from './ports/repos-interfaces';
+import type { Token_Service } from './ports/services-interfaces';
+import { type Unit_of_Work } from './ports/unit-of-work-interfaces';
 
 export class User_Controller {
 	constructor(
