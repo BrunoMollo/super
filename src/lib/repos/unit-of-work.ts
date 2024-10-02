@@ -1,5 +1,5 @@
-import type { Hash_Service } from '$lib/logic/ports/i-hash-service';
-import type { Repos, Unit_of_Work } from '$lib/logic/ports/i-unit-of-work';
+import type { Hash_Service } from '$lib/logic/ports/services-interfaces';
+import type { Repos, Unit_of_Work } from '$lib/logic/ports/unit-of-work-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { Category_Repo_Drizzle } from './category-repo-drizzle';
 import { User_Repo_Drizzle } from './user-repo-drizzle';
