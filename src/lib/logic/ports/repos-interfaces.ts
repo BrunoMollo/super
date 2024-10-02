@@ -17,7 +17,7 @@ export interface User_Repo {
 export interface Role_Repo {
 	get_all(): Promise<Role[]>;
 	get_one(id: number): Promise<Role | undefined>;
-	create(category: { id: number; name: string }): Promise<Role>;
+	create(category: { id: number; name: string }): Promise<number>;
 }
 
 export interface Category_Repo {

@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { Category, create_category_validator } from '$lib/entities/category';
-import { IntegrityError } from '$lib/errors';
 import { Category_Controller } from '$lib/logic/category-controller';
 import { Mock_Category_Repo } from '../mocks/mock-category-repo';
 
@@ -17,19 +16,20 @@ describe('create category', () => {
 		});
 
 		const res = await category_ctrl.create(input);
-		expect(res).instanceof(Category);
-		const all = await category_ctrl.list_all();
-		expect(all.length).toBe(2);
+		expect(res.status).toBe('ok');
+
+		const { output } = await category_ctrl.list_all();
+		expect(output.length).toBe(2);
 	});
 
 	test('if duplicated name, return error', async () => {
 		const input = create_category_validator.parse({
 			name: 'Lacteos'
 		});
+		const res = await category_ctrl.create(input);
+		expect(res.status).toBe('duplicated-name');
 
-		expect(async () => await category_ctrl.create(input)).rejects.toThrow(IntegrityError);
-
-		const all = await category_ctrl.list_all();
-		expect(all.length).toBe(1);
+		const { output } = await category_ctrl.list_all();
+		expect(output.length).toBe(1);
 	});
 });

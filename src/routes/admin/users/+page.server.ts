@@ -1,19 +1,25 @@
 import { user_controller } from '$lib';
-import { superValidate } from 'sveltekit-superforms';
+import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_user_validator } from '$lib/entities/user';
-import { handel_error } from '$lib/errors';
+import { exaust } from '$lib/logic/helpers/results';
 import { serilize } from '$lib/utils/parsing';
 import type { Actions, PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
-	const users = await user_controller.list_all().then(serilize).catch(handel_error);
+	const res = await user_controller.list_all();
 
-	return {
-		users,
-		form: await superValidate(zod(create_user_validator))
-	};
+	switch (res.status) {
+		case 'ok': {
+			return {
+				users: serilize(res.output),
+				form: await superValidate(zod(create_user_validator))
+			};
+		}
+		default:
+			exaust(res.status);
+	}
 };
 
 export const actions: Actions = {
@@ -25,8 +31,17 @@ export const actions: Actions = {
 			});
 		}
 
-		await user_controller.create(form.data).catch(handel_error);
+		const res = await user_controller.create(form.data);
 
-		return { form };
+		switch (res.status) {
+			case 'ok': {
+				return { form };
+			}
+			case 'duplicated-username': {
+				return setError(form, 'username', 'This username already exists');
+			}
+			default:
+				exaust(res);
+		}
 	}
 };

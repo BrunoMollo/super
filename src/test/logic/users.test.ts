@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { edit_user_validator, login_validator } from '$lib/entities/user';
 import { User, create_user_validator } from '$lib/entities/user';
-import { IntegrityError, LoginError, NotFoundError } from '$lib/errors';
 import { User_Controller } from '$lib/logic/users-controller';
 import { Mock_Token_Service } from '../mocks/mock-token-service';
 import { Mock_Unit_of_Work } from '../mocks/mock-unit-of-work';
@@ -25,10 +24,12 @@ describe('user creation', () => {
 			password: '1234',
 			roles_id: [1]
 		});
+
 		const res = await user_ctrl.create(bruno);
-		expect(res).instanceof(User);
-		const all = await user_ctrl.list_all();
-		expect(all.length).toBe(2);
+		expect(res.status).toBe('ok');
+
+		const { output } = await user_ctrl.list_all();
+		expect(output.length).toBe(2);
 	});
 	test('if duplicated username, return error', async () => {
 		const bruno = create_user_validator.parse({
@@ -37,9 +38,11 @@ describe('user creation', () => {
 			roles_id: [1]
 		});
 
-		expect(async () => await user_ctrl.create(bruno)).rejects.toThrowError(IntegrityError);
-		const res = await user_ctrl.list_all();
-		expect(res.length).toBe(1);
+		const res = await user_ctrl.create(bruno);
+		expect(res.status).toBe('duplicated-username');
+
+		const { output } = await user_ctrl.list_all();
+		expect(output.length).toBe(1);
 	});
 });
 
@@ -59,7 +62,11 @@ describe('user login', () => {
 			password: '1234'
 		});
 		const res = await user_ctrl.login(creds);
-		expect(res).toHaveProperty('token', 'token(1)');
+		expect(res.status).toBe('ok');
+
+		if (res.status == 'ok') {
+			expect(res.output.token).toBe('token(1)');
+		}
 	});
 	test('reject login (wrong password)', async () => {
 		//Create
@@ -75,7 +82,8 @@ describe('user login', () => {
 			username: 'admin',
 			password: '4321 (wrong)'
 		});
-		expect(async () => await user_ctrl.login(creds)).rejects.toThrow(LoginError);
+		const res = await user_ctrl.login(creds);
+		expect(res.status).toBe('wrong-credentials');
 	});
 
 	test('reject login (wrong username)', async () => {
@@ -92,7 +100,8 @@ describe('user login', () => {
 			username: 'someone else',
 			password: '1234'
 		});
-		expect(async () => await user_ctrl.login(creds)).rejects.toThrow(LoginError);
+		const res = await user_ctrl.login(creds);
+		expect(res.status).toBe('wrong-credentials');
 	});
 });
 
@@ -103,9 +112,14 @@ describe('user edition', () => {
 			roles_id: [1, 2]
 		});
 		const res_edit = await user_ctrl.edit(modified);
-		expect(res_edit).toBe(undefined);
-		const check = (await user_ctrl.get_one(1)) as User;
-		expect(check.roles.map((x) => x.id)).toEqual([1, 2]);
+		expect(res_edit.status).toBe('ok');
+
+		const res_check = await user_ctrl.get_one(1);
+		expect(res_check.status).toBe('ok');
+		if (res_check.status == 'ok') {
+			const user = res_check.output;
+			expect(user.roles.map((x) => x.id)).toEqual([1, 2]);
+		}
 	});
 
 	test('happy path (1)->(2)', async () => {
@@ -114,9 +128,14 @@ describe('user edition', () => {
 			roles_id: [2]
 		});
 		const res_edit = await user_ctrl.edit(modified);
-		expect(res_edit).toBe(undefined);
-		const check = (await user_ctrl.get_one(1)) as User;
-		expect(check.roles.map((x) => x.id)).toEqual([2]);
+		expect(res_edit.status).toBe('ok');
+
+		const res_check = await user_ctrl.get_one(1);
+		expect(res_check.status).toBe('ok');
+		if (res_check.status == 'ok') {
+			const user = res_check.output;
+			expect(user.roles.map((x) => x.id)).toEqual([2]);
+		}
 	});
 
 	test('happy path (1)->()', async () => {
@@ -125,9 +144,14 @@ describe('user edition', () => {
 			roles_id: []
 		});
 		const res_edit = await user_ctrl.edit(modified);
-		expect(res_edit).toBe(undefined);
-		const check = (await user_ctrl.get_one(1)) as User;
-		expect(check.roles.map((x) => x.id)).toEqual([]);
+		expect(res_edit.status).toBe('ok');
+
+		const res_check = await user_ctrl.get_one(1);
+		expect(res_check.status).toBe('ok');
+		if (res_check.status == 'ok') {
+			const user = res_check.output;
+			expect(user.roles.map((x) => x.id)).toEqual([]);
+		}
 	});
 
 	test('user not found', async () => {
@@ -136,6 +160,7 @@ describe('user edition', () => {
 			roles_id: [1, 2]
 		});
 
-		expect(async () => await user_ctrl.edit(modified)).rejects.toThrow(NotFoundError);
+		const res = await user_ctrl.edit(modified);
+		expect(res.status).toBe('not-found');
 	});
 });

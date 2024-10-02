@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "drizzle-kit push && vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -13,7 +13,9 @@
 		"coverage": "vitest run --coverage",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"generate": "pnpm drizzle-kit generate"
+		"add-migration": "pnpm drizzle-kit generate",
+		"inspect": "pnpm drizzle-kit studio",
+		"seed": "drizzle-kit push && vite-node --options.transformMode.ssr='/.*/'  src/lib/seeders/seed.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -42,6 +44,7 @@
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.0.0-alpha.20",
 		"vite": "^5.0.3",
+		"vite-node": "^2.1.1",
 		"vitest": "^2.0.0"
 	},
 	"type": "module",

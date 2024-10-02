@@ -1,16 +1,27 @@
 import { category_controller } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
-import { superValidate } from 'sveltekit-superforms/client';
+import { setError, superValidate } from 'sveltekit-superforms/client';
 import { edit_category_validator } from '$lib/entities/category';
-import { handel_error } from '$lib/errors';
+import { exaust } from '$lib/logic/helpers/results';
 import type { Actions, PageServerLoad } from './$types';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const id = Number(params.category_id);
-	const category = await category_controller.get_one(id).catch(handel_error);
 
-	const { name } = category;
-	return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
+	const res = await category_controller.get_one(id);
+
+	switch (res.status) {
+		case 'ok': {
+			const { name } = res.output;
+			return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
+		}
+		case 'not-found': {
+			return error(404, 'not found');
+		}
+		default:
+			exaust(res);
+	}
 };
 
 export const actions: Actions = {
@@ -20,8 +31,20 @@ export const actions: Actions = {
 			return { form };
 		}
 
-		await category_controller.edit(form.data).catch(handel_error);
+		const res = await category_controller.edit(form.data);
 
-		return { form };
+		switch (res.status) {
+			case 'ok': {
+				return { form };
+			}
+			case 'not-found': {
+				return error(404, 'Category Not Found');
+			}
+			case 'duplicated-name': {
+				return setError(form, 'name', 'There is already a category with this name');
+			}
+			default:
+				exaust(res);
+		}
 	}
 };
