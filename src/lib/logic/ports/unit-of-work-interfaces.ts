@@ -1,5 +1,6 @@
-import type { Category_Repo } from './i-category-repo';
-import type { User_Repo } from './i-user-repo';
+import type { Category_Repo, User_Repo } from './repos-interfaces';
+
+export class RollbackError extends Error {}
 
 export class RollbackError extends Error {}
 

@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { edit_user_validator, login_validator } from '$lib/entities/user';
-import { User, create_user_validator } from '$lib/entities/user';
+import { Authorized_User, create_user_validator } from '$lib/entities/user';
 import { User_Controller } from '$lib/logic/users-controller';
 import { Mock_Token_Service } from '../mocks/mock-token-service';
 import { Mock_Unit_of_Work } from '../mocks/mock-unit-of-work';
 import { Mock_User_Repo } from '../mocks/mock-user-repo';
 
 let user_ctrl: User_Controller;
+const admin = new Authorized_User(1, 'admin', [{ id: 1, name: 'ADMIN' }]);
 
 beforeEach(() => {
-	const data = [new User(1, 'bruno', 'some-psw', [{ id: 1, name: 'ADMIN' }])];
+	const data = [new Authorized_User(1, 'bruno', [{ id: 1, name: 'ADMIN' }])];
 	const mock_repo = new Mock_User_Repo(data);
 	const mock_uow = new Mock_Unit_of_Work();
 	mock_uow.user_repo = mock_repo;
@@ -25,10 +26,11 @@ describe('user creation', () => {
 			roles_id: [1]
 		});
 
-		const res = await user_ctrl.create(bruno);
+		const res = await user_ctrl.create(bruno, admin);
 		expect(res.status).toBe('ok');
 
-		const { output } = await user_ctrl.list_all();
+		//@ts-expect-error should be authorized
+		const { output } = await user_ctrl.list_all(admin);
 		expect(output.length).toBe(2);
 	});
 	test('if duplicated username, return error', async () => {
@@ -38,10 +40,11 @@ describe('user creation', () => {
 			roles_id: [1]
 		});
 
-		const res = await user_ctrl.create(bruno);
+		const res = await user_ctrl.create(bruno, admin);
 		expect(res.status).toBe('duplicated-username');
 
-		const { output } = await user_ctrl.list_all();
+		//@ts-expect-error should be authorized
+		const { output } = await user_ctrl.list_all(admin);
 		expect(output.length).toBe(1);
 	});
 });
@@ -49,12 +52,12 @@ describe('user creation', () => {
 describe('user login', () => {
 	test('happy path', async () => {
 		//Create
-		const admin = create_user_validator.parse({
+		const input = create_user_validator.parse({
 			username: 'admin',
 			password: '1234',
 			roles_id: [1]
 		});
-		await user_ctrl.create(admin);
+		await user_ctrl.create(input, admin);
 
 		//Login
 		const creds = login_validator.parse({
@@ -70,12 +73,12 @@ describe('user login', () => {
 	});
 	test('reject login (wrong password)', async () => {
 		//Create
-		const admin = create_user_validator.parse({
+		const input = create_user_validator.parse({
 			username: 'admin',
 			password: '1234',
 			roles_id: [1]
 		});
-		await user_ctrl.create(admin);
+		await user_ctrl.create(input, admin);
 
 		//Login
 		const creds = login_validator.parse({
@@ -88,12 +91,12 @@ describe('user login', () => {
 
 	test('reject login (wrong username)', async () => {
 		//Create
-		const admin = create_user_validator.parse({
+		const input = create_user_validator.parse({
 			username: 'admin',
 			password: '1234',
 			roles_id: [1]
 		});
-		await user_ctrl.create(admin);
+		await user_ctrl.create(input, admin);
 
 		//Login
 		const creds = login_validator.parse({
@@ -111,10 +114,10 @@ describe('user edition', () => {
 			user_id: 1,
 			roles_id: [1, 2]
 		});
-		const res_edit = await user_ctrl.edit(modified);
+		const res_edit = await user_ctrl.edit(modified, admin);
 		expect(res_edit.status).toBe('ok');
 
-		const res_check = await user_ctrl.get_one(1);
+		const res_check = await user_ctrl.get_one(1, admin);
 		expect(res_check.status).toBe('ok');
 		if (res_check.status == 'ok') {
 			const user = res_check.output;
@@ -127,10 +130,11 @@ describe('user edition', () => {
 			user_id: 1,
 			roles_id: [2]
 		});
-		const res_edit = await user_ctrl.edit(modified);
+		const res_edit = await user_ctrl.edit(modified, admin);
 		expect(res_edit.status).toBe('ok');
 
-		const res_check = await user_ctrl.get_one(1);
+		const res_check = await user_ctrl.get_one(1, admin);
+
 		expect(res_check.status).toBe('ok');
 		if (res_check.status == 'ok') {
 			const user = res_check.output;
@@ -143,10 +147,11 @@ describe('user edition', () => {
 			user_id: 1,
 			roles_id: []
 		});
-		const res_edit = await user_ctrl.edit(modified);
+		const res_edit = await user_ctrl.edit(modified, admin);
 		expect(res_edit.status).toBe('ok');
 
-		const res_check = await user_ctrl.get_one(1);
+		const res_check = await user_ctrl.get_one(1, admin);
+
 		expect(res_check.status).toBe('ok');
 		if (res_check.status == 'ok') {
 			const user = res_check.output;
@@ -160,7 +165,8 @@ describe('user edition', () => {
 			roles_id: [1, 2]
 		});
 
-		const res = await user_ctrl.edit(modified);
+		const res = await user_ctrl.edit(modified, admin);
+
 		expect(res.status).toBe('not-found');
 	});
 });

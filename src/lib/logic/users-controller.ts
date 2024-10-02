@@ -1,8 +1,13 @@
-import { type Create_user_dto, type Edit_User_Dto, type Login_dto } from '$lib/entities/user';
+import {
+	type Create_user_dto,
+	type Edit_User_Dto,
+	type Login_dto,
+	type User
+} from '$lib/entities/user';
 import { err, ok, ok_empty } from './helpers/results';
-import type { Token_Service } from './ports/i-token-service';
-import { type Unit_of_Work } from './ports/i-unit-of-work';
-import type { User_Repo } from './ports/i-user-repo';
+import type { User_Repo } from './ports/repos-interfaces';
+import type { Token_Service } from './ports/services-interfaces';
+import { type Unit_of_Work } from './ports/unit-of-work-interfaces';
 
 export class User_Controller {
 	constructor(
@@ -11,7 +16,10 @@ export class User_Controller {
 		private uow: Unit_of_Work
 	) {}
 
-	async get_one(id: number) {
+	async get_one(id: number, auth_user: User) {
+		if (!auth_user.has_role('ADMIN')) {
+			return err('unauthorized');
+		}
 		const user = await this.user_repo.get_one(id);
 		if (!user) {
 			return err('not-found');
@@ -19,12 +27,18 @@ export class User_Controller {
 		return ok(user);
 	}
 
-	async list_all() {
+	async list_all(auth_user: User) {
+		if (!auth_user.has_role('ADMIN')) {
+			return err('unauthorized');
+		}
 		const list = await this.user_repo.get_all();
 		return ok(list);
 	}
 
-	async create(user: Create_user_dto) {
+	async create(user: Create_user_dto, auth_user: User) {
+		if (!auth_user.has_role('ADMIN')) {
+			return err('unauthorized');
+		}
 		const match_username = await this.user_repo.get_by_username(user.username);
 		if (match_username) {
 			return err('duplicated-username');
@@ -52,7 +66,10 @@ export class User_Controller {
 		return ok({ token });
 	}
 
-	async edit(modified: Edit_User_Dto) {
+	async edit(modified: Edit_User_Dto, auth_user: User) {
+		if (!auth_user.has_role('ADMIN')) {
+			return err('unauthorized');
+		}
 		const { user_id, roles_id } = modified;
 		const user = await this.user_repo.get_one(user_id);
 		if (!user) {

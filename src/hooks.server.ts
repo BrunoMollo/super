@@ -1,5 +1,5 @@
 import { token_service } from '$lib';
-import { Empty_User, User } from '$lib/entities/user';
+import { Authorized_User, Empty_User } from '$lib/entities/user';
 import type { LayoutRouteId } from './routes/$types';
 import type { Handle } from '@sveltejs/kit';
 
@@ -61,7 +61,7 @@ async function get_user_from_token(token: string | undefined) {
 		return new Empty_User();
 	}
 	const { id, username, roles } = res.user;
-	return new User(id, username, '', roles);
+	return new Authorized_User(id, username, roles);
 }
 
 /**
