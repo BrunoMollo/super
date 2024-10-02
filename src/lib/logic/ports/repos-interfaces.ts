@@ -2,12 +2,6 @@ import type { Category } from '$lib/entities/category';
 import type { Authorized_User } from '$lib/entities/user';
 import type { Role } from '$lib/entities/user';
 
-// export interface Basic_Repo<T extends { id: number }> {
-// 	get_one(id: number): Promise<T | undefined>;
-// 	remove(id: number): Promise<T | undefined>;
-// 	update(entity: T): Promise<T | undefined>;
-// }
-//
 export type Login_Response = { pass: true; user: Authorized_User } | { pass: false };
 
 export interface User_Repo {
