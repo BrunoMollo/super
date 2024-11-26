@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
+	import ProductTable from './product-table.svelte';
+	export let data;
 </script>
 
 <main class="container pt-6">
@@ -9,5 +11,9 @@
 			<Button>Add new Product</Button>
 		</div>
 	</div>
-	<b class="text-4xl">//TODO</b>
+	<b class="text-4xl">
+		{#await data.products then products}
+			<ProductTable {products} />
+		{/await}
+	</b>
 </main>

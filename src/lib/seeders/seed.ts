@@ -1,4 +1,5 @@
 import { Category_Repo_Drizzle } from '$lib/repos/category-repo-drizzle';
+import { Product_Repo_Drizzle } from '$lib/repos/product-repo';
 import { Role_Repo_Drizzle } from '$lib/repos/role-repo-drizzle';
 import { User_Repo_Drizzle } from '$lib/repos/user-repo-drizzle';
 import { db } from '$lib/server/drizzle/drizzle-client';
@@ -35,10 +36,19 @@ async function seed_categories() {
 	await repo.create({ name: 'Lacteos' });
 }
 
+async function seed_products() {
+	title_seeder('Products');
+	const repo = new Product_Repo_Drizzle(db);
+	await repo.create({ name: 'Leche Milkaut', order_point: 10, stock: 0 });
+	await repo.create({ name: 'Pan', order_point: 10, stock: 0 });
+	await repo.create({ name: 'Amargo Obrero', order_point: 10, stock: 0 });
+}
+
 async function seed() {
 	const { admin_id } = await seed_roles();
 	await seed_users(admin_id);
 	await seed_categories();
+	await seed_products();
 }
 
 // Main Seed
