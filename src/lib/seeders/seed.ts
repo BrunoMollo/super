@@ -3,6 +3,7 @@ import { Product_Repo_Drizzle } from '$lib/repos/product-repo';
 import { Role_Repo_Drizzle } from '$lib/repos/role-repo-drizzle';
 import { User_Repo_Drizzle } from '$lib/repos/user-repo-drizzle';
 import { db } from '$lib/server/drizzle/drizzle-client';
+import { t_category, t_product, t_role, t_user, t_user_has_role } from '$lib/server/drizzle/schema';
 import { Hash_Service_Bcrypt } from '$lib/services/hash_service';
 
 function title_seeder(thing: string) {
@@ -45,6 +46,12 @@ async function seed_products() {
 }
 
 async function seed() {
+	await db.delete(t_product);
+	await db.delete(t_category);
+	await db.delete(t_user_has_role);
+	await db.delete(t_user);
+	await db.delete(t_role);
+
 	const { admin_id } = await seed_roles();
 	await seed_users(admin_id);
 	await seed_categories();
