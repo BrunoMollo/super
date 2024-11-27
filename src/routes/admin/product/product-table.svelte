@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { readable } from 'svelte/store';
-	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
+	import { createTable, Render, Subscribe } from 'svelte-headless-table';
 	import * as Table from '$lib/components/ui/table';
 
 	export let products: Array<{
 		id: number;
-		name: string;
+		desc: string;
 	}>;
 
 	const table = createTable(readable(products));
@@ -16,8 +16,8 @@
 			header: 'ID'
 		}),
 		table.column({
-			accessor: 'name',
-			header: 'Name'
+			accessor: 'desc',
+			header: 'Descripcion'
 		})
 	]);
 

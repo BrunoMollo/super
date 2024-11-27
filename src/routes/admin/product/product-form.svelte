@@ -27,14 +27,14 @@
 		}
 	});
 
-	const { form: formData, enhance, errors } = form;
+	const { form: formData, enhance } = form;
 </script>
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
-	<Form.Field {form} name="name">
+	<Form.Field {form} name="desc">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Name</Form.Label>
-			<Input {...attrs} bind:value={$formData.name} class="w-64" />
+			<Form.Label class="text-lg">Descripcion</Form.Label>
+			<Input {...attrs} bind:value={$formData.desc} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>

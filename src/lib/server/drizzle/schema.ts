@@ -30,7 +30,7 @@ export const t_role = pgTable('role', {
 
 export const t_product = pgTable('product', {
 	id: serial('id').primaryKey().notNull(),
-	name: text('name').notNull(),
+	desc: text('desc').notNull(),
 	order_point: integer('order_point'),
 	stock: integer('stock').default(0).notNull(),
 	created_at: timestamp('created_at').defaultNow().notNull()
