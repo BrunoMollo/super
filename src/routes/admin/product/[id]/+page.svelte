@@ -4,4 +4,12 @@
 	export let data;
 </script>
 
-<ProductForm data={data.form} />
+<main class="flex flex-col justify-center gap-4 p-4 pt-10 align-middle">
+	<h2
+		class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+	>
+		Edit Product {data.product.id}
+	</h2>
+
+	<ProductForm data={data.form} />
+</main>
