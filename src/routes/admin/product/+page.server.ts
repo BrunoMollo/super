@@ -3,10 +3,16 @@ import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_category_validator } from '$lib/entities/category';
 import type { Actions, PageServerLoad } from '../users/$types';
+import { create_product_validator } from './validators';
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
+	const { user } = locals;
+	if (!user.has_role('ADMIN')) {
+		return redirect(302, '/login');
+	}
 	const products = product_repo.list_all();
-	return { products };
+	return { products, form: await superValidate(zod(create_product_validator)) };
 };
 
 export const actions: Actions = {
@@ -19,7 +25,7 @@ export const actions: Actions = {
 		}
 
 		const { user } = locals;
-		if (user.has_role('ADMIN')) {
+		if (!user.has_role('ADMIN')) {
 			return fail(401, { form });
 		}
 

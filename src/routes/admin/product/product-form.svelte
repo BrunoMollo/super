@@ -22,13 +22,12 @@
 				});
 			}
 		},
-
 		onError: (res) => {
 			error_message = res.result.error.message;
 		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, errors } = form;
 </script>
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
