@@ -1,7 +1,6 @@
 import { product_repo } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { create_category_validator } from '$lib/entities/category';
 import type { Actions, PageServerLoad } from '../users/$types';
 import { create_product_validator } from './validators';
 import { redirect } from '@sveltejs/kit';
@@ -31,8 +30,8 @@ export const actions: Actions = {
 			return fail(401, { form });
 		}
 
-		const { desc } = form.data;
-		await product_repo.create({ desc, stock: 0, order_point: 0 });
+		const { desc, order_point } = form.data;
+		await product_repo.create({ desc, stock: 0, order_point });
 		return { form };
 	}
 };

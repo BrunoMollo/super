@@ -2,7 +2,8 @@ import type { Infer } from 'sveltekit-superforms';
 import { z } from 'zod';
 
 export const create_product_validator = z.object({
-	desc: z.string().min(4).max(36)
+	desc: z.string().min(4).max(36),
+	order_point: z.coerce.number().min(0).max(10_000_000)
 });
 
 export type Product_Create_Dto = Infer<typeof create_product_validator>;

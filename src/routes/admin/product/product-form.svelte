@@ -33,8 +33,16 @@
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="desc">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Descripcion</Form.Label>
+			<Form.Label class="text-lg">Description</Form.Label>
 			<Input {...attrs} bind:value={$formData.desc} class="w-64" />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+
+	<Form.Field {form} name="order_point">
+		<Form.Control let:attrs>
+			<Form.Label class="text-lg">Order Point</Form.Label>
+			<Input {...attrs} bind:value={$formData.order_point} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>

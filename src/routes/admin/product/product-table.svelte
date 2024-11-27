@@ -6,6 +6,7 @@
 	export let products: Array<{
 		id: number;
 		desc: string;
+		order_point: number;
 	}>;
 
 	const table = createTable(readable(products));
@@ -18,6 +19,10 @@
 		table.column({
 			accessor: 'desc',
 			header: 'Descripcion'
+		}),
+		table.column({
+			accessor: 'order_point',
+			header: 'Order Point'
 		})
 	]);
 
