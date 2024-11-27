@@ -12,7 +12,7 @@
 	function on_product_added() {
 		const description = new Date().toLocaleString();
 		is_open = false;
-		toast.success('Category has been created', {
+		toast.success('Product has been created', {
 			description
 		});
 	}
@@ -35,8 +35,8 @@
 <Sheet.Root bind:open={is_open}>
 	<Sheet.Content>
 		<Sheet.Header>
-			<Sheet.Title>New Category</Sheet.Title>
-			<Sheet.Description>By compleating this from you'll create a new Category</Sheet.Description>
+			<Sheet.Title>New Product</Sheet.Title>
+			<Sheet.Description>By compleating this from you'll create a new Product</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
 			<ProductForm data={data.form} on:success={on_product_added} />
