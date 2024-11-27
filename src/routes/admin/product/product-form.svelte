@@ -7,9 +7,13 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
-	import { create_product_validator, type Product_Create_Dto } from './validators';
+	import {
+		create_product_validator,
+		type Product_Create_Dto,
+		type Product_Update_Dto
+	} from './validators';
 
-	export let data: SuperValidated<Product_Create_Dto>;
+	export let data: SuperValidated<Product_Create_Dto | Product_Update_Dto>;
 	let error_message = '';
 
 	const dispatch = createEventDispatcher();
@@ -28,9 +32,13 @@
 	});
 
 	const { form: formData, enhance } = form;
+
+	//@ts-ignore
+	const id: number | undefined = $formData.id;
 </script>
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
+	<input type="hidden" name="id" value={id} />
 	<Form.Field {form} name="desc">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Description</Form.Label>

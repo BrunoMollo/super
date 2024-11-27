@@ -1,9 +1,9 @@
 import { product_repo } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { Actions, PageServerLoad } from '../users/$types';
+import type { PageServerLoad } from './$types';
 import { create_product_validator } from './validators';
-import { redirect } from '@sveltejs/kit';
+import { type Actions, redirect } from '@sveltejs/kit';
 
 const VALIDATOR = create_product_validator;
 
@@ -12,6 +12,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!user.has_role('ADMIN')) {
 		return redirect(302, '/login');
 	}
+
 	const products = product_repo.list_all();
 	return { products, form: await superValidate(zod(VALIDATOR)) };
 };
