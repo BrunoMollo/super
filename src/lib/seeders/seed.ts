@@ -44,7 +44,7 @@ async function seed_products() {
 	title_seeder('Products');
 	const repo = new Product_Repo_Drizzle(db);
 	await repo.create({ desc: 'Leche Milkaut', order_point: 10, stock: 0, categories_ids: [] });
-	await repo.create({ desc: 'Pan', order_point: 10, stock: 0, categories_ids: [] });
+	await repo.create({ desc: 'Pan Lactal', order_point: 10, stock: 0, categories_ids: [] });
 	await repo.create({ desc: 'Amargo Obrero', order_point: 10, stock: 0, categories_ids: [] });
 }
 
