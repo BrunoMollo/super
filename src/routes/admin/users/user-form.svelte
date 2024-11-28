@@ -10,7 +10,6 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
-	import MultipleCheckGroup from '$lib/components/multiple-check-group.svelte';
 
 	export let data: SuperValidated<Create_user_dto>;
 	let error_message = '';
@@ -89,7 +88,6 @@
 			</Form.Field>
 		</div>
 	</Form.Fieldset>
-	<MultipleCheckGroup options={roles} bind:selected={$formData.roles_id} />
 
 	<div class="mt-4 flex w-64 justify-end gap-3">
 		<Form.Button class="w-6/12 ">Submit</Form.Button>
