@@ -49,10 +49,15 @@ async function seed_products() {
 }
 
 async function seed() {
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_product);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_category);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_user_has_role);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_user);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_role);
 
 	const { admin_id } = await seed_roles();

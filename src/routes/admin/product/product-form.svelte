@@ -36,7 +36,7 @@
 
 	const { form: formData, enhance } = form;
 
-	//@ts-ignore
+	//@ts-expect-error dam
 	const id: number | undefined = $formData.id;
 
 	function addItem(id: number) {

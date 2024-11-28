@@ -5,6 +5,7 @@
 	type $$Props = DropdownMenuPrimitive.ItemProps & {
 		inset?: boolean;
 	};
+	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type $$Events = DropdownMenuPrimitive.ItemEvents;
 
 	let className: $$Props['class'] = undefined;
