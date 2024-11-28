@@ -1,7 +1,9 @@
 import { Category_Repo_Drizzle } from '$lib/repos/category-repo-drizzle';
+import { Product_Repo_Drizzle } from '$lib/repos/product-repo';
 import { Role_Repo_Drizzle } from '$lib/repos/role-repo-drizzle';
 import { User_Repo_Drizzle } from '$lib/repos/user-repo-drizzle';
 import { db } from '$lib/server/drizzle/drizzle-client';
+import { t_category, t_product, t_role, t_user, t_user_has_role } from '$lib/server/drizzle/schema';
 import { Hash_Service_Bcrypt } from '$lib/services/hash_service';
 
 function title_seeder(thing: string) {
@@ -33,12 +35,35 @@ async function seed_categories() {
 	title_seeder('Categories');
 	const repo = new Category_Repo_Drizzle(db);
 	await repo.create({ name: 'Lacteos' });
+	await repo.create({ name: 'Gaseosas' });
+	await repo.create({ name: 'Limpieza' });
+	await repo.create({ name: 'Enlatados' });
+}
+
+async function seed_products() {
+	title_seeder('Products');
+	const repo = new Product_Repo_Drizzle(db);
+	await repo.create({ desc: 'Leche Milkaut', order_point: 10, stock: 0, categories_ids: [] });
+	await repo.create({ desc: 'Pan Lactal', order_point: 10, stock: 0, categories_ids: [] });
+	await repo.create({ desc: 'Amargo Obrero', order_point: 10, stock: 0, categories_ids: [] });
 }
 
 async function seed() {
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_product);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_category);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_user_has_role);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_user);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_role);
+
 	const { admin_id } = await seed_roles();
 	await seed_users(admin_id);
 	await seed_categories();
+	await seed_products();
 }
 
 // Main Seed
