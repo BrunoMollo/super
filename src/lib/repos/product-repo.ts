@@ -80,4 +80,11 @@ export class Product_Repo_Drizzle {
 			return product_id;
 		});
 	}
+
+	async remove(id: number) {
+		return this.ctx.transaction(async (tx) => {
+			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, id));
+			await tx.delete(t_product).where(eq(t_product.id, id));
+		});
+	}
 }
