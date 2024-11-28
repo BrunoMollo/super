@@ -39,7 +39,7 @@
 			<Sheet.Description>By compleating this from you'll create a new Product</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
-			<ProductForm data={data.form} on:success={on_product_added} />
+			<ProductForm data={data.form} on:success={on_product_added} categories={data.categories} />
 		</Sheet.Portal>
 	</Sheet.Content>
 </Sheet.Root>

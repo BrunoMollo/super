@@ -1,4 +1,4 @@
-import { product_repo } from '$lib';
+import { category_repo, product_repo } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
@@ -14,7 +14,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const products = product_repo.list_all();
-	return { products, form: await superValidate(zod(VALIDATOR)) };
+	const categories = await category_repo.get_all();
+	return { products, categories, form: await superValidate(zod(VALIDATOR)) };
 };
 
 export const actions: Actions = {
@@ -31,8 +32,8 @@ export const actions: Actions = {
 			return fail(401, { form });
 		}
 
-		const { desc, order_point } = form.data;
-		await product_repo.create({ desc, stock: 0, order_point });
+		const { desc, order_point, categories_ids } = form.data;
+		await product_repo.create({ desc, stock: 0, order_point, categories_ids });
 		return { form };
 	}
 };

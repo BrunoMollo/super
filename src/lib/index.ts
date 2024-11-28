@@ -13,8 +13,8 @@ const hash_service = new Hash_Service_Bcrypt();
 export const token_service = new JWT_Service();
 
 //Repos
-const user_repo = new User_Repo_Drizzle(db, hash_service);
-const category_repo = new Category_Repo_Drizzle(db);
+export const user_repo = new User_Repo_Drizzle(db, hash_service);
+export const category_repo = new Category_Repo_Drizzle(db);
 
 export const product_repo = new Product_Repo_Drizzle(db);
 

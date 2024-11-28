@@ -8,6 +8,7 @@
 		id: number;
 		desc: string;
 		order_point: number | null;
+		categories: Array<{ id: number; name: string }>;
 	}>;
 
 	const table = createTable(readable(products));
@@ -24,6 +25,11 @@
 		table.column({
 			accessor: 'order_point',
 			header: 'Order Point'
+		}),
+		table.column({
+			accessor: 'categories',
+			header: 'Categories',
+			cell: ({ value }) => value.map(({ name }) => name).join(', ')
 		}),
 		table.column({
 			accessor: ({ id }) => id,
