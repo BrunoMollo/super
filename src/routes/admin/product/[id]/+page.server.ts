@@ -1,4 +1,4 @@
-import { product_repo } from '$lib';
+import { category_repo, product_repo } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { update_product_validator } from '../validators';
@@ -19,7 +19,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		return error(404, 'Product Not Found');
 	}
 
-	return { product, form: await superValidate(product, zod(VALIDATOR)) };
+	const categories = await category_repo.get_all();
+
+	return { product, categories, form: await superValidate(product, zod(VALIDATOR)) };
 };
 
 export const actions: Actions = {
@@ -37,12 +39,12 @@ export const actions: Actions = {
 			return fail(401, { form });
 		}
 
-		const { id, desc, order_point } = form.data;
+		const { id, desc, order_point, categories_ids } = form.data;
 		const existing = !!product_repo.get_one(id);
 		if (!existing) {
 			return fail(404, { form });
 		}
-		await product_repo.update({ id, desc, order_point });
+		await product_repo.update({ id, desc, order_point, categories_ids });
 		return redirect(302, '/admin/product');
 	}
 };

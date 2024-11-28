@@ -11,5 +11,5 @@
 		Edit Product {data.product.id}
 	</h2>
 
-	<ProductForm data={data.form} />
+	<ProductForm data={data.form} categories={data.categories} />
 </main>

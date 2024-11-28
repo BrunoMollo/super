@@ -3,11 +3,19 @@ import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category, t_product, t_product_has_category } from '$lib/server/drizzle/schema';
 
 export class Product_Repo_Drizzle {
-	update(data: { id: number; desc: string; order_point: number }) {
-		return this.ctx
-			.update(t_product)
-			.set({ desc: data.desc, order_point: data.order_point })
-			.where(eq(t_product.id, data.id));
+	update(data: { id: number; desc: string; order_point: number; categories_ids: number[] }) {
+		this.ctx.transaction(async (tx) => {
+			await tx
+				.update(t_product)
+				.set({ desc: data.desc, order_point: data.order_point })
+				.where(eq(t_product.id, data.id));
+
+			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, data.id));
+
+			for (const category_id of data.categories_ids) {
+				await tx.insert(t_product_has_category).values({ product_id: data.id, category_id });
+			}
+		});
 	}
 	constructor(private ctx: DB_Context) {}
 
