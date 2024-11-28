@@ -20,8 +20,13 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	}
 
 	const categories = await category_repo.get_all();
+	const categories_ids = product.categories.map(({ id }) => id);
 
-	return { product, categories, form: await superValidate(product, zod(VALIDATOR)) };
+	return {
+		product,
+		categories,
+		form: await superValidate({ ...product, categories_ids }, zod(VALIDATOR))
+	};
 };
 
 export const actions: Actions = {

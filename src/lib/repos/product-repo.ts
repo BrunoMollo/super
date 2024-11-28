@@ -20,11 +20,20 @@ export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
 	async get_one(id: number) {
-		return this.ctx
+		const product = await this.ctx
 			.select()
 			.from(t_product)
 			.where(eq(t_product.id, id))
 			.then((x) => x.at(0));
+
+		const categories = await this.ctx
+			.select()
+			.from(t_product_has_category)
+			.innerJoin(t_category, eq(t_product_has_category.category_id, t_category.id))
+			.where(eq(t_product_has_category.product_id, id))
+			.then((x) => x.map(({ category }) => category));
+
+		return { ...product, categories };
 	}
 
 	async list_all() {
