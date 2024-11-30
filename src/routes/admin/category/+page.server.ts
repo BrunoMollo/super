@@ -1,8 +1,7 @@
-import { category_controller, category_repo, category_repo } from '$lib';
+import { category_repo } from '$lib';
 import { fail, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_category_validator } from '$lib/entities/category';
-import { exaust } from '$lib/logic/helpers/results';
 import type { LayoutRouteId } from '../../$types';
 import type { Actions, PageServerLoad } from '../users/$types';
 import { redirect } from '@sveltejs/kit';
@@ -33,8 +32,7 @@ export const actions: Actions = {
 		}
 
 		const { user } = locals;
-    const {name} = form.data;
-
+		const { name } = form.data;
 
 		if (!user.has_role('ADMIN')) {
 			const url = '/login' satisfies LayoutRouteId;
@@ -46,7 +44,7 @@ export const actions: Actions = {
 			return setError(form, 'name', 'This name already exists');
 		}
 
-		await category_repo.create({name});
+		await category_repo.create({ name });
 
 		return { form };
 	}
