@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
-import type { Hash_Service } from '$lib/logic/ports/services-interfaces';
 
-export class Hash_Service_Bcrypt implements Hash_Service {
+export class Hash_Service_Bcrypt {
 	async check(password: string, hash: string): Promise<{ pass: boolean }> {
 		const pass = await bcrypt.compare(password, hash);
 		return { pass };

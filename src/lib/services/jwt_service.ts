@@ -1,14 +1,15 @@
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { SignJWT, jwtVerify } from 'jose';
-import { Authorized_User } from '$lib/entities/user';
-import type {
-	Payload,
-	Token_Service,
-	Token_Validate_Res
-} from '$lib/logic/ports/services-interfaces';
+import { Authorized_User, type Role } from '$lib/entities/user';
 
-export class JWT_Service implements Token_Service {
-	async validate(token: string): Promise<Token_Validate_Res> {
+export type Payload = {
+	id: number;
+	username: string;
+	roles: Role[];
+};
+
+export class JWT_Service {
+	async validate(token: string) {
 		const secret = new TextEncoder().encode(JWT_SECRET_KEY);
 		try {
 			const res = await jwtVerify(token, secret);
@@ -17,7 +18,7 @@ export class JWT_Service implements Token_Service {
 		} catch {
 			return {
 				valid: false
-			};
+			} as const;
 		}
 	}
 
