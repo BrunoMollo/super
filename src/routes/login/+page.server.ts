@@ -2,20 +2,22 @@ import { token_service, user_repo } from '$lib';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { dev } from '$app/environment';
-import { login_validator } from '$lib/entities/user.js';
 import type { LayoutRouteId } from '../$types.js';
 import type { Actions, PageServerLoad } from './$types.js';
+import { login_validator } from './login-validator.js';
 import { error, redirect } from '@sveltejs/kit';
+
+const VALIDATOR = login_validator;
 
 export const load: PageServerLoad = async () => {
 	return {
-		form: await superValidate(zod(login_validator))
+		form: await superValidate(zod(VALIDATOR))
 	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event, zod(login_validator));
+		const form = await superValidate(event, zod(VALIDATOR));
 		if (!form.valid) {
 			return fail(400, { form });
 		}

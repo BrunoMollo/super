@@ -2,7 +2,7 @@
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { create_user_validator, type Create_user_dto, roles } from '$lib/entities/user';
+	import { create_user_validator, type Create_user_dto } from './user-validator';
 	import { createEventDispatcher } from 'svelte';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
@@ -10,6 +10,7 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
+	import { roles } from '$lib/entities/user';
 
 	export let data: SuperValidated<Create_user_dto>;
 	let error_message = '';

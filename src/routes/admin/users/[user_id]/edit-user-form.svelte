@@ -1,7 +1,8 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { roles, type Edit_User_Dto, edit_user_validator } from '$lib/entities/user';
+	import { roles } from '$lib/entities/user';
+	import { type Edit_User_Dto, edit_user_validator } from '../user-validator';
 	import { createEventDispatcher } from 'svelte';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
