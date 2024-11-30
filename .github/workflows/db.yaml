@@ -1,0 +1,36 @@
+name: Reset Staging DB
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  on-pr-merge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+
+    - name: Install
+      run: pnpm install --frozen-lockfile
+
+    - name: Create .env
+      run: echo 'DATABASE_URI="${{ secrets.DATABASE_URI }}" > .env'
+
+    - name: Deploy to Staging
+      run: pnpm seed
+
