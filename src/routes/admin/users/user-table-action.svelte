@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { LayoutRouteId } from '../$types';
-
 	import { page } from '$app/stores';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';

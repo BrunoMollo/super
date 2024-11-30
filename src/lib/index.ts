@@ -1,4 +1,3 @@
-import { User_Controller } from './logic/users-controller';
 import { Category_Repo_Drizzle } from './repos/category-repo-drizzle';
 import { Product_Repo_Drizzle } from './repos/product-repo';
 import { Unit_of_Work_Drizzle } from './repos/unit-of-work';
@@ -18,7 +17,4 @@ export const category_repo = new Category_Repo_Drizzle(db);
 export const product_repo = new Product_Repo_Drizzle(db);
 
 // Unit of Work
-const uow = new Unit_of_Work_Drizzle(db, hash_service);
-
-//Controllers
-export const user_controller = new User_Controller(user_repo, token_service, uow);
+export const uow = new Unit_of_Work_Drizzle(db, hash_service);
