@@ -1,25 +1,13 @@
-import { type Edit_User_Dto, type Login_dto, type User } from '$lib/entities/user';
-import { err, ok, ok_empty } from './helpers/results';
+import { type Edit_User_Dto, type User } from '$lib/entities/user';
+import { err, ok_empty } from './helpers/results';
 import type { User_Repo } from './ports/repos-interfaces';
-import type { Token_Service } from './ports/services-interfaces';
 import { type Unit_of_Work } from './ports/unit-of-work-interfaces';
 
 export class User_Controller {
 	constructor(
 		private user_repo: User_Repo,
-		private token_service: Token_Service,
 		private uow: Unit_of_Work
 	) {}
-
-	async login(creds: Login_dto) {
-		const res = await this.user_repo.validate(creds);
-		if (!res.pass) {
-			return err('wrong-credentials');
-		}
-		const { user } = res;
-		const token = await this.token_service.create_token(user);
-		return ok({ token });
-	}
 
 	async edit(modified: Edit_User_Dto, auth_user: User) {
 		if (!auth_user.has_role('ADMIN')) {
