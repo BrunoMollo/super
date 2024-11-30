@@ -46,10 +46,10 @@ export const actions: Actions = {
 
 		if (!user.has_role('ADMIN')) {
 			const url = '/login' satisfies LayoutRouteId;
-			return redirect(307, url);
-		}
-
-		const selected_user = await user_repo.get_one(user_id);
+			return redirect(307, url);		
+    }
+    
+    	const selected_user = await user_repo.get_one(user_id);
 		if (!selected_user) {
 			return error(404, 'User Not Found');
 		}
