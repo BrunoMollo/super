@@ -28,7 +28,11 @@
 	</div>
 	<b class="text-4xl">
 		{#await data.products}
-			<Skeleton class="h-full w-full" />
+			<div class="flex flex-col items-center space-y-2">
+				{#each Array(15) as _}
+					<Skeleton class="h-10 w-full" />
+				{/each}
+			</div>
 		{:then products}
 			<ProductTable {products} />
 		{/await}

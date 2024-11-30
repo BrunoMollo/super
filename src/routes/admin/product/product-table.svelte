@@ -3,6 +3,7 @@
 	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import * as Table from '$lib/components/ui/table';
 	import Actions from './product-table-actions.svelte';
+	import { fade } from 'svelte/transition';
 
 	export let products: Array<{
 		id: number;
@@ -43,7 +44,7 @@
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
 </script>
 
-<div class="rounded-md border">
+<div class="rounded-md border" transition:fade>
 	<Table.Root {...$tableAttrs}>
 		<Table.Header>
 			{#each $headerRows as headerRow}
