@@ -4,16 +4,18 @@
 </script>
 
 <Menubar.Root class="py-6">
-	{#each commands as { name, hrefs }}
-		<Menubar.Menu>
-			<Menubar.Trigger>{name}</Menubar.Trigger>
-			<Menubar.Content>
-				{#each hrefs as { label, href }}
-					<Menubar.Item {href}>
-						{label}
-					</Menubar.Item>
-				{/each}
-			</Menubar.Content>
-		</Menubar.Menu>
+	{#each commands as { name, hrefs, place }}
+		{#if place.includes('navbar')}
+			<Menubar.Menu>
+				<Menubar.Trigger>{name}</Menubar.Trigger>
+				<Menubar.Content>
+					{#each hrefs as { label, href }}
+						<Menubar.Item {href}>
+							{label}
+						</Menubar.Item>
+					{/each}
+				</Menubar.Content>
+			</Menubar.Menu>
+		{/if}
 	{/each}
 </Menubar.Root>

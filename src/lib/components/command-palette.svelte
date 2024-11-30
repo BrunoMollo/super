@@ -17,10 +17,9 @@
 				e.preventDefault();
 				open = !open;
 			}
-
-			toast.info('Press Ctrl+K to navigate');
 		}
 
+		toast.info('Press Ctrl+K to navigate');
 		document.addEventListener('keydown', handleKeydown);
 
 		return () => {
