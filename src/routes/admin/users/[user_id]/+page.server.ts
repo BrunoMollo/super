@@ -1,8 +1,7 @@
-import { user_controller, user_repo } from '$lib';
+import { uow, user_repo } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/client';
 import { edit_user_validator } from '$lib/entities/user';
-import { exaust } from '$lib/logic/helpers/results';
 import type { LayoutRouteId } from '../../../$types';
 import type { Actions, PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
@@ -41,21 +40,25 @@ export const actions: Actions = {
 
 		const { user } = locals;
 
-		const res = await user_controller.edit(form.data, user);
+		const { user_id, roles_id } = form.data;
 
-		switch (res.status) {
-			case 'ok': {
-				return { form };
-			}
-			case 'not-found': {
-				return error(404, 'User Not Found');
-			}
-			case 'unauthorized': {
-				const url = '/login' satisfies LayoutRouteId;
-				return redirect(401, url);
-			}
-			default:
-				exaust(res);
+		if (!user.has_role('ADMIN')) {
+			const url = '/login' satisfies LayoutRouteId;
+			return redirect(307, url);
 		}
+
+		const selected_user = await user_repo.get_one(user_id);
+		if (!selected_user) {
+			return error(404, 'User Not Found');
+		}
+
+		await uow.do(async (repos) => {
+			await repos.user_repo.remove_all_roles({ user_id });
+			for (const role_id of roles_id) {
+				await repos.user_repo.add_role({ user_id, role_id });
+			}
+		});
+
+		return { form };
 	}
 };
