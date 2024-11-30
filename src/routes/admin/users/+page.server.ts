@@ -1,8 +1,7 @@
-import { user_controller, user_repo } from '$lib';
+import { uow, user_repo } from '$lib';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_user_validator } from '$lib/entities/user';
-import { exaust } from '$lib/logic/helpers/results';
 import type { LayoutRouteId } from '../../$types';
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
@@ -34,21 +33,27 @@ export const actions: Actions = {
 
 		const { user } = locals;
 
-		const res = await user_controller.create(form.data, user);
-
-		switch (res.status) {
-			case 'ok': {
-				return { form };
-			}
-			case 'duplicated-username': {
-				return setError(form, 'username', 'This username already exists');
-			}
-			case 'unauthorized': {
-				const url = '/login' satisfies LayoutRouteId;
-				return redirect(401, url);
-			}
-			default:
-				exaust(res);
+		if (!user.has_role('ADMIN')) {
+			const url = '/login' satisfies LayoutRouteId;
+			return redirect(401, url);
 		}
+
+		const { username, password, roles_id } = form.data;
+
+		const match_username = await user_repo.get_by_username(username);
+		if (match_username) {
+			return setError(form, 'username', 'This username already exists');
+		}
+
+		await uow.do(async (repos) => {
+			const new_user = await repos.user_repo.create({ username, password });
+			const user_id = new_user.id;
+
+			for (const role_id of roles_id) {
+				await repos.user_repo.add_role({ user_id, role_id });
+			}
+		});
+
+		return { form };
 	}
 };

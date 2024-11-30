@@ -18,7 +18,7 @@ export const category_repo = new Category_Repo_Drizzle(db);
 export const product_repo = new Product_Repo_Drizzle(db);
 
 // Unit of Work
-const uow = new Unit_of_Work_Drizzle(db, hash_service);
+export const uow = new Unit_of_Work_Drizzle(db, hash_service);
 
 //Controllers
 export const user_controller = new User_Controller(user_repo, token_service, uow);
