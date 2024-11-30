@@ -4,6 +4,7 @@
 	import { toast } from 'svelte-sonner';
 	import ProductTable from './product-table.svelte';
 	import ProductForm from './product-form.svelte';
+	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 
 	export let data;
 
@@ -26,7 +27,9 @@
 		</div>
 	</div>
 	<b class="text-4xl">
-		{#await data.products then products}
+		{#await data.products}
+			<Skeleton class="h-full w-full" />
+		{:then products}
 			<ProductTable {products} />
 		{/await}
 	</b>
