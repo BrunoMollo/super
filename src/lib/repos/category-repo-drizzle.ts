@@ -1,10 +1,9 @@
 import { eq } from 'drizzle-orm';
 import { Category } from '$lib/entities/category';
-import type { Category_Repo } from '$lib/logic/ports/repos-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category } from '$lib/server/drizzle/schema';
 
-export class Category_Repo_Drizzle implements Category_Repo {
+export class Category_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
 	async create(category: { name: string }): Promise<Category> {

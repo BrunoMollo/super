@@ -1,14 +1,13 @@
 import { eq } from 'drizzle-orm';
 import { Authorized_User, type Role } from '$lib/entities/user';
-import type { Login_Response, User_Repo } from '$lib/logic/ports/repos-interfaces';
-import type { Hash_Service } from '$lib/logic/ports/services-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_role, t_user, t_user_has_role } from '$lib/server/drizzle/schema';
+import type { Hash_Service_Bcrypt } from '$lib/services/hash_service';
 
-export class User_Repo_Drizzle implements User_Repo {
+export class User_Repo_Drizzle {
 	constructor(
 		private ctx: DB_Context,
-		private hash_service: Hash_Service
+		private hash_service: Hash_Service_Bcrypt
 	) {}
 
 	private async populate_roles(users_data: (typeof t_user.$inferSelect)[]) {
@@ -48,7 +47,7 @@ export class User_Repo_Drizzle implements User_Repo {
 		return new Authorized_User(id, username, []);
 	}
 
-	async validate(creds: { username: string; password: string }): Promise<Login_Response> {
+	async validate(creds: { username: string; password: string }) {
 		const { username, password } = creds;
 		const db_user = await this.ctx
 			.select()
@@ -56,15 +55,15 @@ export class User_Repo_Drizzle implements User_Repo {
 			.where(eq(t_user.username, username))
 			.then((x) => x.at(0));
 		if (!db_user) {
-			return { pass: false };
+			return { pass: false } as const;
 		}
 
 		const { pass } = await this.hash_service.check(password, db_user.password_hash);
 		if (pass) {
 			const user = await this.populate_roles([db_user]).then((x) => x[0]);
-			return { pass: true, user };
+			return { pass: true, user } as const;
 		} else {
-			return { pass: false };
+			return { pass: false } as const;
 		}
 	}
 
