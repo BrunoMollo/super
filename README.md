@@ -1,4 +1,4 @@
-# Super: Proyecto Final
+# Super: Proyecto Final 
 
 Team Members:
 
@@ -8,7 +8,7 @@ Team Members:
 
 ## Developing
 
-Requirements:
+Requirements to run this:
 
 - git
 - node
