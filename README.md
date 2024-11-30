@@ -8,14 +8,14 @@ Team Members:
 
 ## Developing
 
-Requirements:
+Requirements to run this:
 
 - git
 - node
 - pnpm
 - docker
 
-Once you've cloned a project and installed dependencies with `pnpm install` ,
+Once you've cloned a project and installed dependencies with `pnpm install`
 
 Copy the environment variable file
 
