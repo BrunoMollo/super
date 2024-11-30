@@ -1,6 +1,3 @@
-import type { Infer } from 'sveltekit-superforms';
-import { z } from 'zod';
-
 export const roles = [
 	{
 		id: 1,
