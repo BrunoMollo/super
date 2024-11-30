@@ -12,7 +12,11 @@ declare global {
 		// interface PageData {}
 		interface PageState {
 			edit_user_state?: {
-				user: Authorized_User;
+				user: {
+					id: number;
+					username: string;
+					roles: ({ id: 1; name: 'ADMIN' } | { id: 2; name: 'SELLER' })[];
+				};
 				form: SuperValidated<Edit_User_Dto>;
 			};
 			edit_category_state?: {

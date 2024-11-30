@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	switch (res.status) {
 		case 'ok': {
 			return {
-				users: serilize(res.output),
+				users: res.output.map((x) => ({ ...x })),
 				form: await superValidate(zod(create_user_validator))
 			};
 		}

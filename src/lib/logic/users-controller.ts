@@ -16,18 +16,6 @@ export class User_Controller {
 		private uow: Unit_of_Work
 	) {}
 
-	async get_one(id: number, auth_user: User) {
-		if (!auth_user.has_role('ADMIN')) {
-			return err('unauthorized');
-		}
-
-		const user = await this.user_repo.get_one(id);
-		if (!user) {
-			return err('not-found');
-		}
-		return ok(user);
-	}
-
 	async list_all(auth_user: User) {
 		if (!auth_user.has_role('ADMIN')) {
 			return err('unauthorized');
