@@ -46,7 +46,15 @@
 			<Sheet.Description>By compleating this from you'll create a new Product</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
-			<ProductForm data={data.form} on:success={on_product_added} categories={data.categories} />
+			{#await data.categories}
+				<div class="flex flex-col items-center space-y-4">
+					{#each Array(5) as _}
+						<Skeleton class="h-4 w-full" />
+					{/each}
+				</div>
+			{:then categories}
+				<ProductForm data={data.form} on:success={on_product_added} {categories} />
+			{/await}
 		</Sheet.Portal>
 	</Sheet.Content>
 </Sheet.Root>
