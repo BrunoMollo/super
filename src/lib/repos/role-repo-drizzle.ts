@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
-import type { Role } from '$lib/user';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_role } from '$lib/server/drizzle/schema';
+import type { Role } from '$lib/user';
 
 export class Role_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
