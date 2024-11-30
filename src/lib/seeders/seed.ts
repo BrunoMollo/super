@@ -33,23 +33,31 @@ async function seed_roles() {
 	title_seeder('Roles');
 
 	const repo = new Role_Repo_Drizzle(db);
-	const admin_id = await repo.create({ id: 1, name: 'ADMIN' });
-	const seller_id = await repo.create({ id: 2, name: 'SELLER' });
+	const ADMIN_ROLE_ID = await repo.create({ id: 1, name: 'ADMIN' });
+	const SELLER_ROLE_ID = await repo.create({ id: 2, name: 'SELLER' });
 
 	await show_count(t_role);
-	return { admin_id, seller_id };
+	return { ADMIN_ROLE_ID, SELLER_ROLE_ID };
 }
 
-async function seed_users(admin_id: number) {
+async function seed_users(roles: Awaited<ReturnType<typeof seed_roles>>) {
 	title_seeder('Users');
 	const hash_service = new Hash_Service_Bcrypt();
 	const repo = new User_Repo_Drizzle(db, hash_service);
 
-	const admin_user = { username: 'bruno', password: '1234' };
-	const user_id = await repo.create(admin_user).then((x) => x.id);
-	await repo.add_role({ user_id, role_id: admin_id });
+	const ADMIN_ID = await repo.create({ username: 'bruno', password: '1234' });
+	await repo.add_role({ user_id: ADMIN_ID, role_id: roles.ADMIN_ROLE_ID });
+
+	const SELLER_ID = await repo.create({ username: 'rami', password: '1234' });
+	await repo.add_role({ user_id: SELLER_ID, role_id: roles.SELLER_ROLE_ID });
+
+	const ADMIN_SELLER_ID = await repo.create({ username: 'faus', password: '1234' });
+
+	await repo.add_role({ user_id: ADMIN_SELLER_ID, role_id: roles.ADMIN_ROLE_ID });
+	await repo.add_role({ user_id: ADMIN_SELLER_ID, role_id: roles.SELLER_ROLE_ID });
 
 	await show_count(t_user);
+	return { ADMIN_ID, SELLER_ID, ADMIN_SELLER_ID };
 }
 
 async function seed_categories() {
@@ -148,8 +156,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 }
 
 async function seed() {
-	console.log('');
-	console.log('======= Cleaning tables 🧹 =======');
+	console.log('\n======= Cleaning tables 🧹 =======');
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_product_has_category);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
@@ -163,16 +170,14 @@ async function seed() {
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_role);
 
-	console.log('======= Tables deleted 🗑️ =======');
-	console.log('');
+	console.log('======= Tables deleted 🗑️ =======\n');
 
-	const { admin_id } = await seed_roles();
-	await seed_users(admin_id);
+	const roles = await seed_roles();
+	await seed_users(roles);
 	const categories = await seed_categories();
 	await seed_products(categories);
 
-	console.log('');
-	console.log('===================================');
+	console.log('\n===================================');
 	console.log('======= Seeding finished 🌱 =======');
 	console.log('===================================');
 }
