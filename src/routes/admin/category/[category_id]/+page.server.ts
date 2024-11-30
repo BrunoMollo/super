@@ -1,4 +1,4 @@
-import { category_controller } from '$lib';
+import { category_controller, category_repo } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/client';
 import { edit_category_validator } from '$lib/entities/category';
@@ -12,23 +12,20 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const { user } = locals;
 
-	const res = await category_controller.get_one(id, user);
+	//const res = await category_controller.get_one(id, user);
 
-	switch (res.status) {
-		case 'ok': {
-			const { name } = res.output;
-			return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
-		}
-		case 'not-found': {
-			return error(404, 'not found');
-		}
-		case 'unauthorized': {
-			const url = '/login' satisfies LayoutRouteId;
-			return redirect(401, url);
-		}
-		default:
-			exaust(res);
+	if (!user.has_role('ADMIN')) {
+		const url = '/login' satisfies LayoutRouteId;
+		return redirect(401, url);
 	}
+
+	const category = await category_repo.get_one(id);
+	if (!category) {
+		return error(404, 'not found');
+	}
+
+	const { name } = category;
+	return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
 };
 
 export const actions: Actions = {

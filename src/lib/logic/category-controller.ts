@@ -6,18 +6,6 @@ import type { Category_Repo } from './ports/repos-interfaces';
 export class Category_Controller {
 	constructor(private category_repo: Category_Repo) {}
 
-	async get_one(id: number, user: User) {
-		if (!user.has_role('ADMIN')) {
-			return err('unauthorized');
-		}
-
-		const category = await this.category_repo.get_one(id);
-		if (!category) {
-			return err('not-found');
-		}
-		return ok(category);
-	}
-
 	async list_all(user: User) {
 		if (!user.has_role('ADMIN')) {
 			return err('unauthorized');
