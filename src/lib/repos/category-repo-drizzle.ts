@@ -13,7 +13,7 @@ export class Category_Repo_Drizzle {
 			.returning({ id: t_category.id })
 			.then((x) => x[0]);
 
-		return { id, name };
+		return id;
 	}
 
 	async get_by_name(name: string) {
