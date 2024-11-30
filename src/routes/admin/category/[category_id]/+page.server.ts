@@ -1,10 +1,12 @@
 import { category_repo } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/client';
-import { edit_category_validator } from '$lib/entities/category';
 import type { LayoutRouteId } from '../../../$types';
+import { edit_category_validator } from '../category-validators';
 import type { Actions, PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
+
+const VALIDATOR = edit_category_validator;
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const id = Number(params.category_id);
@@ -22,12 +24,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 
 	const { name } = category;
-	return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
+	return { form: await superValidate({ id, name }, zod(VALIDATOR)) };
 };
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const form = await superValidate(request, zod(edit_category_validator));
+		const form = await superValidate(request, zod(VALIDATOR));
 		if (!form.valid) {
 			return { form };
 		}

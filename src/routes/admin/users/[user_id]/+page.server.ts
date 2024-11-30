@@ -1,10 +1,12 @@
 import { uow, user_repo } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/client';
-import { edit_user_validator } from '$lib/entities/user';
 import type { LayoutRouteId } from '../../../$types';
+import { edit_user_validator } from '../user-validator';
 import type { Actions, PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
+
+const VALIDATOR = edit_user_validator;
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const id = Number(params.user_id);
@@ -27,13 +29,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	const { username, roles } = selected_user;
 	return {
 		user: { id, username, roles },
-		form: await superValidate(populated_form, zod(edit_user_validator))
+		form: await superValidate(populated_form, zod(VALIDATOR))
 	};
 };
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const form = await superValidate(request, zod(edit_user_validator));
+		const form = await superValidate(request, zod(VALIDATOR));
 		if (!form.valid) {
 			return { form };
 		}

@@ -1,13 +1,11 @@
 import { eq } from 'drizzle-orm';
-import { Category } from '$lib/entities/category';
-import type { Category_Repo } from '$lib/logic/ports/repos-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category } from '$lib/server/drizzle/schema';
 
-export class Category_Repo_Drizzle implements Category_Repo {
+export class Category_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
-	async create(category: { name: string }): Promise<Category> {
+	async create(category: { name: string }) {
 		const { name } = category;
 		const { id } = await this.ctx
 			.insert(t_category)
@@ -15,10 +13,10 @@ export class Category_Repo_Drizzle implements Category_Repo {
 			.returning({ id: t_category.id })
 			.then((x) => x[0]);
 
-		return new Category(id, name);
+		return { id, name };
 	}
 
-	async get_by_name(name: string): Promise<Category | undefined> {
+	async get_by_name(name: string) {
 		const result = await this.ctx
 			.select()
 			.from(t_category)
@@ -30,14 +28,14 @@ export class Category_Repo_Drizzle implements Category_Repo {
 		}
 
 		const { id } = result;
-		return new Category(id, name);
+		return { id, name };
 	}
 
-	get_all(): Promise<Category[]> {
+	get_all() {
 		return this.ctx.select().from(t_category).orderBy(t_category.id);
 	}
 
-	async get_one(id: number): Promise<Category | undefined> {
+	async get_one(id: number) {
 		const result = await this.ctx
 			.select()
 			.from(t_category)
@@ -49,23 +47,21 @@ export class Category_Repo_Drizzle implements Category_Repo {
 		}
 
 		const { name } = result;
-		return new Category(id, name);
+		return { id, name };
 	}
 
-	async remove(id: number): Promise<Category | undefined> {
+	async remove(id: number) {
 		const target = await this.get_one(id);
 		if (target) {
 			await this.ctx.delete(t_category).where(eq(t_category.id, id));
 		}
-		return target;
 	}
 
-	async update(modified: Category): Promise<void> {
+	async update(modified: { id: number; name: string }) {
 		const { id, name } = modified;
 		const target = await this.get_one(id);
 		if (target) {
 			await this.ctx.update(t_category).set({ name }).where(eq(t_category.id, id));
-			new Category(id, name);
 		}
 	}
 }

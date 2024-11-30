@@ -1,5 +1,11 @@
 # Super: Proyecto Final
 
+Team Members:
+
+- Bruno
+- Ramiro
+- Fausto
+
 ## Developing
 
 Requirements:

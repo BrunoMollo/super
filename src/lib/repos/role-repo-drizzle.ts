@@ -1,10 +1,9 @@
 import { eq } from 'drizzle-orm';
-import type { Role } from '$lib/entities/user';
-import type { Role_Repo } from '$lib/logic/ports/repos-interfaces';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_role } from '$lib/server/drizzle/schema';
+import type { Role } from '$lib/user';
 
-export class Role_Repo_Drizzle implements Role_Repo {
+export class Role_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
 	async get_all(): Promise<Role[]> {

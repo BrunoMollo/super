@@ -2,7 +2,7 @@
 	import { readable } from 'svelte/store';
 	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import * as Table from '$lib/components/ui/table';
-	import type { Role } from '$lib/entities/user';
+	import type { Role } from '$lib/user';
 	import UserTableAction from './user-table-action.svelte';
 	import { toProperCase } from '$lib/utils';
 

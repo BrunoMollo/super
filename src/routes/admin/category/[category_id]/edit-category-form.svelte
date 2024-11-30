@@ -5,8 +5,8 @@
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
-	import { edit_category_validator, type Edit_Cateogory_Dto } from '$lib/entities/category';
 	import { invalidateAll } from '$app/navigation';
+	import { edit_category_validator, type Edit_Cateogory_Dto } from '../category-validators';
 
 	export let form_data: SuperValidated<Edit_Cateogory_Dto>;
 

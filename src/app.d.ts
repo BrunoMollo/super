@@ -1,5 +1,5 @@
 import type { Edit_Cateogory_Dto } from '$lib/entities/category';
-import type { User } from '$lib/entities/user';
+import type { User } from '$lib/user';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces

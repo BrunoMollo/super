@@ -1,5 +1,5 @@
 import { token_service } from '$lib';
-import { Authorized_User, Empty_User } from '$lib/entities/user';
+import { Authorized_User, Empty_User } from '$lib/user';
 import type { LayoutRouteId } from './routes/$types';
 import type { Handle } from '@sveltejs/kit';
 
