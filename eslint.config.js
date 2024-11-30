@@ -32,13 +32,20 @@ export default [
 		ignores: ['build/', '.svelte-kit/', 'dist/']
 	},
 	{
-		files: ['**/*.ts'],
+		files: ['**/*.ts', '**/*.svelte'],
 		plugins: {
 			drizzle
 		},
 		rules: {
 			'drizzle/enforce-delete-with-where': 'error',
-			'drizzle/enforce-update-with-where': 'error'
+			'drizzle/enforce-update-with-where': 'error',
+			'@typescript-eslint/no-unused-vars': [
+				'off',
+				{
+					argsIgnorePattern: '^_', // Ignore function arguments starting with "_"
+					varsIgnorePattern: '^_' // Ignore variables starting with "_"
+				}
+			]
 		}
 	}
 ];

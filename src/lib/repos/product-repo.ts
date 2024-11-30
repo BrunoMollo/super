@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category, t_product, t_product_has_category } from '$lib/server/drizzle/schema';
 
@@ -37,7 +37,7 @@ export class Product_Repo_Drizzle {
 	}
 
 	async list_all() {
-		const data = await this.ctx.select().from(t_product);
+		const data = await this.ctx.select().from(t_product).orderBy(desc(t_product.id));
 
 		const products = data.map(({ id, desc, order_point, stock }) => ({
 			id,

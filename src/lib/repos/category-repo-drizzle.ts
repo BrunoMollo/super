@@ -31,8 +31,8 @@ export class Category_Repo_Drizzle {
 		return { id, name };
 	}
 
-	get_all() {
-		return this.ctx.select().from(t_category).orderBy(t_category.id);
+	async get_all() {
+		return await this.ctx.select().from(t_category).orderBy(t_category.id);
 	}
 
 	async get_one(id: number) {

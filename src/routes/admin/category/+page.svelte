@@ -4,6 +4,8 @@
 	import { toast } from 'svelte-sonner';
 	import CategoryForm from './category-form.svelte';
 	import CategoryTable from './category-table.svelte';
+	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
+
 	export let data;
 
 	let is_open = false;
@@ -25,9 +27,15 @@
 		</div>
 	</div>
 
-	{#key data.categories}
-		<CategoryTable categories={data.categories} />
-	{/key}
+	{#await data.categories}
+		<div class="flex flex-col items-center space-y-2">
+			{#each Array(15) as _}
+				<Skeleton class="h-10 w-full" />
+			{/each}
+		</div>
+	{:then categories}
+		<CategoryTable {categories} />
+	{/await}
 </main>
 
 <Sheet.Root bind:open={is_open}>

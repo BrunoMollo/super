@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const products = product_repo.list_all();
-	const categories = await category_repo.get_all();
+	const categories = category_repo.get_all();
 	return { products, categories, form: await superValidate(zod(VALIDATOR)) };
 };
 
