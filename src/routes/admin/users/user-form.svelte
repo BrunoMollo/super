@@ -10,7 +10,7 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
-	import { roles } from '$lib/entities/user';
+	import { roles } from '$lib/user';
 
 	export let data: SuperValidated<Create_user_dto>;
 	let error_message = '';

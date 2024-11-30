@@ -1,6 +1,6 @@
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { SignJWT, jwtVerify } from 'jose';
-import { Authorized_User, type Role } from '$lib/entities/user';
+import { Authorized_User, type Role } from '$lib/user';
 
 export type Payload = {
 	id: number;

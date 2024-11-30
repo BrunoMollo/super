@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { Role } from '$lib/entities/user';
+import type { Role } from '$lib/user';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_role } from '$lib/server/drizzle/schema';
 
