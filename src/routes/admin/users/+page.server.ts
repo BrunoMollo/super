@@ -48,8 +48,7 @@ export const actions: Actions = {
 		}
 
 		await uow.do(async (repos) => {
-			const new_user = await repos.user_repo.create({ username, password });
-			const user_id = new_user.id;
+			const user_id = await repos.user_repo.create({ username, password });
 
 			for (const role_id of roles_id) {
 				await repos.user_repo.add_role({ user_id, role_id });

@@ -36,7 +36,7 @@ export class User_Repo_Drizzle {
 		return this.populate_roles(users_data);
 	}
 
-	async create(user: { username: string; password: string }): Promise<Authorized_User> {
+	async create(user: { username: string; password: string }) {
 		const { username, password } = user;
 		const password_hash = await this.hash_service.hash(password);
 		const { id } = await this.ctx
@@ -44,7 +44,7 @@ export class User_Repo_Drizzle {
 			.values({ username, password_hash })
 			.returning({ id: t_user.id })
 			.then((x) => x[0]);
-		return new Authorized_User(id, username, []);
+		return id;
 	}
 
 	async validate(creds: { username: string; password: string }) {
