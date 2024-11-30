@@ -17,6 +17,10 @@
 			description
 		});
 	}
+
+	// TODO: extract into component | fix flickering
+	let catched_list: null | Awaited<typeof data.products> = null;
+	data.products.then((x) => (catched_list = x));
 </script>
 
 <main class="container pt-6">
@@ -28,11 +32,15 @@
 	</div>
 	<b class="text-4xl">
 		{#await data.products}
-			<div class="flex flex-col items-center space-y-2">
-				{#each Array(15) as _}
-					<Skeleton class="h-10 w-full" />
-				{/each}
-			</div>
+			{#if catched_list}
+				<ProductTable products={catched_list} />
+			{:else}
+				<div class="flex flex-col items-center space-y-2">
+					{#each Array(15) as _}
+						<Skeleton class="h-10 w-full" />
+					{/each}
+				</div>
+			{/if}
 		{:then products}
 			<ProductTable {products} />
 		{/await}
