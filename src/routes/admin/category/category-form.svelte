@@ -4,10 +4,10 @@
 	import { createEventDispatcher } from 'svelte';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { create_category_validator, type Create_Category_Dto } from '$lib/entities/category';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
+	import { create_category_validator, type Create_Category_Dto } from './category-validators';
 
 	export let data: SuperValidated<Create_Category_Dto>;
 	let error_message = '';
