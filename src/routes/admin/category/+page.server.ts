@@ -1,4 +1,4 @@
-import { category_controller, category_repo } from '$lib';
+import { category_controller, category_repo, category_repo } from '$lib';
 import { fail, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_category_validator } from '$lib/entities/category';
@@ -33,22 +33,21 @@ export const actions: Actions = {
 		}
 
 		const { user } = locals;
+    const {name} = form.data;
 
-		const res = await category_controller.create(form.data, user);
 
-		switch (res.status) {
-			case 'ok': {
-				return { form };
-			}
-			case 'duplicated-name': {
-				return setError(form, 'name', 'This name already exists');
-			}
-			case 'unauthorized': {
-				const url = '/login' satisfies LayoutRouteId;
-				return redirect(401, url);
-			}
-			default:
-				exaust(res);
+		if (!user.has_role('ADMIN')) {
+			const url = '/login' satisfies LayoutRouteId;
+			return redirect(307, url);
 		}
+
+		const match = await category_repo.get_by_name(name);
+		if (match) {
+			return setError(form, 'name', 'This name already exists');
+		}
+
+		await category_repo.create({name});
+
+		return { form };
 	}
 };
