@@ -5,9 +5,11 @@
 	import { onNavigate } from '$app/navigation';
 
 	onNavigate((navigation) => {
+		// @ts-expect-error STILL BEING ADDED TO BROWSERS
 		if (!document.startViewTransition) return;
 
 		return new Promise((resolve) => {
+			// @ts-expect-error STILL BEING ADDED TO BROWSERS
 			document.startViewTransition(async () => {
 				resolve();
 				await navigation.complete;
