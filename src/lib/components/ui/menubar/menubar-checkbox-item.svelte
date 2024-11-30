@@ -4,6 +4,7 @@
 	import { cn } from '$lib/utils.js';
 
 	type $$Props = MenubarPrimitive.CheckboxItemProps;
+	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type $$Events = MenubarPrimitive.CheckboxItemEvents;
 
 	let className: $$Props['class'] = undefined;

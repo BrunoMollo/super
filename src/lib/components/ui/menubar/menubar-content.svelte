@@ -3,6 +3,7 @@
 	import { cn, flyAndScale } from '$lib/utils.js';
 
 	type $$Props = MenubarPrimitive.ContentProps;
+	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type $$Events = MenubarPrimitive.ContentEvents;
 
 	let className: $$Props['class'] = undefined;

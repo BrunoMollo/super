@@ -3,6 +3,7 @@
 	import { cn } from '$lib/utils.js';
 
 	type $$Props = MenubarPrimitive.TriggerProps;
+	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type $$Events = MenubarPrimitive.TriggerEvents;
 
 	let className: $$Props['class'] = undefined;
