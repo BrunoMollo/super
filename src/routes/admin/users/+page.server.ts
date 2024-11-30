@@ -1,31 +1,26 @@
-import { user_controller } from '$lib';
+import { user_controller, user_repo } from '$lib';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_user_validator } from '$lib/entities/user';
 import { exaust } from '$lib/logic/helpers/results';
-import { serilize } from '$lib/utils/parsing';
 import type { LayoutRouteId } from '../../$types';
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const { user } = locals;
-	const res = await user_controller.list_all(user);
 
-	switch (res.status) {
-		case 'ok': {
-			return {
-				users: res.output.map((x) => ({ ...x })),
-				form: await superValidate(zod(create_user_validator))
-			};
-		}
-		case 'unauthorized': {
-			const url = '/login' satisfies LayoutRouteId;
-			return redirect(401, url);
-		}
-		default:
-			exaust(res);
+	if (!user.has_role('ADMIN')) {
+		const url = '/login' satisfies LayoutRouteId;
+		return redirect(307, url);
 	}
+
+	const list = await user_repo.get_all();
+
+	return {
+		users: list.map((x) => ({ ...x })),
+		form: await superValidate(zod(create_user_validator))
+	};
 };
 
 export const actions: Actions = {

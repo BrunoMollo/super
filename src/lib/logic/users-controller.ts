@@ -16,15 +16,6 @@ export class User_Controller {
 		private uow: Unit_of_Work
 	) {}
 
-	async list_all(auth_user: User) {
-		if (!auth_user.has_role('ADMIN')) {
-			return err('unauthorized');
-		}
-
-		const list = await this.user_repo.get_all();
-		return ok(list);
-	}
-
 	async create(user: Create_user_dto, auth_user: User) {
 		if (!auth_user.has_role('ADMIN')) {
 			return err('unauthorized');
