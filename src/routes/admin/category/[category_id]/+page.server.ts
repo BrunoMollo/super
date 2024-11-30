@@ -1,8 +1,7 @@
-import { category_controller } from '$lib';
+import { category_repo } from '$lib';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/client';
 import { edit_category_validator } from '$lib/entities/category';
-import { exaust } from '$lib/logic/helpers/results';
 import type { LayoutRouteId } from '../../../$types';
 import type { Actions, PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
@@ -12,23 +11,18 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const { user } = locals;
 
-	const res = await category_controller.get_one(id, user);
-
-	switch (res.status) {
-		case 'ok': {
-			const { name } = res.output;
-			return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
-		}
-		case 'not-found': {
-			return error(404, 'not found');
-		}
-		case 'unauthorized': {
-			const url = '/login' satisfies LayoutRouteId;
-			return redirect(401, url);
-		}
-		default:
-			exaust(res);
+	if (!user.has_role('ADMIN')) {
+		const url = '/login' satisfies LayoutRouteId;
+		return redirect(401, url);
 	}
+
+	const category = await category_repo.get_one(id);
+	if (!category) {
+		return error(404, 'not found');
+	}
+
+	const { name } = category;
+	return { form: await superValidate({ id, name }, zod(edit_category_validator)) };
 };
 
 export const actions: Actions = {
@@ -40,24 +34,25 @@ export const actions: Actions = {
 
 		const { user } = locals;
 
-		const res = await category_controller.edit(form.data, user);
+		const { id, name } = form.data;
 
-		switch (res.status) {
-			case 'ok': {
-				return { form };
-			}
-			case 'not-found': {
-				return error(404, 'Category Not Found');
-			}
-			case 'duplicated-name': {
-				return setError(form, 'name', 'There is already a category with this name');
-			}
-			case 'unauthorized': {
-				const url = '/login' satisfies LayoutRouteId;
-				return redirect(401, url);
-			}
-			default:
-				exaust(res);
+		if (!user.has_any_role(['ADMIN'])) {
+			const url = '/login' satisfies LayoutRouteId;
+			return redirect(307, url);
 		}
+
+		const category = await category_repo.get_one(id);
+		if (!category) {
+			return error(404, 'Category Not Found');
+		}
+
+		const match = await category_repo.get_by_name(name);
+		if (match) {
+			return setError(form, 'name', 'There is already a category with this name');
+		}
+
+		await category_repo.update({ id, name });
+
+		return { form };
 	}
 };

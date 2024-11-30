@@ -1,9 +1,7 @@
-import { category_controller } from '$lib';
+import { category_repo } from '$lib';
 import { fail, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { create_category_validator } from '$lib/entities/category';
-import { exaust } from '$lib/logic/helpers/results';
-import { serilize } from '$lib/utils/parsing';
 import type { LayoutRouteId } from '../../$types';
 import type { Actions, PageServerLoad } from '../users/$types';
 import { redirect } from '@sveltejs/kit';
@@ -11,22 +9,17 @@ import { redirect } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ locals }) => {
 	const { user } = locals;
 
-	const res = await category_controller.list_all(user);
-
-	switch (res.status) {
-		case 'ok': {
-			return {
-				categories: serilize(res.output),
-				form: await superValidate(zod(create_category_validator))
-			};
-		}
-		case 'unauthorized': {
-			const url = '/login' satisfies LayoutRouteId;
-			return redirect(401, url);
-		}
-		default:
-			exaust(res);
+	if (!user.has_role('ADMIN')) {
+		const url = '/login' satisfies LayoutRouteId;
+		return redirect(307, url);
 	}
+
+	const categories = await category_repo.get_all();
+
+	return {
+		categories,
+		form: await superValidate(zod(create_category_validator))
+	};
 };
 
 export const actions: Actions = {
@@ -39,22 +32,20 @@ export const actions: Actions = {
 		}
 
 		const { user } = locals;
+		const { name } = form.data;
 
-		const res = await category_controller.create(form.data, user);
-
-		switch (res.status) {
-			case 'ok': {
-				return { form };
-			}
-			case 'duplicated-name': {
-				return setError(form, 'name', 'This name already exists');
-			}
-			case 'unauthorized': {
-				const url = '/login' satisfies LayoutRouteId;
-				return redirect(401, url);
-			}
-			default:
-				exaust(res);
+		if (!user.has_role('ADMIN')) {
+			const url = '/login' satisfies LayoutRouteId;
+			return redirect(307, url);
 		}
+
+		const match = await category_repo.get_by_name(name);
+		if (match) {
+			return setError(form, 'name', 'This name already exists');
+		}
+
+		await category_repo.create({ name });
+
+		return { form };
 	}
 };

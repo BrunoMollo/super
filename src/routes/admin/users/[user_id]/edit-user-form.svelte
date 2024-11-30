@@ -33,11 +33,14 @@
 	const { form: formData, enhance } = form;
 
 	const original = { ...$formData };
-	const original_roles_id = original.roles_id.sort();
-	$: current_roles_id = $formData.roles_id.sort();
 
-	$: changed =
-		original_roles_id[0] === current_roles_id[0] && original_roles_id[1] === current_roles_id[1];
+	$: original_0 = original.roles_id.sort()[0];
+	$: original_1 = original.roles_id.sort()[1];
+
+	$: current_id_0 = $formData.roles_id.sort()[0];
+	$: current_id_1 = $formData.roles_id.sort()[1];
+
+	$: changed = original_0 === current_id_0 && original_1 === current_id_1;
 
 	function addItem(id: number) {
 		$formData.roles_id = [...$formData.roles_id, id];
