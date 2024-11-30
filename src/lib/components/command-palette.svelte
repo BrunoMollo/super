@@ -1,48 +1,15 @@
 <script lang="ts">
-	import type { LayoutRouteId } from '../../routes/$types';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import * as Command from '$lib/components/ui/command/index.js';
 	import { toast } from 'svelte-sonner';
-
-	type Commands = Array<{
-		name: string;
-		action: () => unknown;
-	}>;
+	import { commands } from './commands';
 
 	let open = false;
-	function navigate(url: NonNullable<LayoutRouteId>) {
+	function navigate(url: string) {
 		open = false;
-		goto(url, {
-			replaceState: true
-		});
+		goto(url, { replaceState: true });
 	}
-
-	const commands_admin = [
-		{
-			name: 'Categoria',
-			action: () => navigate('/admin/category')
-		},
-		{
-			name: 'Usuarios',
-			action: () => navigate('/admin/users')
-		},
-		{
-			name: 'Productos',
-			action: () => navigate('/admin/product')
-		}
-	] satisfies Commands;
-
-	const commands_general = [
-		{
-			name: 'Logout',
-			action: () => {
-				if (confirm('seguro que quieres cerrar session?')) {
-					navigate('/login');
-				}
-			}
-		}
-	] satisfies Commands;
 
 	onMount(() => {
 		function handleKeydown(e: KeyboardEvent) {
@@ -50,11 +17,11 @@
 				e.preventDefault();
 				open = !open;
 			}
+
+			toast.info('Press Ctrl+K to navigate');
 		}
 
 		document.addEventListener('keydown', handleKeydown);
-
-		toast.info('Press Ctrl+K to navigate');
 
 		return () => {
 			document.removeEventListener('keydown', handleKeydown);
@@ -66,19 +33,20 @@
 	<Command.Input placeholder="Type a command or search..." />
 	<Command.List>
 		<Command.Empty>No results found.</Command.Empty>
-		<Command.Group heading="Admin">
-			{#each commands_admin as { name, action }}
-				<Command.Item onSelect={action}>
-					<span>{name}</span>
-				</Command.Item>
-			{/each}
-		</Command.Group>
-		<Command.Group heading="General">
-			{#each commands_general as { name, action }}
-				<Command.Item onSelect={action}>
-					<span>{name}</span>
-				</Command.Item>
-			{/each}
-		</Command.Group>
+		{#each commands as { name, hrefs }}
+			<Command.Group heading={name}>
+				{#each hrefs as { label, href, confirmation }}
+					<Command.Item
+						onSelect={() => {
+							if (!confirmation || confirm(confirmation)) {
+								navigate(href);
+							}
+						}}
+					>
+						<span>{label}</span>
+					</Command.Item>
+				{/each}
+			</Command.Group>
+		{/each}
 	</Command.List>
 </Command.Dialog>
