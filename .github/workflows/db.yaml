@@ -2,8 +2,8 @@ name: Reset Staging DB
 
 on:
   pull_request:
-    types:
-      - closed
+    branches: [main]
+    types: [closed]
 
 jobs:
   on-pr-merge:
