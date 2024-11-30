@@ -3,7 +3,7 @@
 	import { commands } from './commands';
 </script>
 
-<Menubar.Root class="py-6">
+<Menubar.Root class="flex-row py-6">
 	{#each commands as { name, hrefs, place }}
 		{#if place.includes('navbar')}
 			<Menubar.Menu>
@@ -18,4 +18,7 @@
 			</Menubar.Menu>
 		{/if}
 	{/each}
+	<div class="flex w-full flex-col">
+		<div class="w-12 self-end">...</div>
+	</div>
 </Menubar.Root>

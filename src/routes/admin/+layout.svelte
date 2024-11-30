@@ -4,7 +4,7 @@
 </script>
 
 <main class="container">
-	<header class="pl-5 pt-2">
+	<header class="px-5 pt-3">
 		<Navbar />
 	</header>
 	<slot />
