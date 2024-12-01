@@ -3,7 +3,7 @@
 
 	import { page } from '$app/stores';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import { pushState } from '$app/navigation';
+	import { invalidateAll, pushState } from '$app/navigation';
 	import type { PageData } from './[category_id]/$types';
 	import EditCategoryPage from './[category_id]/+page.svelte';
 	import { shallow_navigate } from '$lib/utils/shallow-routing';
@@ -11,6 +11,7 @@
 
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import { Button } from '$lib/components/ui/button';
+	import { toast } from 'svelte-sonner';
 
 	export let id: number;
 	const base_url = '/admin/category' satisfies LayoutRouteId;
@@ -31,6 +32,23 @@
 			pushState(href, { edit_category_state: undefined });
 		}
 	});
+
+	async function deleteCategory(id: number) {
+		if (!confirm('Are you sure you want to delete this category?')) return;
+		const res = await fetch(`/admin/category/${id}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}).then((res) => res.json());
+		if (res.ok) {
+			toast.success(res.message);
+		} else {
+			toast.warning(res.message);
+		}
+
+		await invalidateAll();
+	}
 </script>
 
 <Dialog.Root
@@ -56,7 +74,7 @@
 			<DropdownMenu.Item>
 				<a {href} on:click={goto_category}>Edit Category</a>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item on:click={() => false}>Delete Category</DropdownMenu.Item>
+			<DropdownMenu.Item on:click={() => deleteCategory(id)}>Delete Category</DropdownMenu.Item>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
 	<Dialog.Content class="sm:max-w-[425px]">

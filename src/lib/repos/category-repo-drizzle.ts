@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
-import { t_category } from '$lib/server/drizzle/schema';
+import { t_category, t_product_has_category } from '$lib/server/drizzle/schema';
 
 export class Category_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
@@ -51,10 +51,17 @@ export class Category_Repo_Drizzle {
 	}
 
 	async remove(id: number) {
-		const target = await this.get_one(id);
-		if (target) {
+		const can_delete = await this.ctx
+			.select()
+			.from(t_product_has_category)
+			.where(eq(t_product_has_category.category_id, id))
+			.then((x) => x.length === 0);
+
+		if (can_delete) {
 			await this.ctx.delete(t_category).where(eq(t_category.id, id));
 		}
+
+		return can_delete;
 	}
 
 	async update(modified: { id: number; name: string }) {
