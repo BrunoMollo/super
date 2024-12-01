@@ -1,5 +1,6 @@
 
 #!/bin/bash
+# This is a script used by Bruno to start developing quickly 
 
 # Name of the tmux session
 SESSION_NAME="super"
