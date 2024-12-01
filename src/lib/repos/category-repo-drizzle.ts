@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category, t_product_has_category } from '$lib/server/drizzle/schema';
 
@@ -33,6 +33,23 @@ export class Category_Repo_Drizzle {
 
 	async get_all() {
 		return await this.ctx.select().from(t_category).orderBy(t_category.id);
+	}
+
+	async get_count_of_products_of_each_category() {
+		return await this.ctx
+			.select({ category_id: t_product_has_category.category_id, count: count() })
+			.from(t_product_has_category)
+			.groupBy(t_product_has_category.category_id);
+	}
+
+	async get_all_with_count() {
+		const categories = await this.get_all().then((x) => x.map((x) => ({ ...x, count: 0 })));
+		const bbb = await this.get_count_of_products_of_each_category();
+		for (const category of categories) {
+			const count = bbb.find((x) => x.category_id === category.id)?.count || 0;
+			category.count = count;
+		}
+		return categories;
 	}
 
 	async get_one(id: number) {
