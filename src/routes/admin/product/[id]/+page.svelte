@@ -4,7 +4,7 @@
 	export let data;
 </script>
 
-<main class="flex flex-col justify-center gap-4 p-4 pt-10 align-middle">
+<main class="flex flex-col justify-center gap-4 p-4 pt-10 align-middle pl-6">
 	<h2
 		class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
