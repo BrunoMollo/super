@@ -47,14 +47,24 @@ export class Product_Repo_Drizzle {
 			categories: [] as { id: number; name: string }[]
 		}));
 
+		const categories = await this.ctx
+			.select()
+			.from(t_product_has_category)
+			.innerJoin(t_category, eq(t_product_has_category.category_id, t_category.id))
+			.then((arr) => {
+				const map = new Map<number, Array<{ id: number; name: string }>>();
+				for (const item of arr) {
+					const { product_id } = item.product_has_category;
+					if (!map.has(product_id)) {
+						map.set(product_id, []);
+					}
+					map.get(product_id)?.push(item.category);
+				}
+				return map;
+			});
+
 		for (const product of products) {
-			const categories = await this.ctx
-				.select()
-				.from(t_product_has_category)
-				.innerJoin(t_category, eq(t_product_has_category.category_id, t_category.id))
-				.where(eq(t_product_has_category.product_id, product.id))
-				.then((x) => x.map(({ category }) => category));
-			product.categories = categories;
+			product.categories = categories.get(product.id) || [];
 		}
 
 		return products;
