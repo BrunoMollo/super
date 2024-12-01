@@ -7,6 +7,7 @@
 	export let categories: Array<{
 		id: number;
 		name: string;
+		count: number;
 	}>;
 
 	const table = createTable(readable(categories));
@@ -19,6 +20,10 @@
 		table.column({
 			accessor: 'name',
 			header: 'Name'
+		}),
+		table.column({
+			accessor: 'count',
+			header: 'Products with this category'
 		}),
 		table.column({
 			accessor: ({ id }) => id,
