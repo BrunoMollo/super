@@ -5,6 +5,7 @@
 	import ProductTable from './product-table.svelte';
 	import ProductForm from './product-form.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 
 	export let data;
 
@@ -61,7 +62,9 @@
 					{/each}
 				</div>
 			{:then categories}
-				<ProductForm data={data.form} on:success={on_product_added} {categories} />
+				<ScrollArea class="h-[80vh]">
+					<ProductForm data={data.form} on:success={on_product_added} {categories} />
+				</ScrollArea>
 			{/await}
 		</Sheet.Portal>
 	</Sheet.Content>
