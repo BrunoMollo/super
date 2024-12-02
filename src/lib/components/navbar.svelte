@@ -24,13 +24,13 @@
 
 	<div class="flex w-full flex-col">
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="h-11 w-11 self-end ">
+			<DropdownMenu.Trigger class="mr-2 h-10 w-10 self-end ">
 				<Avatar.Root>
 					<Avatar.Image
-						src="https://media.licdn.com/dms/image/v2/D4D03AQEXqoZ0b0GKdw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1729205110937?e=1738800000&v=beta&t=JrtVnmj9E3IyO0-Bciqy5hpCm3AsmGthHIf8rfNoEmw"
+						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq8T0hZUoX8kuRi3EZpZbUDtZ_WqqN9Ll15Q&s"
 						alt="User"
 					/>
-					<Avatar.Fallback>U</Avatar.Fallback>
+					<Avatar.Fallback>US</Avatar.Fallback>
 				</Avatar.Root>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content side="bottom" align="start">
