@@ -1,6 +1,6 @@
 # Super: Proyecto Final
 
-Team Members:
+Team members:
 
 - Bruno
 - Ramiro
