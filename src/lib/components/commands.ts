@@ -2,7 +2,7 @@ import type { LayoutRouteId } from '../../routes/$types';
 
 type Router = Array<{
 	name: string;
-	place: ('navbar' | 'command-palette')[];
+	place: ('navbar' | 'command-palette' | 'avatar-dropdown')[];
 	hrefs: Array<{
 		label: string;
 		href: NonNullable<LayoutRouteId> | '#';
@@ -54,9 +54,13 @@ export const commands: Router = [
 		]
 	},
 	{
-		name: 'Session',
-		place: ['command-palette'],
+		name: 'My Account',
+		place: ['command-palette', 'avatar-dropdown'],
 		hrefs: [
+			{
+				label: 'Subscription',
+				href: '#'
+			},
 			{
 				confirmation: 'Are you sure you want to logout?',
 				label: 'Logout',

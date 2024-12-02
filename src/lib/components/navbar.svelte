@@ -1,5 +1,8 @@
 <script lang="ts">
 	import * as Menubar from '$lib/components/ui/menubar/index';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import * as Avatar from '$lib/components/ui/avatar/index.js';
+
 	import { commands } from './commands';
 </script>
 
@@ -18,7 +21,31 @@
 			</Menubar.Menu>
 		{/if}
 	{/each}
+
 	<div class="flex w-full flex-col">
-		<div class="w-12 self-end">...</div>
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger class="h-11 w-11 self-end ">
+				<Avatar.Root>
+					<Avatar.Image
+						src="https://media.licdn.com/dms/image/v2/D4D03AQEXqoZ0b0GKdw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1729205110937?e=1738800000&v=beta&t=JrtVnmj9E3IyO0-Bciqy5hpCm3AsmGthHIf8rfNoEmw"
+						alt="User"
+					/>
+					<Avatar.Fallback>U</Avatar.Fallback>
+				</Avatar.Root>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content side="bottom" align="start">
+				<DropdownMenu.Label>My Account</DropdownMenu.Label>
+				<DropdownMenu.Separator />
+				<DropdownMenu.Group>
+					{#each commands as { hrefs, place }}
+						{#if place.includes('avatar-dropdown')}
+							{#each hrefs as { label, href }}
+								<DropdownMenu.Item {href}>{label}</DropdownMenu.Item>
+							{/each}
+						{/if}
+					{/each}
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
 	</div>
 </Menubar.Root>
