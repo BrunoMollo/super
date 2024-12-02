@@ -8,14 +8,14 @@ export class Product_Repo_Drizzle {
 	async update(data: {
 		id: number;
 		desc: string;
-		bar_code: string;
+		bar_code: number;
 		order_point: number;
 		categories_ids: number[];
 	}) {
 		return await this.ctx.transaction(async (tx) => {
 			await tx
 				.update(t_product)
-				.set({ desc: data.desc, order_point: data.order_point })
+				.set({ desc: data.desc, bar_code: data.bar_code, order_point: data.order_point })
 				.where(eq(t_product.id, data.id));
 
 			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, data.id));
