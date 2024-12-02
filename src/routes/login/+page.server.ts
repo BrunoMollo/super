@@ -38,7 +38,7 @@ export const actions: Actions = {
 			maxAge: token_service.get_max_age_seconds()
 		});
 
-		const url = '/admin/users' satisfies LayoutRouteId;
+		const url = '/admin/product' satisfies LayoutRouteId;
 		return redirect(302, url);
 	}
 };
