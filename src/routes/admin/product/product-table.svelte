@@ -8,6 +8,7 @@
 	export let products: Array<{
 		id: number;
 		desc: string;
+		bar_code: number;
 		order_point: number | null;
 		categories: Array<{ id: number; name: string }>;
 	}>;
@@ -22,6 +23,10 @@
 		table.column({
 			accessor: 'desc',
 			header: 'Descripcion'
+		}),
+		table.column({
+			accessor: 'bar_code',
+			header: 'Bar Code'
 		}),
 		table.column({
 			accessor: 'order_point',

@@ -3,7 +3,15 @@ import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category, t_product, t_product_has_category } from '$lib/server/drizzle/schema';
 
 export class Product_Repo_Drizzle {
-	async update(data: { id: number; desc: string; order_point: number; categories_ids: number[] }) {
+	constructor(private ctx: DB_Context) {}
+
+	async update(data: {
+		id: number;
+		desc: string;
+		bar_code: string;
+		order_point: number;
+		categories_ids: number[];
+	}) {
 		return await this.ctx.transaction(async (tx) => {
 			await tx
 				.update(t_product)
@@ -17,7 +25,6 @@ export class Product_Repo_Drizzle {
 			}
 		});
 	}
-	constructor(private ctx: DB_Context) {}
 
 	async get_one(id: number) {
 		const product = await this.ctx
@@ -39,10 +46,11 @@ export class Product_Repo_Drizzle {
 	async list_all() {
 		const data = await this.ctx.select().from(t_product).orderBy(desc(t_product.id));
 
-		const products = data.map(({ id, desc, order_point, stock }) => ({
+		const products = data.map(({ id, desc, bar_code, order_point, stock }) => ({
 			id,
 			desc,
 			order_point,
+			bar_code,
 			stock,
 			categories: [] as { id: number; name: string }[]
 		}));
@@ -72,16 +80,17 @@ export class Product_Repo_Drizzle {
 
 	async create(product: {
 		desc: string;
+		bar_code: number;
 		order_point: number;
 		stock: number;
 		categories_ids: Array<number>;
 	}) {
-		const { desc, order_point, stock } = product;
+		const { desc, bar_code, order_point, stock } = product;
 
 		return this.ctx.transaction(async (tx) => {
 			const { product_id } = await tx
 				.insert(t_product)
-				.values({ desc, order_point, stock })
+				.values({ desc, bar_code, order_point, stock })
 				.returning({ product_id: t_product.id })
 				.then((x) => x[0]);
 			for (const category_id of product.categories_ids) {
