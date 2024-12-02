@@ -44,12 +44,11 @@ export const actions: Actions = {
 			return fail(401, { form });
 		}
 
-		const { id, desc, order_point, categories_ids } = form.data;
-		const existing = !!product_repo.get_one(id);
+		const existing = !!product_repo.get_one(form.data.id);
 		if (!existing) {
 			return fail(404, { form });
 		}
-		await product_repo.update({ id, desc, order_point, categories_ids });
+		await product_repo.update(form.data);
 		return redirect(302, '/admin/product');
 	}
 };

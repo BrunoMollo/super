@@ -32,8 +32,7 @@ export const actions: Actions = {
 			return fail(401, { form });
 		}
 
-		const { desc, order_point, categories_ids } = form.data;
-		await product_repo.create({ desc, stock: 0, order_point, categories_ids });
+		await product_repo.create(form.data);
 		return { form };
 	}
 };
