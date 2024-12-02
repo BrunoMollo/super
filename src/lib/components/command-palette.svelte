@@ -35,15 +35,17 @@
 		{#each commands as { name, hrefs }}
 			<Command.Group heading={name}>
 				{#each hrefs as { label, href, confirmation }}
-					<Command.Item
-						onSelect={() => {
-							if (!confirmation || confirm(confirmation)) {
-								navigate(href);
-							}
-						}}
-					>
-						<span>{label}</span>
-					</Command.Item>
+					{#if href !== '#'}
+						<Command.Item
+							onSelect={() => {
+								if (!confirmation || confirm(confirmation)) {
+									navigate(href);
+								}
+							}}
+						>
+							<span>{label}</span>
+						</Command.Item>
+					{/if}
 				{/each}
 			</Command.Group>
 		{/each}
