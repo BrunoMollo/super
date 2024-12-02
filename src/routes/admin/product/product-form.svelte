@@ -58,6 +58,14 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
+	<Form.Field {form} name="bar_code">
+		<Form.Control let:attrs>
+			<Form.Label class="text-lg">Bar Code</Form.Label>
+			<Input {...attrs} bind:value={$formData.bar_code} class="w-64" maxlength={12} />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+
 	<Form.Field {form} name="order_point">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Order Point</Form.Label>
