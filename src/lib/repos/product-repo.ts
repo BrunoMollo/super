@@ -105,4 +105,12 @@ export class Product_Repo_Drizzle {
 			await tx.delete(t_product).where(eq(t_product.id, id));
 		});
 	}
+
+	async get_by_description(description: string) {
+		return await this.ctx
+			.select()
+			.from(t_product)
+			.where(eq(t_product.desc, description))
+			.then((x) => x.at(0));
+	}
 }
