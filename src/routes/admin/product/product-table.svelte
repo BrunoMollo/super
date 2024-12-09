@@ -17,10 +17,6 @@
 
 	const columns = table.createColumns([
 		table.column({
-			accessor: 'id',
-			header: 'ID'
-		}),
-		table.column({
 			accessor: 'desc',
 			header: 'Descripcion'
 		}),
