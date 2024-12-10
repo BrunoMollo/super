@@ -113,4 +113,12 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product.desc, description))
 			.then((x) => x.at(0));
 	}
+
+	async get_by_bar_code(bar_code: number) {
+		return await this.ctx
+			.select()
+			.from(t_product)
+			.where(eq(t_product.bar_code, bar_code))
+			.then((x) => x.at(0));
+	}
 }

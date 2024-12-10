@@ -30,10 +30,10 @@ export const t_role = pgTable('role', {
 
 export const t_product = pgTable('product', {
 	id: serial('id').primaryKey().notNull(),
-	desc: text('desc').notNull(),
+	desc: text('desc').unique().notNull(),
 	order_point: integer('order_point').notNull(),
 	stock: integer('stock').default(0).notNull(),
-	bar_code: bigint('bar_code', { mode: 'number' }).notNull(),
+	bar_code: bigint('bar_code', { mode: 'number' }).unique().notNull(),
 	created_at: timestamp('created_at').defaultNow().notNull()
 });
 

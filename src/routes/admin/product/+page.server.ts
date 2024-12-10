@@ -25,14 +25,19 @@ export const actions: Actions = {
 			return fail(400, { form });
 		}
 
-		const repeated = await product_repo.get_by_description(form.data.desc).then((x) => !!x);
-		if (repeated) {
-			return setError(form, 'desc', 'Esta Descripción ya existe');
-		}
-
 		const { user } = locals;
 		if (!user.has_role('ADMIN')) {
 			return fail(401, { form });
+		}
+
+		const same_desc = await product_repo.get_by_description(form.data.desc).then((x) => !!x);
+		if (same_desc) {
+			return setError(form, 'desc', 'Esta Descripción ya existe');
+		}
+
+		const same_bar_code = await product_repo.get_by_bar_code(form.data.bar_code).then((x) => !!x);
+		if (same_bar_code) {
+			return setError(form, 'bar_code', 'Este código de barras ya existe');
 		}
 
 		await product_repo.create(form.data);
