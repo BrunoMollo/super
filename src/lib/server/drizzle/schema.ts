@@ -1,4 +1,4 @@
-import { bigint, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { bigint, integer, numeric, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const t_category = pgTable('category', {
 	id: serial('id').primaryKey().notNull(),
@@ -44,4 +44,12 @@ export const t_product_has_category = pgTable('product_has_category', {
 	category_id: integer('category_id')
 		.notNull()
 		.references(() => t_category.id)
+});
+
+export const t_product_price = pgTable('product_price', {
+	product_id: integer('product_id')
+		.notNull()
+		.references(() => t_product.id),
+	price_amount: numeric('price_amount', { precision: 100, scale: 2 }).notNull(),
+	date_from: timestamp('created_at').defaultNow().notNull()
 });

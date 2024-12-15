@@ -66,6 +66,14 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
+	<Form.Field {form} name="price">
+		<Form.Control let:attrs>
+			<Form.Label class="text-lg">Precio</Form.Label>
+			<Input {...attrs} bind:value={$formData.price} class="w-64" />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+
 	<Form.Field {form} name="order_point">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Order Point</Form.Label>
