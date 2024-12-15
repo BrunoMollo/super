@@ -11,13 +11,15 @@ export function create_state_sell() {
 
 	const sell_list = writable([] as { id: number; desc: string; amount: number }[]);
 
-	async function search_product() {
+	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
 		const { bar_code, amount } = $input;
+
 		const product = await fetch_product_by_bar_code(bar_code);
-		if (product) {
-			sell_list.update((x) => [...x, { ...product, amount }]);
-			input.update(() => ({ bar_code: '', amount: 1 }));
+		if (!product) {
+			return on_not_found();
 		}
+		sell_list.update((x) => [...x, { ...product, amount }]);
+		input.update(() => ({ bar_code: '', amount: 1 }));
 	}
 
 	return {
