@@ -9,6 +9,7 @@ import {
 	t_category,
 	t_product,
 	t_product_has_category,
+	t_product_price,
 	t_role,
 	t_user,
 	t_user_has_role
@@ -168,6 +169,8 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 
 async function seed() {
 	console.log('\n------- Cleaning tables 🧹 -------');
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_product_price);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_product_has_category);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
