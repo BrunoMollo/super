@@ -5,7 +5,7 @@ export async function fetch_product_by_bar_code(bar_code: string) {
 				return null;
 			}
 			if (res.status === 200) {
-				return res.json().then((x) => x.product as { id: number; desc: string });
+				return res.json().then((x) => x.product as { id: number; desc: string; price: number });
 			}
 		})
 		.catch(() => alert('Internal error'));

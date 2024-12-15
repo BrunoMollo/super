@@ -7,6 +7,7 @@
 		id: number;
 		desc: string;
 		amount: number;
+		price: number;
 	}>;
 
 	const table = createTable(readable(lines));
@@ -19,6 +20,20 @@
 		table.column({
 			accessor: 'amount',
 			header: 'Cantidad'
+		}),
+		table.column({
+			accessor: 'price',
+			header: 'Precio',
+			cell: ({ value }) => `$${value.toFixed(2)}`
+		}),
+		table.column({
+			accessor: 'id',
+			header: 'Acum',
+			cell: ({ value }) => {
+				return lines
+					.filter((x) => x.id == value)
+					.reduce((acum, prod) => acum + prod.price * prod.amount, 0);
+			}
 		})
 	]);
 

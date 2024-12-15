@@ -1,4 +1,4 @@
-import { and, desc, eq, max } from 'drizzle-orm';
+import { and, desc, eq, lte, max } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import {
 	t_category,
@@ -11,11 +11,31 @@ export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
 	async get_by_code_bar(code_bar: number) {
-		return await this.ctx
+		const product = await this.ctx
 			.select()
 			.from(t_product)
 			.where(eq(t_product.bar_code, code_bar))
 			.then((x) => x.at(0));
+
+		if (!product) {
+			return null;
+		}
+
+		const price = await this.ctx
+			.select()
+			.from(t_product_price)
+			.where(
+				and(eq(t_product_price.product_id, product.id), lte(t_product_price.date_from, new Date()))
+			)
+			.orderBy(desc(t_product_price.date_from))
+			.limit(1)
+			.then((x) => x[0])
+			.then((x) => Number(x.price_amount));
+
+		return {
+			...product,
+			price
+		};
 	}
 
 	async update(data: {
@@ -173,14 +193,6 @@ export class Product_Repo_Drizzle {
 			.select()
 			.from(t_product)
 			.where(eq(t_product.desc, description))
-			.then((x) => x.at(0));
-	}
-
-	async get_by_bar_code(bar_code: number) {
-		return await this.ctx
-			.select()
-			.from(t_product)
-			.where(eq(t_product.bar_code, bar_code))
 			.then((x) => x.at(0));
 	}
 }

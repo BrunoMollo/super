@@ -21,7 +21,8 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	return json({
 		product: {
 			id: product.id,
-			desc: product.desc
+			desc: product.desc,
+			price: product.price
 		}
 	});
 };
