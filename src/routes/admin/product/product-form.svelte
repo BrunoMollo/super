@@ -55,32 +55,32 @@
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<input type="hidden" name="id" value={id} />
 	<Form.Field {form} name="desc">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Description</Form.Label>
+				<Form.Label class="text-lg">Description</Form.Label>
 				<Input {...attrs} bind:value={$formData.desc} class="w-64" />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="bar_code">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Bar Code</Form.Label>
+				<Form.Label class="text-lg">Bar Code</Form.Label>
 				<Input {...attrs} bind:value={$formData.bar_code} class="w-64" maxlength={12} />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="order_point">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Order Point</Form.Label>
+				<Form.Label class="text-lg">Order Point</Form.Label>
 				<Input {...attrs} bind:value={$formData.order_point} class="w-64" />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
@@ -92,9 +92,9 @@
 				{#each categories as { id, name }}
 					{@const checked = $formData.categories_ids.includes(id)}
 					<div class="flex flex-row items-start space-x-3">
-						<Form.Control >
+						<Form.Control>
 							{#snippet children({ attrs })}
-														<Checkbox
+								<Checkbox
 									{...attrs}
 									{checked}
 									onCheckedChange={(v) => {
@@ -109,8 +109,8 @@
 									{toProperCase(name)}
 								</Form.Label>
 								<input hidden type="checkbox" name={attrs.name} value={id} {checked} />
-																				{/snippet}
-												</Form.Control>
+							{/snippet}
+						</Form.Control>
 					</div>
 				{/each}
 				<Form.FieldErrors />

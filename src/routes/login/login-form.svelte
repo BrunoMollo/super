@@ -24,23 +24,23 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="username">
-		<Form.Control >
-			{#snippet children({ attrs }:{attrs:any})}
-						<Form.Label class="text-lg">Username</Form.Label>
+		<Form.Control>
+			{#snippet children({ attrs }: { attrs: any })}
+				<Form.Label class="text-lg">Username</Form.Label>
 				<Input {...attrs} bind:value={$formData.username} class="w-64" />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="password">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Password</Form.Label>
+				<Form.Label class="text-lg">Password</Form.Label>
 				<Input {...attrs} bind:value={$formData.password} class="w-64" type="password" />
 				<Form.FieldErrors />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 	</Form.Field>
 
 	<div class="mt-4 flex w-64 justify-end gap-3">

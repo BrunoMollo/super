@@ -6,10 +6,10 @@
 
 	interface Props {
 		categories: Array<{
-		id: number;
-		name: string;
-		count: number;
-	}>;
+			id: number;
+			name: string;
+			count: number;
+		}>;
 	}
 
 	let { categories }: Props = $props();
@@ -42,13 +42,13 @@
 				<Subscribe rowAttrs={headerRow.attrs()}>
 					<Table.Row>
 						{#each headerRow.cells as cell (cell.id)}
-							<Subscribe attrs={cell.attrs()}  props={cell.props()}>
+							<Subscribe attrs={cell.attrs()} props={cell.props()}>
 								{#snippet children({ attrs })}
-																<Table.Head {...attrs}>
+									<Table.Head {...attrs}>
 										<Render of={cell.render()} />
 									</Table.Head>
-																							{/snippet}
-														</Subscribe>
+								{/snippet}
+							</Subscribe>
 						{/each}
 					</Table.Row>
 				</Subscribe>
@@ -56,21 +56,21 @@
 		</Table.Header>
 		<Table.Body {...$tableBodyAttrs}>
 			{#each $pageRows as row (row.id)}
-				<Subscribe rowAttrs={row.attrs()} >
+				<Subscribe rowAttrs={row.attrs()}>
 					{#snippet children({ rowAttrs })}
-										<Table.Row {...rowAttrs}>
+						<Table.Row {...rowAttrs}>
 							{#each row.cells as cell (cell.id)}
-								<Subscribe attrs={cell.attrs()} >
+								<Subscribe attrs={cell.attrs()}>
 									{#snippet children({ attrs })}
-																<Table.Cell {...attrs}>
+										<Table.Cell {...attrs}>
 											<Render of={cell.render()} />
 										</Table.Cell>
-																								{/snippet}
-														</Subscribe>
+									{/snippet}
+								</Subscribe>
 							{/each}
 						</Table.Row>
-														{/snippet}
-								</Subscribe>
+					{/snippet}
+				</Subscribe>
 			{/each}
 		</Table.Body>
 	</Table.Root>

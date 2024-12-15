@@ -37,12 +37,12 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="name">
-		<Form.Control >
-			{#snippet children({ attrs }:{attrs:any})}
-						<Form.Label class="text-lg">Name</Form.Label>
+		<Form.Control>
+			{#snippet children({ attrs }: { attrs: any })}
+				<Form.Label class="text-lg">Name</Form.Label>
 				<Input {...attrs} bind:value={$formData.name} class="w-64" />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 

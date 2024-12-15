@@ -25,14 +25,14 @@
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild >
+	<DropdownMenu.Trigger asChild>
 		{#snippet children({ builder })}
-				<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
+			<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
 				<span class="sr-only">Open menu</span>
 				<Ellipsis class="h-4 w-4" />
 			</Button>
-					{/snippet}
-		</DropdownMenu.Trigger>
+		{/snippet}
+	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>Actions</DropdownMenu.Label>

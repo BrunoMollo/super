@@ -48,13 +48,13 @@
 		{#if $page.state.edit_user_state}
 			<EditUserPage data={$page.state.edit_user_state}>
 				{#snippet header()}
-								<Dialog.Header >
+					<Dialog.Header>
 						<Dialog.Title>EDIT</Dialog.Title>
 						<Dialog.Description>
 							Make changes to your profile here. Click save when you're done.
 						</Dialog.Description>
 					</Dialog.Header>
-							{/snippet}
+				{/snippet}
 			</EditUserPage>
 		{/if}
 	</Dialog.Content>

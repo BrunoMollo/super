@@ -47,23 +47,23 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="username">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Username</Form.Label>
+				<Form.Label class="text-lg">Username</Form.Label>
 				<Input {...attrs} bind:value={$formData.username} class="w-64" />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="password">
-		<Form.Control >
+		<Form.Control>
 			{#snippet children({ attrs })}
-						<Form.Label class="text-lg">Password</Form.Label>
+				<Form.Label class="text-lg">Password</Form.Label>
 				<Input {...attrs} bind:value={$formData.password} class="w-64" />
 				<Form.FieldErrors />
-								{/snippet}
-				</Form.Control>
+			{/snippet}
+		</Form.Control>
 	</Form.Field>
 
 	<Form.Fieldset {form} name="roles_id" class="space-y-0">
@@ -74,9 +74,9 @@
 				{#each roles as role}
 					{@const checked = $formData.roles_id.includes(role.id)}
 					<div class="flex flex-row items-start space-x-3">
-						<Form.Control >
+						<Form.Control>
 							{#snippet children({ attrs })}
-														<Checkbox
+								<Checkbox
 									{...attrs}
 									{checked}
 									onCheckedChange={(v) => {
@@ -91,8 +91,8 @@
 									{toProperCase(role.name)}
 								</Form.Label>
 								<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
-																				{/snippet}
-												</Form.Control>
+							{/snippet}
+						</Form.Control>
 					</div>
 				{/each}
 				<Form.FieldErrors />

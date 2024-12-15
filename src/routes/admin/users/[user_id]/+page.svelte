@@ -4,7 +4,7 @@
 	let { data, header } = $props();
 </script>
 
-{#if header}{@render header({ user: data.user, })}{:else}
+{#if header}{@render header({ user: data.user })}{:else}
 	<h2
 		class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>

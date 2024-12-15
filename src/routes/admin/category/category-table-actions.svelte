@@ -24,7 +24,7 @@
 
 	const href = [base_url, id].join('/');
 
-	let open_dialog=$state(false);
+	let open_dialog = $state(false);
 	run(() => {
 		open_dialog = $page.state.edit_category_state ? true : false;
 	});
@@ -69,12 +69,12 @@
 	}}
 >
 	<DropdownMenu.Root bind:open={open_dropdown}>
-		<DropdownMenu.Trigger >
-						<Button variant="ghost"  size="icon" class="relative h-8 w-8 p-0">
-					<span class="sr-only">Open menu</span>
-					<Ellipsis class="h-4 w-4" />
-				</Button>
-				</DropdownMenu.Trigger>
+		<DropdownMenu.Trigger>
+			<Button variant="ghost" size="icon" class="relative h-8 w-8 p-0">
+				<span class="sr-only">Open menu</span>
+				<Ellipsis class="h-4 w-4" />
+			</Button>
+		</DropdownMenu.Trigger>
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>
 				<DropdownMenu.Label>Actions</DropdownMenu.Label>
@@ -90,7 +90,7 @@
 		{#if $page.state.edit_category_state}
 			<EditCategoryPage data={$page.state.edit_category_state}>
 				{#snippet header()}
-								<Dialog.Header >
+					<Dialog.Header>
 						<Dialog.Title>EDIT</Dialog.Title>
 						<Dialog.Description>
 							Make changes to your profile here. Click save when you're done.

@@ -66,9 +66,9 @@
 				{#each roles as role}
 					{@const checked = $formData.roles_id.includes(role.id)}
 					<div class="flex flex-row items-start space-x-3">
-						<Form.Control >
+						<Form.Control>
 							{#snippet children({ attrs })}
-														<Checkbox
+								<Checkbox
 									{...attrs}
 									{checked}
 									onCheckedChange={(v) => {
@@ -83,8 +83,8 @@
 									{toProperCase(role.name)}
 								</Form.Label>
 								<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
-																				{/snippet}
-												</Form.Control>
+							{/snippet}
+						</Form.Control>
 					</div>
 				{/each}
 				<Form.FieldErrors />
