@@ -5,9 +5,9 @@
 	import UserForm from './user-form.svelte';
 	import { toast } from 'svelte-sonner';
 
-	export let data;
+	let { data } = $props();
 
-	let is_open = false;
+	let is_open = $state(false);
 
 	function on_user_added() {
 		const description = new Date().toLocaleString();

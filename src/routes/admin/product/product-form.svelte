@@ -15,9 +15,13 @@
 	} from './validators';
 	import { toProperCase } from '$lib/utils';
 
-	export let data: SuperValidated<Product_Create_Dto | Product_Update_Dto>;
-	export let categories: Array<{ id: number; name: string }>;
-	let error_message = '';
+	interface Props {
+		data: SuperValidated<Product_Create_Dto | Product_Update_Dto>;
+		categories: Array<{ id: number; name: string }>;
+	}
+
+	let { data, categories }: Props = $props();
+	let error_message = $state('');
 
 	const dispatch = createEventDispatcher();
 	const form = superForm(data, {
@@ -51,26 +55,32 @@
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<input type="hidden" name="id" value={id} />
 	<Form.Field {form} name="desc">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Description</Form.Label>
-			<Input {...attrs} bind:value={$formData.desc} class="w-64" />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Description</Form.Label>
+				<Input {...attrs} bind:value={$formData.desc} class="w-64" />
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="bar_code">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Bar Code</Form.Label>
-			<Input {...attrs} bind:value={$formData.bar_code} class="w-64" maxlength={12} />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Bar Code</Form.Label>
+				<Input {...attrs} bind:value={$formData.bar_code} class="w-64" maxlength={12} />
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="order_point">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Order Point</Form.Label>
-			<Input {...attrs} bind:value={$formData.order_point} class="w-64" />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Order Point</Form.Label>
+				<Input {...attrs} bind:value={$formData.order_point} class="w-64" />
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
@@ -82,23 +92,25 @@
 				{#each categories as { id, name }}
 					{@const checked = $formData.categories_ids.includes(id)}
 					<div class="flex flex-row items-start space-x-3">
-						<Form.Control let:attrs>
-							<Checkbox
-								{...attrs}
-								{checked}
-								onCheckedChange={(v) => {
-									if (v) {
-										addItem(id);
-									} else {
-										removeItem(id);
-									}
-								}}
-							/>
-							<Form.Label class="text-sm font-normal">
-								{toProperCase(name)}
-							</Form.Label>
-							<input hidden type="checkbox" name={attrs.name} value={id} {checked} />
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Checkbox
+									{...attrs}
+									{checked}
+									onCheckedChange={(v) => {
+										if (v) {
+											addItem(id);
+										} else {
+											removeItem(id);
+										}
+									}}
+								/>
+								<Form.Label class="text-sm font-normal">
+									{toProperCase(name)}
+								</Form.Label>
+								<input hidden type="checkbox" name={attrs.name} value={id} {checked} />
+																				{/snippet}
+												</Form.Control>
 					</div>
 				{/each}
 				<Form.FieldErrors />

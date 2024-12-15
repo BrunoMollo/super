@@ -5,13 +5,17 @@
 	import Actions from './product-table-actions.svelte';
 	import { fade } from 'svelte/transition';
 
-	export let products: Array<{
+	interface Props {
+		products: Array<{
 		id: number;
 		desc: string;
 		bar_code: number;
 		order_point: number | null;
 		categories: Array<{ id: number; name: string }>;
 	}>;
+	}
+
+	let { products }: Props = $props();
 
 	const table = createTable(readable(products));
 
@@ -52,11 +56,13 @@
 				<Subscribe rowAttrs={headerRow.attrs()}>
 					<Table.Row>
 						{#each headerRow.cells as cell (cell.id)}
-							<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()}>
-								<Table.Head {...attrs}>
-									<Render of={cell.render()} />
-								</Table.Head>
-							</Subscribe>
+							<Subscribe attrs={cell.attrs()}  props={cell.props()}>
+								{#snippet children({ attrs })}
+																<Table.Head {...attrs}>
+										<Render of={cell.render()} />
+									</Table.Head>
+																							{/snippet}
+														</Subscribe>
 						{/each}
 					</Table.Row>
 				</Subscribe>
@@ -64,17 +70,21 @@
 		</Table.Header>
 		<Table.Body {...$tableBodyAttrs}>
 			{#each $pageRows as row (row.id)}
-				<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-					<Table.Row {...rowAttrs}>
-						{#each row.cells as cell (cell.id)}
-							<Subscribe attrs={cell.attrs()} let:attrs>
-								<Table.Cell {...attrs}>
-									<Render of={cell.render()} />
-								</Table.Cell>
-							</Subscribe>
-						{/each}
-					</Table.Row>
-				</Subscribe>
+				<Subscribe rowAttrs={row.attrs()} >
+					{#snippet children({ rowAttrs })}
+										<Table.Row {...rowAttrs}>
+							{#each row.cells as cell (cell.id)}
+								<Subscribe attrs={cell.attrs()} >
+									{#snippet children({ attrs })}
+																<Table.Cell {...attrs}>
+											<Render of={cell.render()} />
+										</Table.Cell>
+																								{/snippet}
+														</Subscribe>
+							{/each}
+						</Table.Row>
+														{/snippet}
+								</Subscribe>
 			{/each}
 		</Table.Body>
 	</Table.Root>

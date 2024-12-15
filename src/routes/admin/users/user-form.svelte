@@ -12,8 +12,12 @@
 	import { fly } from 'svelte/transition';
 	import { roles } from '$lib/user';
 
-	export let data: SuperValidated<Create_user_dto>;
-	let error_message = '';
+	interface Props {
+		data: SuperValidated<Create_user_dto>;
+	}
+
+	let { data }: Props = $props();
+	let error_message = $state('');
 
 	const dispatch = createEventDispatcher();
 	const form = superForm(data, {
@@ -43,19 +47,23 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="username">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Username</Form.Label>
-			<Input {...attrs} bind:value={$formData.username} class="w-64" />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Username</Form.Label>
+				<Input {...attrs} bind:value={$formData.username} class="w-64" />
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<Form.Field {form} name="password">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Password</Form.Label>
-			<Input {...attrs} bind:value={$formData.password} class="w-64" />
-			<Form.FieldErrors />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<Form.Label class="text-lg">Password</Form.Label>
+				<Input {...attrs} bind:value={$formData.password} class="w-64" />
+				<Form.FieldErrors />
+								{/snippet}
+				</Form.Control>
 	</Form.Field>
 
 	<Form.Fieldset {form} name="roles_id" class="space-y-0">
@@ -66,23 +74,25 @@
 				{#each roles as role}
 					{@const checked = $formData.roles_id.includes(role.id)}
 					<div class="flex flex-row items-start space-x-3">
-						<Form.Control let:attrs>
-							<Checkbox
-								{...attrs}
-								{checked}
-								onCheckedChange={(v) => {
-									if (v) {
-										addItem(role.id);
-									} else {
-										removeItem(role.id);
-									}
-								}}
-							/>
-							<Form.Label class="text-sm font-normal">
-								{toProperCase(role.name)}
-							</Form.Label>
-							<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Checkbox
+									{...attrs}
+									{checked}
+									onCheckedChange={(v) => {
+										if (v) {
+											addItem(role.id);
+										} else {
+											removeItem(role.id);
+										}
+									}}
+								/>
+								<Form.Label class="text-sm font-normal">
+									{toProperCase(role.name)}
+								</Form.Label>
+								<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
+																				{/snippet}
+												</Form.Control>
 					</div>
 				{/each}
 				<Form.FieldErrors />

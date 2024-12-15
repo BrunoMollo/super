@@ -8,7 +8,11 @@
 	import { invalidateAll } from '$app/navigation';
 	import { edit_category_validator, type Edit_Cateogory_Dto } from '../category-validators';
 
-	export let form_data: SuperValidated<Edit_Cateogory_Dto>;
+	interface Props {
+		form_data: SuperValidated<Edit_Cateogory_Dto>;
+	}
+
+	let { form_data }: Props = $props();
 
 	const dispatch = createEventDispatcher();
 	const super_form = superForm(form_data.data, {
@@ -27,7 +31,7 @@
 		}
 	});
 
-	$: changed = false;
+	let changed = $derived(false);
 
 	const { form, enhance } = super_form;
 </script>
@@ -35,9 +39,11 @@
 <form method="POST" use:enhance class="flex max-w-sm flex-col gap-4">
 	<input type="hidden" name="id" value={$form.id} />
 	<Form.Field form={super_form} name="name">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Name</Form.Label>
-			<Input {...attrs} bind:value={$form.name} class="w-64" />
+		<Form.Control >
+			{#snippet children({ attrs }:{attrs:any})}
+						<Form.Label class="text-lg">Name</Form.Label>
+				    <Input {...attrs} bind:value={$form.name} class="w-64" />
+			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>

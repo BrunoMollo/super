@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	import LoginForm from './login-form.svelte';
 	import * as Card from '$lib/components/ui/card/index';
 
-	export let data;
+	let { data } = $props();
 </script>
 
 <main class="flex h-screen w-screen flex-col items-center justify-center align-middle">

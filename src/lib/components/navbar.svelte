@@ -13,9 +13,11 @@
 				<Menubar.Trigger>{name}</Menubar.Trigger>
 				<Menubar.Content>
 					{#each hrefs as { label, href }}
-						<Menubar.Item {href}>
-							{label}
-						</Menubar.Item>
+						<a {href}>
+							<Menubar.Item>
+								{label}
+							</Menubar.Item>
+						</a>
 					{/each}
 				</Menubar.Content>
 			</Menubar.Menu>
@@ -40,7 +42,9 @@
 					{#each commands as { hrefs, place }}
 						{#if place.includes('avatar-dropdown')}
 							{#each hrefs as { label, href }}
-								<DropdownMenu.Item {href}>{label}</DropdownMenu.Item>
+								<a {href}>
+									<DropdownMenu.Item>{label}</DropdownMenu.Item>
+								</a>
 							{/each}
 						{/if}
 					{/each}

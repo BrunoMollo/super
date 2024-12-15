@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { LayoutRouteId } from '../$types';
 
 	import { page } from '$app/stores';
@@ -13,14 +15,21 @@
 	import { Button } from '$lib/components/ui/button';
 	import { toast } from 'svelte-sonner';
 
-	export let id: number;
+	interface Props {
+		id: number;
+	}
+
+	let { id }: Props = $props();
 	const base_url = '/admin/category' satisfies LayoutRouteId;
 
 	const href = [base_url, id].join('/');
 
-	$: open_dialog = $page.state.edit_category_state ? true : false;
+	let open_dialog;
+	run(() => {
+		open_dialog = $page.state.edit_category_state ? true : false;
+	});
 
-	let open_dropdown = false;
+	let open_dropdown = $state(false);
 
 	const goto_category = shallow_navigate<PageData>({
 		on_load: (data) => {
@@ -60,19 +69,21 @@
 	}}
 >
 	<DropdownMenu.Root bind:open={open_dropdown}>
-		<DropdownMenu.Trigger asChild let:builder>
-			<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
-				<span class="sr-only">Open menu</span>
-				<Ellipsis class="h-4 w-4" />
-			</Button>
-		</DropdownMenu.Trigger>
+		<DropdownMenu.Trigger asChild >
+			{#snippet children({ builder })}
+						<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
+					<span class="sr-only">Open menu</span>
+					<Ellipsis class="h-4 w-4" />
+				</Button>
+								{/snippet}
+				</DropdownMenu.Trigger>
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>
 				<DropdownMenu.Label>Actions</DropdownMenu.Label>
 			</DropdownMenu.Group>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<a {href} on:click={goto_category}>Edit Category</a>
+				<a {href} onclick={goto_category}>Edit Category</a>
 			</DropdownMenu.Item>
 			<DropdownMenu.Item on:click={() => deleteCategory(id)}>Delete Category</DropdownMenu.Item>
 		</DropdownMenu.Content>
@@ -80,12 +91,14 @@
 	<Dialog.Content class="sm:max-w-[425px]">
 		{#if $page.state.edit_category_state}
 			<EditCategoryPage data={$page.state.edit_category_state}>
-				<Dialog.Header slot="header">
-					<Dialog.Title>EDIT</Dialog.Title>
-					<Dialog.Description>
-						Make changes to your profile here. Click save when you're done.
-					</Dialog.Description>
-				</Dialog.Header>
+				{#snippet header()}
+								<Dialog.Header >
+						<Dialog.Title>EDIT</Dialog.Title>
+						<Dialog.Description>
+							Make changes to your profile here. Click save when you're done.
+						</Dialog.Description>
+					</Dialog.Header>
+							{/snippet}
 			</EditCategoryPage>
 		{/if}
 	</Dialog.Content>

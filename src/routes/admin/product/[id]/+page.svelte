@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ProductForm from '../product-form.svelte';
 
-	export let data;
+	let { data } = $props();
 </script>
 
 <main class="flex flex-col justify-center gap-4 p-4 pl-6 pt-10 align-middle">

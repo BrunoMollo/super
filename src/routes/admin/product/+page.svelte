@@ -7,9 +7,9 @@
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 
-	export let data;
+	let { data } = $props();
 
-	let is_open = false;
+	let is_open = $state(false);
 
 	function on_product_added() {
 		const description = new Date().toLocaleString();
@@ -20,7 +20,7 @@
 	}
 
 	// TODO: extract into component | fix flickering
-	let catched_list: null | Awaited<typeof data.products> = null;
+	let catched_list: null | Awaited<typeof data.products> = $state(null);
 	data.products.then((x) => (catched_list = x));
 </script>
 

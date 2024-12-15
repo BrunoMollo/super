@@ -5,7 +5,7 @@
 	import { toast } from 'svelte-sonner';
 	import { commands } from './commands';
 
-	let open = false;
+	let open = $state(false);
 	function navigate(url: string) {
 		open = false;
 		goto(url, { replaceState: true });

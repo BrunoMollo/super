@@ -12,8 +12,12 @@
 	import { fly } from 'svelte/transition';
 	import { toast } from 'svelte-sonner';
 
-	export let data: SuperValidated<Edit_User_Dto>;
-	let error_message = '';
+	interface Props {
+		data: SuperValidated<Edit_User_Dto>;
+	}
+
+	let { data }: Props = $props();
+	let error_message = $state('');
 
 	const dispatch = createEventDispatcher();
 	const form = superForm(data, {
@@ -35,13 +39,13 @@
 
 	const original = { ...$formData };
 
-	$: original_0 = original.roles_id.sort()[0];
-	$: original_1 = original.roles_id.sort()[1];
+	let original_0 = $derived(original.roles_id.sort()[0]);
+	let original_1 = $derived(original.roles_id.sort()[1]);
 
-	$: current_id_0 = $formData.roles_id.sort()[0];
-	$: current_id_1 = $formData.roles_id.sort()[1];
+	let current_id_0 = $derived($formData.roles_id.sort()[0]);
+	let current_id_1 = $derived($formData.roles_id.sort()[1]);
 
-	$: changed = original_0 === current_id_0 && original_1 === current_id_1;
+	let changed = $derived(original_0 === current_id_0 && original_1 === current_id_1);
 
 	function addItem(id: number) {
 		$formData.roles_id = [...$formData.roles_id, id];
@@ -62,23 +66,25 @@
 				{#each roles as role}
 					{@const checked = $formData.roles_id.includes(role.id)}
 					<div class="flex flex-row items-start space-x-3">
-						<Form.Control let:attrs>
-							<Checkbox
-								{...attrs}
-								{checked}
-								onCheckedChange={(v) => {
-									if (v) {
-										addItem(role.id);
-									} else {
-										removeItem(role.id);
-									}
-								}}
-							/>
-							<Form.Label class="text-sm font-normal">
-								{toProperCase(role.name)}
-							</Form.Label>
-							<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Checkbox
+									{...attrs}
+									{checked}
+									onCheckedChange={(v) => {
+										if (v) {
+											addItem(role.id);
+										} else {
+											removeItem(role.id);
+										}
+									}}
+								/>
+								<Form.Label class="text-sm font-normal">
+									{toProperCase(role.name)}
+								</Form.Label>
+								<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
+																				{/snippet}
+												</Form.Control>
 					</div>
 				{/each}
 				<Form.FieldErrors />

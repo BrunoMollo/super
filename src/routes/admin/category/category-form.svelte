@@ -9,8 +9,12 @@
 	import { fly } from 'svelte/transition';
 	import { create_category_validator, type Create_Category_Dto } from './category-validators';
 
-	export let data: SuperValidated<Create_Category_Dto>;
-	let error_message = '';
+	interface Props {
+		data: SuperValidated<Create_Category_Dto>;
+	}
+
+	let { data }: Props = $props();
+	let error_message = $state('');
 
 	const dispatch = createEventDispatcher();
 	const form = superForm(data, {
@@ -33,10 +37,12 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="name">
-		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Name</Form.Label>
-			<Input {...attrs} bind:value={$formData.name} class="w-64" />
-		</Form.Control>
+		<Form.Control >
+			{#snippet children({ attrs }:{attrs:any})}
+						<Form.Label class="text-lg">Name</Form.Label>
+				<Input {...attrs} bind:value={$formData.name} class="w-64" />
+								{/snippet}
+				</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 

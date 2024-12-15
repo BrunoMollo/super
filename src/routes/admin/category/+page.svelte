@@ -6,9 +6,9 @@
 	import CategoryTable from './category-table.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 
-	export let data;
+	let { data } = $props();
 
-	let is_open = false;
+	let is_open = $state(false);
 
 	function on_category_added() {
 		const description = new Date().toLocaleString();
@@ -23,7 +23,11 @@
 	<div class="relative mb-6">
 		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Admin Category</h1>
 		<div class="absolute right-4 top-1/4 flex justify-end">
-			<Button on:click={() => (is_open = true)}>Add new Category</Button>
+			<Button
+				onclick={() => {
+					is_open = true;
+				}}>Add new Category</Button
+			>
 		</div>
 	</div>
 
@@ -44,8 +48,6 @@
 			<Sheet.Title>New Category</Sheet.Title>
 			<Sheet.Description>By compleating this from you'll create a new Category</Sheet.Description>
 		</Sheet.Header>
-		<Sheet.Portal>
-			<CategoryForm data={data.form} on:success={on_category_added} />
-		</Sheet.Portal>
+		<CategoryForm data={data.form} on:success={on_category_added} />
 	</Sheet.Content>
 </Sheet.Root>
