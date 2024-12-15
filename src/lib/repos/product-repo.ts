@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq, max } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import {
 	t_category,
@@ -61,8 +61,38 @@ export class Product_Repo_Drizzle {
 			order_point,
 			bar_code,
 			stock,
+			price: 0,
 			categories: [] as { id: number; name: string }[]
 		}));
+
+		const sq_last_date_prices = this.ctx.$with('sq_last_date').as(
+			this.ctx
+				.select({
+					product_id: t_product_price.product_id,
+					last_date: max(t_product_price.date_from).as('last_date')
+				})
+				.from(t_product_price)
+				.groupBy(t_product_price.product_id)
+		);
+
+		const prices = await this.ctx
+			.with(sq_last_date_prices)
+			.select({ product_id: t_product_price.product_id, price: t_product_price.price_amount })
+			.from(t_product_price)
+			.innerJoin(
+				sq_last_date_prices,
+				and(
+					eq(t_product_price.product_id, sq_last_date_prices.product_id),
+					eq(t_product_price.date_from, sq_last_date_prices.last_date)
+				)
+			);
+
+		for (const { product_id, price } of prices) {
+			const product = products.find((x) => x.id === product_id);
+			if (product) {
+				product.price = Number(price);
+			}
+		}
 
 		const categories = await this.ctx
 			.select()
