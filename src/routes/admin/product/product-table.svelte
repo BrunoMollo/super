@@ -10,6 +10,7 @@
 		desc: string;
 		bar_code: number;
 		order_point: number | null;
+		price: number;
 		categories: Array<{ id: number; name: string }>;
 	}>;
 
@@ -23,6 +24,11 @@
 		table.column({
 			accessor: 'bar_code',
 			header: 'Bar Code'
+		}),
+		table.column({
+			accessor: 'price',
+			header: 'Precio',
+			cell: ({ value }) => `$${value.toFixed(2)}`
 		}),
 		table.column({
 			accessor: 'order_point',

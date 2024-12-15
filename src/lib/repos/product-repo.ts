@@ -1,6 +1,11 @@
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq, max } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
-import { t_category, t_product, t_product_has_category } from '$lib/server/drizzle/schema';
+import {
+	t_category,
+	t_product,
+	t_product_has_category,
+	t_product_price
+} from '$lib/server/drizzle/schema';
 
 export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
@@ -10,6 +15,7 @@ export class Product_Repo_Drizzle {
 		desc: string;
 		bar_code: number;
 		order_point: number;
+		price: number;
 		categories_ids: number[];
 	}) {
 		return await this.ctx.transaction(async (tx) => {
@@ -17,6 +23,9 @@ export class Product_Repo_Drizzle {
 				.update(t_product)
 				.set({ desc: data.desc, bar_code: data.bar_code, order_point: data.order_point })
 				.where(eq(t_product.id, data.id));
+
+			const price_amount = data.price.toString();
+			await tx.insert(t_product_price).values({ product_id: data.id, price_amount });
 
 			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, data.id));
 
@@ -33,6 +42,15 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product.id, id))
 			.then((x) => x.at(0));
 
+		const price = await this.ctx
+			.select()
+			.from(t_product_price)
+			.where(eq(t_product_price.product_id, id))
+			.orderBy(desc(t_product_price.date_from))
+			.limit(1)
+			.then((x) => x[0])
+			.then((x) => Number(x.price_amount));
+
 		const categories = await this.ctx
 			.select()
 			.from(t_product_has_category)
@@ -40,7 +58,7 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product_has_category.product_id, id))
 			.then((x) => x.map(({ category }) => category));
 
-		return { ...product, categories };
+		return { ...product, categories, price };
 	}
 
 	async list_all() {
@@ -52,8 +70,38 @@ export class Product_Repo_Drizzle {
 			order_point,
 			bar_code,
 			stock,
+			price: 0,
 			categories: [] as { id: number; name: string }[]
 		}));
+
+		const sq_last_date_prices = this.ctx.$with('sq_last_date').as(
+			this.ctx
+				.select({
+					product_id: t_product_price.product_id,
+					last_date: max(t_product_price.date_from).as('last_date')
+				})
+				.from(t_product_price)
+				.groupBy(t_product_price.product_id)
+		);
+
+		const prices = await this.ctx
+			.with(sq_last_date_prices)
+			.select({ product_id: t_product_price.product_id, price: t_product_price.price_amount })
+			.from(t_product_price)
+			.innerJoin(
+				sq_last_date_prices,
+				and(
+					eq(t_product_price.product_id, sq_last_date_prices.product_id),
+					eq(t_product_price.date_from, sq_last_date_prices.last_date)
+				)
+			);
+
+		for (const { product_id, price } of prices) {
+			const product = products.find((x) => x.id === product_id);
+			if (product) {
+				product.price = Number(price);
+			}
+		}
 
 		const categories = await this.ctx
 			.select()
@@ -82,9 +130,10 @@ export class Product_Repo_Drizzle {
 		desc: string;
 		bar_code: number;
 		order_point: number;
+		price: number;
 		categories_ids: Array<number>;
 	}) {
-		const { desc, bar_code, order_point } = product;
+		const { desc, bar_code, order_point, price } = product;
 
 		return this.ctx.transaction(async (tx) => {
 			const { product_id } = await tx
@@ -92,6 +141,10 @@ export class Product_Repo_Drizzle {
 				.values({ desc, bar_code, order_point, stock: 0 })
 				.returning({ product_id: t_product.id })
 				.then((x) => x[0]);
+
+			const price_amount = price.toString();
+			await tx.insert(t_product_price).values({ product_id, price_amount });
+
 			for (const category_id of product.categories_ids) {
 				await tx.insert(t_product_has_category).values({ product_id, category_id });
 			}
@@ -99,6 +152,7 @@ export class Product_Repo_Drizzle {
 		});
 	}
 
+	//TODO: make it soft
 	async remove(id: number) {
 		return this.ctx.transaction(async (tx) => {
 			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, id));
