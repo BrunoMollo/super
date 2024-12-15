@@ -2,6 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import SellTable from './sell-table.svelte';
 	import { create_state_sell } from './sell.state';
 
 	const { input, sell_list, search_product } = create_state_sell();
@@ -26,13 +27,14 @@
 			<Input class="w-20" type="number" placeholder="cantidad" bind:value={$input.amount} />
 		</div>
 		<div class="relative">
-			<Button class="absolute bottom-0" onclick={() => search_product({ on_not_found })}>
+			<Button class="absolute bottom-0" on:click={() => search_product({ on_not_found })}>
 				Agregar
 			</Button>
 		</div>
 	</div>
+	<div class="flex flex-col gap-4 pl-4 pt-4">
+		{#key $sell_list}
+			<SellTable lines={$sell_list} />
+		{/key}
+	</div>
 </main>
-
-<pre>
-  {JSON.stringify($sell_list, null, 2)}
-</pre>
