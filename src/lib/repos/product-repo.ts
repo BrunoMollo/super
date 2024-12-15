@@ -1,6 +1,11 @@
 import { desc, eq } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
-import { t_category, t_product, t_product_has_category } from '$lib/server/drizzle/schema';
+import {
+	t_category,
+	t_product,
+	t_product_has_category,
+	t_product_price
+} from '$lib/server/drizzle/schema';
 
 export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
@@ -82,9 +87,10 @@ export class Product_Repo_Drizzle {
 		desc: string;
 		bar_code: number;
 		order_point: number;
+		price: number;
 		categories_ids: Array<number>;
 	}) {
-		const { desc, bar_code, order_point } = product;
+		const { desc, bar_code, order_point, price } = product;
 
 		return this.ctx.transaction(async (tx) => {
 			const { product_id } = await tx
@@ -92,6 +98,10 @@ export class Product_Repo_Drizzle {
 				.values({ desc, bar_code, order_point, stock: 0 })
 				.returning({ product_id: t_product.id })
 				.then((x) => x[0]);
+
+			const price_amount = price.toString();
+			await tx.insert(t_product_price).values({ product_id, price_amount });
+
 			for (const category_id of product.categories_ids) {
 				await tx.insert(t_product_has_category).values({ product_id, category_id });
 			}
