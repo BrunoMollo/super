@@ -19,7 +19,7 @@
 
 	const href = [base_url, id].join('/');
 
-	let open;
+	let open=$state(false);
 	run(() => {
 		open = $page.state.edit_user_state ? true : false;
 	});

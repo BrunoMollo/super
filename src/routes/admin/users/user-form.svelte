@@ -47,10 +47,11 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="username">
+
 		<Form.Control>
-			{#snippet children({ attrs })}
-				<Form.Label class="text-lg">Username</Form.Label>
-				<Input {...attrs} bind:value={$formData.username} class="w-64" />
+			{#snippet children({ attrs , props}:{attrs:any, props:any})}
+				<label {...props} class="text-lg">Username</label>
+				<Input {...attrs} {...props} bind:value={$formData.username} class="w-64" />
 			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />
@@ -58,7 +59,7 @@
 
 	<Form.Field {form} name="password">
 		<Form.Control>
-			{#snippet children({ attrs })}
+			{#snippet children({ attrs, props })}
 				<Form.Label class="text-lg">Password</Form.Label>
 				<Input {...attrs} bind:value={$formData.password} class="w-64" />
 				<Form.FieldErrors />

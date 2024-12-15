@@ -22,7 +22,7 @@
 	<div class="relative mb-6">
 		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Admin Users</h1>
 		<div class="absolute right-4 top-1/4 flex justify-end">
-			<Button on:click={() => (is_open = true)}>Add new user</Button>
+			<Button onclick={() => (is_open = true)}>Add new user</Button>
 		</div>
 	</div>
 	{#key data.users}
@@ -36,8 +36,6 @@
 			<Sheet.Title>New User</Sheet.Title>
 			<Sheet.Description>By compleating this from you'll create a new User</Sheet.Description>
 		</Sheet.Header>
-		<Sheet.Portal>
-			<UserForm data={data.form} on:success={on_user_added} />
-		</Sheet.Portal>
+		<UserForm data={data.form} on:success={on_user_added} />
 	</Sheet.Content>
 </Sheet.Root>

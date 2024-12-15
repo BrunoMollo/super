@@ -5,17 +5,17 @@
 	import { cn } from '$lib/utils.js';
 
 	let {
-		ref = $bindable(null),
 		children,
 		class: className,
-		...restProps
-	}: WithoutChild<FormPrimitive.LabelProps> = $props();
+    props,
+	}: WithoutChild<FormPrimitive.LabelProps> & {props:unknown}= $props();
 </script>
 
-<FormPrimitive.Label {...restProps} bind:ref>
-	{#snippet child({ props })}
+
+{#if props instanceof Object}
 		<Label {...props} class={cn('data-[fs-error]:text-destructive', className)}>
 			{@render children?.()}
 		</Label>
-	{/snippet}
-</FormPrimitive.Label>
+{:else}
+    INVALID PROPS
+{/if}

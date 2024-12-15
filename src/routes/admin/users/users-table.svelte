@@ -47,7 +47,7 @@
 					<Table.Row>
 						{#each headerRow.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} props={cell.props()}>
-								{#snippet children({ attrs })}
+								{#snippet children({ attrs }:{attrs:any})}
 									<Table.Head {...attrs}>
 										<Render of={cell.render()} />
 									</Table.Head>
@@ -61,11 +61,11 @@
 		<Table.Body {...$tableBodyAttrs}>
 			{#each $pageRows as row (row.id)}
 				<Subscribe rowAttrs={row.attrs()}>
-					{#snippet children({ rowAttrs })}
+					{#snippet children({ rowAttrs }:{rowAttrs:any})}
 						<Table.Row {...rowAttrs}>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()}>
-									{#snippet children({ attrs })}
+									{#snippet children({ attrs }:{attrs:any})}
 										<Table.Cell {...attrs}>
 											<Render of={cell.render()} />
 										</Table.Cell>
