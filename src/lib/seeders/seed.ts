@@ -167,7 +167,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 }
 
 async function seed() {
-	console.log('\n======= Cleaning tables 🧹 =======');
+	console.log('\n------- Cleaning tables 🧹 -------');
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_product_has_category);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
@@ -181,16 +181,16 @@ async function seed() {
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_role);
 
-	console.log('======= Tables deleted 🗑️ =======\n');
+	console.log('------- Tables deleted 🗑️ -------\n');
 
 	const roles = await seed_roles();
 	await seed_users(roles);
 	const categories = await seed_categories();
 	await seed_products(categories);
 
-	console.log('\n===================================');
-	console.log('======= Seeding finished 🌱 =======');
-	console.log('===================================');
+	console.log('\n-----------------------------------');
+	console.log('------- Seeding finished 🌱 -------');
+	console.log('-----------------------------------');
 }
 
 // Main Seed
