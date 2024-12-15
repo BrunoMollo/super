@@ -168,11 +168,11 @@ export class Product_Repo_Drizzle {
 			.then((x) => x.at(0));
 	}
 
-	async get_by_bar_code(bar_code: number) {
+	async exists_with_bar_code(bar_code: number) {
 		return await this.ctx
 			.select()
 			.from(t_product)
 			.where(eq(t_product.bar_code, bar_code))
-			.then((x) => x.at(0));
+			.then((x) => Boolean(x.at(0)));
 	}
 }
