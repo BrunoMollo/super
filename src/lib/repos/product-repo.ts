@@ -42,6 +42,15 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product.id, id))
 			.then((x) => x.at(0));
 
+		const price = await this.ctx
+			.select()
+			.from(t_product_price)
+			.where(eq(t_product_price.product_id, id))
+			.orderBy(desc(t_product_price.date_from))
+			.limit(1)
+			.then((x) => x[0])
+			.then((x) => Number(x.price_amount));
+
 		const categories = await this.ctx
 			.select()
 			.from(t_product_has_category)
@@ -49,7 +58,7 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product_has_category.product_id, id))
 			.then((x) => x.map(({ category }) => category));
 
-		return { ...product, categories };
+		return { ...product, categories, price };
 	}
 
 	async list_all() {
@@ -143,6 +152,7 @@ export class Product_Repo_Drizzle {
 		});
 	}
 
+	//TODO: make it soft
 	async remove(id: number) {
 		return this.ctx.transaction(async (tx) => {
 			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, id));
