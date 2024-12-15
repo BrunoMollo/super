@@ -24,7 +24,7 @@
 
 	const href = [base_url, id].join('/');
 
-	let open_dialog;
+	let open_dialog=$state(false);
 	run(() => {
 		open_dialog = $page.state.edit_category_state ? true : false;
 	});
@@ -69,13 +69,11 @@
 	}}
 >
 	<DropdownMenu.Root bind:open={open_dropdown}>
-		<DropdownMenu.Trigger asChild >
-			{#snippet children({ builder })}
-						<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
+		<DropdownMenu.Trigger >
+						<Button variant="ghost"  size="icon" class="relative h-8 w-8 p-0">
 					<span class="sr-only">Open menu</span>
 					<Ellipsis class="h-4 w-4" />
 				</Button>
-								{/snippet}
 				</DropdownMenu.Trigger>
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>
@@ -85,7 +83,7 @@
 			<DropdownMenu.Item>
 				<a {href} onclick={goto_category}>Edit Category</a>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item on:click={() => deleteCategory(id)}>Delete Category</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => deleteCategory(id)}>Delete Category</DropdownMenu.Item>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
 	<Dialog.Content class="sm:max-w-[425px]">
@@ -98,7 +96,7 @@
 							Make changes to your profile here. Click save when you're done.
 						</Dialog.Description>
 					</Dialog.Header>
-							{/snippet}
+				{/snippet}
 			</EditCategoryPage>
 		{/if}
 	</Dialog.Content>
