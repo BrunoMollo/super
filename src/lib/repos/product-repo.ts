@@ -15,6 +15,7 @@ export class Product_Repo_Drizzle {
 		desc: string;
 		bar_code: number;
 		order_point: number;
+		price: number;
 		categories_ids: number[];
 	}) {
 		return await this.ctx.transaction(async (tx) => {
@@ -22,6 +23,9 @@ export class Product_Repo_Drizzle {
 				.update(t_product)
 				.set({ desc: data.desc, bar_code: data.bar_code, order_point: data.order_point })
 				.where(eq(t_product.id, data.id));
+
+			const price_amount = data.price.toString();
+			await tx.insert(t_product_price).values({ product_id: data.id, price_amount });
 
 			await tx.delete(t_product_has_category).where(eq(t_product_has_category.product_id, data.id));
 
