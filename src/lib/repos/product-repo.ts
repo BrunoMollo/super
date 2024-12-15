@@ -160,12 +160,12 @@ export class Product_Repo_Drizzle {
 		});
 	}
 
-	async get_by_description(description: string) {
+	async exists_with_description(description: string) {
 		return await this.ctx
 			.select()
 			.from(t_product)
 			.where(eq(t_product.desc, description))
-			.then((x) => x.at(0));
+			.then((x) => Boolean(x.at(0)));
 	}
 
 	async exists_with_bar_code(bar_code: number) {

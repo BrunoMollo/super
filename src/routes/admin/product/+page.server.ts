@@ -30,7 +30,7 @@ export const actions: Actions = {
 			return fail(401, { form });
 		}
 
-		const same_desc = await product_repo.get_by_description(form.data.desc).then((x) => !!x);
+		const same_desc = await product_repo.exists_with_description(form.data.desc);
 		if (same_desc) {
 			return setError(form, 'desc', 'Esta Descripción ya existe');
 		}
