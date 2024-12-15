@@ -7,7 +7,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 		return new Response('Forbidden', { status: 403 });
 	}
 
-	const code_bar = url.searchParams.get('code_bar');
+	const code_bar = Number(url.searchParams.get('code_bar'));
 	if (!code_bar) {
 		return new Response('Missing code_bar', { status: 400 });
 	}

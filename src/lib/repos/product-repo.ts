@@ -5,7 +5,7 @@ import { t_category, t_product, t_product_has_category } from '$lib/server/drizz
 export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
-	async get_by_code_bar(code_bar: string) {
+	async get_by_code_bar(code_bar: number) {
 		return await this.ctx
 			.select()
 			.from(t_product)
