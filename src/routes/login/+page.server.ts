@@ -26,7 +26,7 @@ export const actions: Actions = {
 
 		const res = await user_repo.validate({ username, password });
 		if (!res.pass) {
-			return error(401, 'Wrong username or password');
+			return error(401, 'Usuario o contraseña incorrectos');
 		}
 
 		const token = await token_service.create_token(res.user);
