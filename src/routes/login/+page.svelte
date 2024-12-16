@@ -9,7 +9,7 @@
 	<Card.Root class="w-[350px]">
 		<Card.Header>
 			<Card.Title class="text-3xl">Login</Card.Title>
-			<Card.Description>Welcome back</Card.Description>
+			<Card.Description>Bienvenido a la aplicación</Card.Description>
 		</Card.Header>
 		<Card.Content>
 			<LoginForm data={data.form}></LoginForm>
