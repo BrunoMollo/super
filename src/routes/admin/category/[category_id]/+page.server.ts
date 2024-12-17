@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const category = await category_repo.get_one(id);
 	if (!category) {
-		return error(404, 'not found');
+		return error(404, 'No se encontro la categoria');
 	}
 
 	const { name } = category;
@@ -45,12 +45,12 @@ export const actions: Actions = {
 
 		const category = await category_repo.get_one(id);
 		if (!category) {
-			return error(404, 'Category Not Found');
+			return error(404, 'No se encontro la categoria');
 		}
 
 		const match = await category_repo.get_by_name(name);
 		if (match) {
-			return setError(form, 'name', 'There is already a category with this name');
+			return setError(form, 'name', 'Ya hay una categoria con este nombre');
 		}
 
 		await category_repo.update({ id, name });

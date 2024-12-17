@@ -16,7 +16,7 @@
 		onUpdate: async (res) => {
 			if (res.result.type == 'success') {
 				await invalidateAll();
-				toast.success('Category has been modified');
+				toast.success('Categoria fue editada');
 				dispatch('success', {
 					ok: true
 				});
@@ -36,12 +36,12 @@
 	<input type="hidden" name="id" value={$form.id} />
 	<Form.Field form={super_form} name="name">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Name</Form.Label>
+			<Form.Label class="text-lg">Nombre</Form.Label>
 			<Input {...attrs} bind:value={$form.name} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 	<div class="mt-4 flex justify-end gap-3">
-		<Form.Button class="w-6/12 " disabled={changed}>Submit Changes</Form.Button>
+		<Form.Button class="w-6/12 " disabled={changed}>Guardar Cambios</Form.Button>
 	</div>
 </form>

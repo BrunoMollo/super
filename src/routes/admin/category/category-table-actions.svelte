@@ -34,7 +34,7 @@
 	});
 
 	async function deleteCategory(id: number) {
-		if (!confirm('Are you sure you want to delete this category?')) return;
+		if (!confirm('Estas seguro que quieres eliminar la categoria?')) return;
 		const res = await fetch(`/admin/category/${id}`, {
 			method: 'DELETE',
 			headers: {
@@ -62,29 +62,27 @@
 	<DropdownMenu.Root bind:open={open_dropdown}>
 		<DropdownMenu.Trigger asChild let:builder>
 			<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
-				<span class="sr-only">Open menu</span>
+				<span class="sr-only">Abrir Menu</span>
 				<Ellipsis class="h-4 w-4" />
 			</Button>
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>
-				<DropdownMenu.Label>Actions</DropdownMenu.Label>
+				<DropdownMenu.Label>Acciones</DropdownMenu.Label>
 			</DropdownMenu.Group>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
 				<a {href} on:click={goto_category}>Edit Category</a>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item on:click={() => deleteCategory(id)}>Delete Category</DropdownMenu.Item>
+			<DropdownMenu.Item on:click={() => deleteCategory(id)}>Borrar Categoria</DropdownMenu.Item>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
 	<Dialog.Content class="sm:max-w-[425px]">
 		{#if $page.state.edit_category_state}
 			<EditCategoryPage data={$page.state.edit_category_state}>
 				<Dialog.Header slot="header">
-					<Dialog.Title>EDIT</Dialog.Title>
-					<Dialog.Description>
-						Make changes to your profile here. Click save when you're done.
-					</Dialog.Description>
+					<Dialog.Title>Editar Categoria</Dialog.Title>
+					<Dialog.Description>Realizar cambios en la categoria</Dialog.Description>
 				</Dialog.Header>
 			</EditCategoryPage>
 		{/if}
