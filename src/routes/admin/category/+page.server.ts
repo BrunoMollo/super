@@ -43,7 +43,7 @@ export const actions: Actions = {
 
 		const match = await category_repo.get_by_name(name);
 		if (match) {
-			return setError(form, 'name', 'This name already exists');
+			return setError(form, 'name', 'Ya hay una categoria con este nombre');
 		}
 
 		await category_repo.create({ name });

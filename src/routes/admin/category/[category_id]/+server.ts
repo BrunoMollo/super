@@ -13,6 +13,6 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
 
 	return json({
 		ok,
-		message: ok ? 'Category deleted' : 'Can delete it: There are Products using this category'
+		message: ok ? 'Categoria Borrada' : 'NO se puede borrar la cateogria: Hay productos asociados'
 	});
 };

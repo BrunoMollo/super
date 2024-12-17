@@ -21,9 +21,11 @@
 
 <main class="container pt-6">
 	<div class="relative mb-6">
-		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Admin Category</h1>
+		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+			Administrar Categorias
+		</h1>
 		<div class="absolute right-4 top-1/4 flex justify-end">
-			<Button on:click={() => (is_open = true)}>Add new Category</Button>
+			<Button on:click={() => (is_open = true)}>Nueva Categoria</Button>
 		</div>
 	</div>
 
@@ -41,8 +43,10 @@
 <Sheet.Root bind:open={is_open}>
 	<Sheet.Content>
 		<Sheet.Header>
-			<Sheet.Title>New Category</Sheet.Title>
-			<Sheet.Description>By compleating this from you'll create a new Category</Sheet.Description>
+			<Sheet.Title>Nueva Categoria</Sheet.Title>
+			<Sheet.Description>
+				Al completar este formulario, creará una nueva categoria
+			</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
 			<CategoryForm data={data.form} on:success={on_category_added} />

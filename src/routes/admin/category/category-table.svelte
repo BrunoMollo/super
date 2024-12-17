@@ -15,11 +15,11 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'name',
-			header: 'Name'
+			header: 'Nombre'
 		}),
 		table.column({
 			accessor: 'count',
-			header: 'Products with this category'
+			header: 'Productos asociados'
 		}),
 		table.column({
 			accessor: ({ id }) => id,
