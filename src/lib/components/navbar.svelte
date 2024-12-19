@@ -34,7 +34,7 @@
 				</Avatar.Root>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content side="bottom" align="start">
-				<DropdownMenu.Label>My Account</DropdownMenu.Label>
+				<DropdownMenu.Label>Mi cuenta</DropdownMenu.Label>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
 					{#each commands as { hrefs, place }}
