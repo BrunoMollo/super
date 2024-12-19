@@ -25,7 +25,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	/**
 	 * SELLER GUARD
 	 */
-	if (pathname.match('^/seller')) {
+	if (pathname.match('^/sell')) {
 		const is_seller = user.has_role('SELLER');
 		if (is_seller) {
 			return await resolve(event);
