@@ -19,7 +19,7 @@
 			}
 		}
 
-		toast.info('Press Ctrl+K to navigate');
+		toast.info('Presiona Ctrl+K para navegar');
 		document.addEventListener('keydown', handleKeydown);
 
 		return () => {
@@ -29,7 +29,7 @@
 </script>
 
 <Command.Dialog bind:open>
-	<Command.Input placeholder="Type a command or search..." />
+	<Command.Input placeholder="Escribe para buscar..." />
 	<Command.List>
 		<Command.Empty>No results found.</Command.Empty>
 		{#each commands as { name, hrefs }}
