@@ -1,31 +1,38 @@
 import { fetch_product_by_bar_code } from './api/product/product.client';
 import { fetch_submit_sell } from './api/sell/sell.client';
-import { derived, writable } from 'svelte/store';
+import { derived, readonly, writable } from 'svelte/store';
 
-export function create_state_sell() {
-	const input = writable({
-		bar_code: '',
-		amount: 1
-	});
-	let $input = { bar_code: '', amount: 1 };
-	input.subscribe((x) => ($input = x));
-
-	const sell_list = writable(
+class SellState {
+	private readonly listStore = writable(
 		new Map<number, { id: number; desc: string; amount: number; price: number }>()
 	);
 
-	const total = derived(sell_list, (x) =>
-		Array.from(x.values()).reduce((acc, cur) => acc + cur.amount * cur.price, 0)
-	);
+	private products = [] as Array<{ product_id: number; quantity: number }>;
+	constructor() {
+		this.listStore.subscribe((x) => {
+			this.products = Array.from(x.values()).map((x) => ({
+				product_id: x.id,
+				quantity: x.amount
+			}));
+		});
+	}
 
-	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
-		const { bar_code, amount } = $input;
+	getProducts() {
+		return this.products;
+	}
 
-		const product = await fetch_product_by_bar_code(bar_code);
-		if (!product) {
-			return on_not_found();
-		}
-		sell_list.update((x) => {
+	getListStore() {
+		return readonly(this.listStore);
+	}
+
+	totalStore() {
+		return derived(this.listStore, (x) =>
+			Array.from(x.values()).reduce((acc, cur) => acc + cur.amount * cur.price, 0)
+		);
+	}
+
+	add(product: { id: number; desc: string; price: number }, amount: number) {
+		this.listStore.update((x) => {
 			const existing = x.get(product.id);
 			if (existing) {
 				existing.amount += Number(amount);
@@ -34,26 +41,58 @@ export function create_state_sell() {
 			}
 			return x;
 		});
-		input.update(() => ({ bar_code: '', amount: 1 }));
+	}
+}
+
+class InputState {
+	private readonly inputStore = writable({
+		bar_code: '',
+		amount: 1
+	});
+
+	private inputValue = { bar_code: '', amount: 1 };
+	constructor() {
+		this.inputStore.subscribe((x) => {
+			this.inputValue = x;
+		});
 	}
 
-	let $products = [] as Array<{ product_id: number; quantity: number }>;
-	sell_list.subscribe((x) => {
-		$products = Array.from(x.values()).map((x) => ({
-			product_id: x.id,
-			quantity: x.amount
-		}));
-	});
+	getCurrent() {
+		return this.inputValue;
+	}
+	getStore() {
+		return this.inputStore;
+	}
+	reset() {
+		this.inputStore.set({ bar_code: '', amount: 1 });
+	}
+}
+
+export function create_state_sell() {
+	const input = new InputState();
+	const sell_list = new SellState();
+
+	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
+		const { bar_code, amount } = input.getCurrent();
+
+		const product = await fetch_product_by_bar_code(bar_code);
+		if (!product) {
+			return on_not_found();
+		}
+		sell_list.add(product, amount);
+		input.reset();
+	}
+
 	async function submit_sell() {
 		await fetch_submit_sell({
-			products: $products
+			products: sell_list.getProducts()
 		});
 	}
 
 	return {
-		input,
-		sell_list: derived(sell_list, (x) => Array.from(x.values())),
-		total,
+		input: input.getStore(),
+		sell_list: derived(sell_list.getListStore(), (x) => Array.from(x.values())),
+		total: sell_list.totalStore(),
 		search_product,
 		submit_sell
 	};
