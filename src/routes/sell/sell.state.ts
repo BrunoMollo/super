@@ -1,4 +1,5 @@
 import { fetch_product_by_bar_code } from './api/product/product.client';
+import { fetch_submit_sell } from './api/sell/sell.client';
 import { derived, writable } from 'svelte/store';
 
 export function create_state_sell() {
@@ -36,10 +37,24 @@ export function create_state_sell() {
 		input.update(() => ({ bar_code: '', amount: 1 }));
 	}
 
+	let $products = [] as Array<{ product_id: number; quantity: number }>;
+	sell_list.subscribe((x) => {
+		$products = Array.from(x.values()).map((x) => ({
+			product_id: x.id,
+			quantity: x.amount
+		}));
+	});
+	async function submit_sell() {
+		await fetch_submit_sell({
+			products: $products
+		});
+	}
+
 	return {
 		input,
 		sell_list: derived(sell_list, (x) => Array.from(x.values())),
 		total,
-		search_product
+		search_product,
+		submit_sell
 	};
 }

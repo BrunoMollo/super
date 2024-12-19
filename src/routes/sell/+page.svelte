@@ -5,7 +5,7 @@
 	import SellTable from './sell-table.svelte';
 	import { create_state_sell } from './sell.state';
 
-	const { input, sell_list, total, search_product } = create_state_sell();
+	const { input, sell_list, total, search_product, submit_sell } = create_state_sell();
 	function on_not_found() {
 		alert('Producto no encontrado');
 	}
@@ -17,6 +17,8 @@
 	>
 		Punto de Venta
 	</h1>
+
+	<Button class="absolute bottom-0" on:click={() => submit_sell()}>Confirmar</Button>
 	<div class="flex flex-row gap-2 pt-4">
 		<div class="pl-4">
 			<Label class="pl-1">Código de Barras</Label>
