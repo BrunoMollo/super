@@ -28,11 +28,12 @@
 		}),
 		table.column({
 			accessor: 'id',
-			header: 'Acum',
+			header: 'Acumulado',
 			cell: ({ value }) => {
-				return lines
+				const acum = lines
 					.filter((x) => x.id == value)
 					.reduce((acum, prod) => acum + prod.price * prod.amount, 0);
+				return '$' + acum.toFixed(2);
 			}
 		})
 	]);

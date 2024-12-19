@@ -6,11 +6,11 @@ import { db } from './server/drizzle/drizzle-client';
 import { Hash_Service_Bcrypt } from './services/hash_service';
 import { JWT_Service } from './services/jwt_service';
 
-// Serivces
+// Services
 const hash_service = new Hash_Service_Bcrypt();
 export const token_service = new JWT_Service();
 
-//Repos
+// Repos
 export const user_repo = new User_Repo_Drizzle(db, hash_service);
 export const category_repo = new Category_Repo_Drizzle(db);
 

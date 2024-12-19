@@ -13,6 +13,10 @@ export function create_state_sell() {
 		new Map<number, { id: number; desc: string; amount: number; price: number }>()
 	);
 
+	const total = derived(sell_list, (x) =>
+		Array.from(x.values()).reduce((acc, cur) => acc + cur.amount * cur.price, 0)
+	);
+
 	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
 		const { bar_code, amount } = $input;
 
@@ -35,6 +39,7 @@ export function create_state_sell() {
 	return {
 		input,
 		sell_list: derived(sell_list, (x) => Array.from(x.values())),
+		total,
 		search_product
 	};
 }
