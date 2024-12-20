@@ -17,7 +17,7 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'username',
-			header: 'Username'
+			header: 'Usuario'
 		}),
 		table.column({
 			accessor: 'roles',

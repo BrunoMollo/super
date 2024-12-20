@@ -34,14 +34,14 @@
 		}
 	}}
 >
-	<a class={buttonVariants({ variant: 'outline' })} {href} on:click={goto_profile}>Edit Profile</a>
+	<a class={buttonVariants({ variant: 'outline' })} {href} on:click={goto_profile}>Editar</a>
 	<Dialog.Content class="sm:max-w-[425px]">
 		{#if $page.state.edit_user_state}
 			<EditUserPage data={$page.state.edit_user_state}>
 				<Dialog.Header slot="header">
-					<Dialog.Title>EDIT</Dialog.Title>
+					<Dialog.Title>Editar</Dialog.Title>
 					<Dialog.Description>
-						Make changes to your profile here. Click save when you're done.
+						Hace cambios en tu perfil aquí. Haz click en guardar cuando estés listo.
 					</Dialog.Description>
 				</Dialog.Header>
 			</EditUserPage>

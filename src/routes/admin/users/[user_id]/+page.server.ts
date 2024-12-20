@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const selected_user = await user_repo.get_one(id);
 	if (!selected_user) {
-		return error(404, 'User not found');
+		return error(404, 'Usuario no encontrado');
 	}
 
 	const roles_id = selected_user.roles.map((x) => x.id);
@@ -51,7 +51,7 @@ export const actions: Actions = {
 
 		const selected_user = await user_repo.get_one(user_id);
 		if (!selected_user) {
-			return error(404, 'User Not Found');
+			return error(404, 'Usuario no encontrado');
 		}
 
 		await uow.do(async (repos) => {
