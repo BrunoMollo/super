@@ -44,7 +44,7 @@ export const actions: Actions = {
 
 		const match_username = await user_repo.get_by_username(username);
 		if (match_username) {
-			return setError(form, 'username', 'This username already exists');
+			return setError(form, 'username', 'El usuario ya existe');
 		}
 
 		await uow.do(async (repos) => {

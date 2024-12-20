@@ -44,7 +44,7 @@
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="username">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Username</Form.Label>
+			<Form.Label class="text-lg">Usuario</Form.Label>
 			<Input {...attrs} bind:value={$formData.username} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
@@ -52,7 +52,7 @@
 
 	<Form.Field {form} name="password">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Password</Form.Label>
+			<Form.Label class="text-lg">Contraseña</Form.Label>
 			<Input {...attrs} bind:value={$formData.password} class="w-64" />
 			<Form.FieldErrors />
 		</Form.Control>
@@ -61,7 +61,7 @@
 	<Form.Fieldset {form} name="roles_id" class="space-y-0">
 		<div class="mb-4">
 			<Form.Legend class="text-base">Roles</Form.Legend>
-			<Form.Description class="pb-2">Define permisions</Form.Description>
+			<Form.Description class="pb-2">Definir Roles</Form.Description>
 			<Form.Field {form} name="roles_id">
 				{#each roles as role}
 					{@const checked = $formData.roles_id.includes(role.id)}
@@ -91,7 +91,7 @@
 	</Form.Fieldset>
 
 	<div class="mt-4 flex w-64 justify-end gap-3">
-		<Form.Button class="w-6/12 ">Submit</Form.Button>
+		<Form.Button class="w-6/12 ">Confirmar</Form.Button>
 	</div>
 </form>
 
