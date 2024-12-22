@@ -9,12 +9,12 @@ Team members:
 - Fausto
 
 ## Preview
-You can see the site in [this link](https://super-flame.vercel.app/admin/users) entering with the following credentials:
-| Role     | Username      | Password |
-|----------|:-------------:|---------:|
-| Admin    |  bruno        | 1234     | 
-| Seller   |  rami         | 1234     |
 
+You can see the site in [this link](https://super-flame.vercel.app/admin/users) entering with the following credentials:
+| Role | Username | Password |
+|----------|:-------------:|---------:|
+| Admin | bruno | 1234 |
+| Seller | rami | 1234 |
 
 ## Developing
 
