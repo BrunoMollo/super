@@ -70,4 +70,4 @@ Use the following command:
 pnpm add-migration
 ```
 
-Note: don't create the migration before pulling the latest version of main
+Note: don't create the migration before pulling the latest version of main.
