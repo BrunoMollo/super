@@ -13,8 +13,9 @@ export async function fetch_submit_sell(sell: Sell) {
 	})
 		.then(async (res) => {
 			if (res.status === 200) {
-				return res.json().then((x) => x.product);
+				return (await res.json()) as { ok: boolean };
 			}
+			return { ok: false };
 		})
-		.catch(() => alert('Internal error'));
+		.catch(() => ({ ok: false }));
 }

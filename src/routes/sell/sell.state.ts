@@ -42,6 +42,10 @@ class SellState {
 			return x;
 		});
 	}
+
+	reset() {
+		this.listStore.set(new Map());
+	}
 }
 
 class InputState {
@@ -83,10 +87,17 @@ export function create_state_sell() {
 		input.reset();
 	}
 
-	async function submit_sell() {
-		await fetch_submit_sell({
+	async function submit_sell(calls: { on_success: () => unknown; on_error: () => unknown }) {
+		const { ok } = await fetch_submit_sell({
 			products: sell_list.getProducts()
 		});
+		if (ok) {
+			sell_list.reset();
+			input.reset();
+			calls.on_success();
+		} else {
+			calls.on_error();
+		}
 	}
 
 	return {

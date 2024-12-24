@@ -2,6 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import { toast } from 'svelte-sonner';
 	import SellTable from './sell-table.svelte';
 	import { create_state_sell } from './sell.state';
 
@@ -18,7 +19,6 @@
 		Punto de Venta
 	</h1>
 
-	<Button class="absolute bottom-0" on:click={() => submit_sell()}>Confirmar</Button>
 	<div class="flex flex-row gap-2 pt-4">
 		<div class="pl-4">
 			<Label class="pl-1">Código de Barras</Label>
@@ -37,9 +37,26 @@
 		</div>
 	</div>
 
-	<div class="flex flex-col gap-4 pl-4 pt-4">
+	<div class="flex flex-row gap-4 pl-4 pt-4">
 		{#key $sell_list}
 			<SellTable lines={$sell_list} />
 		{/key}
+
+		{#if $total > 0}
+			<Button
+				class=""
+				on:click={() =>
+					submit_sell({
+						on_success: () => {
+							toast.success('Compra realizada exitosamente');
+						},
+						on_error: () => {
+							toast.error('Error al realizar la compra');
+						}
+					})}
+			>
+				Confirmar
+			</Button>
+		{/if}
 	</div>
 </main>
