@@ -19,6 +19,7 @@ export type Role = (typeof roles)[number];
 export type Role_Name = (typeof roles_names)[number];
 
 export interface User {
+	getId(): number;
 	has_role(role_name: Role_Name): boolean;
 	has_any_role(roles_names: Role_Name[]): boolean;
 }
@@ -29,6 +30,10 @@ export class Authorized_User implements User {
 		public username: string,
 		public roles: Role[]
 	) {}
+
+	getId(): number {
+		return this.id;
+	}
 
 	has_role(role_name: Role_Name) {
 		return !!this.roles.find((x) => x.name === role_name);
@@ -45,6 +50,10 @@ export class Authorized_User implements User {
 }
 
 export class Empty_User implements User {
+	getId(): number {
+		return -1;
+	}
+
 	has_role() {
 		return false;
 	}
