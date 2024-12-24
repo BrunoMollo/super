@@ -2,6 +2,13 @@
 #!/bin/bash
 # This is a script used by Bruno to start developing quickly 
 
+echo "   _____                          "
+echo "  / ___/ __  __ ____   ___   _____"
+echo "  \__ \ / / / // __ \ / _ \ / ___/"
+echo " ___/ // /_/ // /_/ //  __// /    "
+echo "/____/ \__,_// .___/ \___//_/     "
+echo "            /_/                   "
+
 # Name of the tmux session
 SESSION_NAME="super"
 
