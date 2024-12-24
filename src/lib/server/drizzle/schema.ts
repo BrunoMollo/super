@@ -53,3 +53,23 @@ export const t_product_price = pgTable('product_price', {
 	price_amount: numeric('price_amount', { precision: 100, scale: 2 }).notNull(),
 	date_from: timestamp('created_at').defaultNow().notNull()
 });
+
+export const t_sale = pgTable('sale', {
+	id: serial('id').primaryKey().notNull(),
+	seller_id: integer('seller_id')
+		.notNull()
+		.references(() => t_user.id),
+	created_at: timestamp('created_at').defaultNow().notNull()
+});
+
+export const t_sale_line = pgTable('sale_line', {
+	id: serial('id').primaryKey().notNull(),
+	sale_id: integer('sale_id')
+		.notNull()
+		.references(() => t_sale.id),
+	product_id: integer('product_id')
+		.notNull()
+		.references(() => t_product.id),
+	quantity: integer('quantity').notNull(),
+	unit_price: numeric('unit_price', { precision: 100, scale: 2 }).notNull()
+});
