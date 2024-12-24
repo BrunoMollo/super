@@ -27,7 +27,7 @@ export async function register_sale(input: { product_id: number; quantity: numbe
 		});
 	}
 
-	const seller_id = 0; //TODO
+	const seller_id = user.getId();
 	await sale_repo.register_sale({ seller_id, products: sale });
 	return { ok: true };
 }
