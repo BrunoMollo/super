@@ -1,5 +1,5 @@
 import type { Infer } from 'sveltekit-superforms';
-import { z } from 'zod';
+import { z } from '$lib/utils/es-zod';
 
 export const create_product_validator = z.object({
 	desc: z.string().min(4).max(36),

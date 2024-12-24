@@ -1,6 +1,6 @@
 import type { Infer } from 'sveltekit-superforms';
-import { z } from 'zod';
 import { roles } from '$lib/user';
+import { z } from '$lib/utils/es-zod';
 
 export const create_user_validator = z
 	.object({

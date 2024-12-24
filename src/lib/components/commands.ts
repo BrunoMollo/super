@@ -12,25 +12,25 @@ type Router = Array<{
 
 export const commands: Router = [
 	{
-		name: 'Configuration',
+		name: 'Configuracion',
 		place: ['navbar', 'command-palette'],
 		hrefs: [
 			{
-				label: 'Categories',
+				label: 'Categorias',
 				href: '/admin/category'
 			},
 			{
-				label: 'Products',
+				label: 'Productos',
 				href: '/admin/product'
 			},
 			{
-				label: 'Users',
+				label: 'Usuarios',
 				href: '/admin/users'
 			}
 		]
 	},
 	{
-		name: 'Promotions',
+		name: 'Promociones',
 		place: ['navbar', 'command-palette'],
 		hrefs: [
 			{
@@ -44,7 +44,7 @@ export const commands: Router = [
 		]
 	},
 	{
-		name: 'Data',
+		name: 'Analisis',
 		place: ['navbar', 'command-palette'],
 		hrefs: [
 			{
@@ -54,16 +54,16 @@ export const commands: Router = [
 		]
 	},
 	{
-		name: 'My Account',
+		name: 'Mi cuenta',
 		place: ['command-palette', 'avatar-dropdown'],
 		hrefs: [
 			{
-				label: 'Subscription',
+				label: 'Subscripcion',
 				href: '#'
 			},
 			{
-				confirmation: 'Are you sure you want to logout?',
-				label: 'Logout',
+				confirmation: '¿Seguro que quieres salir?',
+				label: 'Cerrar sesión',
 				href: '/logout'
 			}
 		]

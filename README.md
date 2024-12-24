@@ -1,10 +1,20 @@
 # Super: Proyecto Final
 
+University: UTN FRRO
+
 Team members:
 
 - Bruno
 - Ramiro
 - Fausto
+
+## Preview
+
+You can see the site in [this link](https://super-flame.vercel.app/admin/users) entering with the following credentials:
+| Role | Username | Password |
+|----------|:-------------:|---------:|
+| Admin | bruno | 1234 |
+| Seller | rami | 1234 |
 
 ## Developing
 
@@ -60,4 +70,4 @@ Use the following command:
 pnpm add-migration
 ```
 
-Note: don't create the migration before pulling the latest version of main
+Note: don't create the migration before pulling the latest version of main.

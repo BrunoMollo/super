@@ -34,14 +34,14 @@
 <form method="POST" use:enhance class="flex flex-col gap-4">
 	<Form.Field {form} name="name">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Name</Form.Label>
+			<Form.Label class="text-lg">Nombre</Form.Label>
 			<Input {...attrs} bind:value={$formData.name} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
 
 	<div class="mt-4 flex w-64 justify-end gap-3">
-		<Form.Button class="w-6/12 ">Submit</Form.Button>
+		<Form.Button class="w-6/12 ">Crear Categoria</Form.Button>
 	</div>
 </form>
 

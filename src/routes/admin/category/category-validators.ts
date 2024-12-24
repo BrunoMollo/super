@@ -1,5 +1,5 @@
 import type { Infer } from 'sveltekit-superforms';
-import { z } from 'zod';
+import { z } from '$lib/utils/es-zod';
 
 // ./+page.server.ts
 export const create_category_validator = z
