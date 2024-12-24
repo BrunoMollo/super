@@ -18,7 +18,7 @@ export async function register_sale(input: { product_id: number; quantity: numbe
 		unit_price: number;
 	}[];
 
-	for (let { product_id, quantity } of input) {
+	for (const { product_id, quantity } of input) {
 		const { price } = products.find((x) => x.id === product_id)!;
 		sale.push({
 			product_id,
