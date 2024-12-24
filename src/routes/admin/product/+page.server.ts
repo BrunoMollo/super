@@ -35,11 +35,7 @@ export const actions: Actions = {
 			return setError(form, 'desc', 'Esta Descripción ya existe');
 		}
 
-<<<<<<< HEAD
-		const same_bar_code = await product_repo.get_by_code_bar(form.data.bar_code).then((x) => !!x);
-=======
 		const same_bar_code = await product_repo.exists_with_bar_code(form.data.bar_code);
->>>>>>> main
 		if (same_bar_code) {
 			return setError(form, 'bar_code', 'Este código de barras ya existe');
 		}
