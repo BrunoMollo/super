@@ -59,6 +59,7 @@ export const t_sale = pgTable('sale', {
 	seller_id: integer('seller_id')
 		.notNull()
 		.references(() => t_user.id),
+	client_id: integer('client_id').references(() => t_client.id),
 	created_at: timestamp('created_at').defaultNow().notNull()
 });
 
