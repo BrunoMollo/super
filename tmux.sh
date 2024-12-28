@@ -29,6 +29,12 @@ if [ $? != 0 ]; then
   sleep 2
   tmux send-keys -t $SESSION_NAME:2 "pnpm seed" C-m
   tmux send-keys -t $SESSION_NAME:2 "pnpm dev" C-m
+
+
+  tmux split-window -h -t $SESSION_NAME:2
+  tmux send-keys -t $SESSION_NAME:2 "open https://local.drizzle.studio &" C-m
+  tmux send-keys -t $SESSION_NAME:2 "pnpm inspect" C-m
+  tmux resize-pane -t $SESSION_NAME:2 -x 20
 fi
 
 # Attach to the session
