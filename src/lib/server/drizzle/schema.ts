@@ -73,3 +73,12 @@ export const t_sale_line = pgTable('sale_line', {
 	quantity: integer('quantity').notNull(),
 	unit_price: numeric('unit_price', { precision: 100, scale: 2 }).notNull()
 });
+
+export const t_client = pgTable('client', {
+	id: serial('id').primaryKey().notNull(),
+	dni: text('dni').notNull().unique(),
+	email: text('email').notNull().unique(),
+	first_name: text('first_name').notNull(),
+	last_name: text('last_name').notNull(),
+	created_at: timestamp('created_at').defaultNow().notNull()
+});

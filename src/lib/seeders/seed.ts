@@ -1,16 +1,20 @@
 import { count } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 import { Category_Repo_Drizzle } from '$lib/repos/category-repo-drizzle';
+import { Client_Repo } from '$lib/repos/client-repo';
 import { Product_Repo_Drizzle } from '$lib/repos/product-repo';
 import { Role_Repo_Drizzle } from '$lib/repos/role-repo-drizzle';
 import { User_Repo_Drizzle } from '$lib/repos/user-repo-drizzle';
 import { db } from '$lib/server/drizzle/drizzle-client';
 import {
 	t_category,
+	t_client,
 	t_product,
 	t_product_has_category,
 	t_product_price,
 	t_role,
+	t_sale,
+	t_sale_line,
 	t_user,
 	t_user_has_role
 } from '$lib/server/drizzle/schema';
@@ -167,8 +171,29 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 	return products;
 }
 
+async function seed_clients() {
+	title_seeder('Clients');
+	const repo = new Client_Repo(db);
+	const clients = {
+		MARIO_ID: await repo.create({
+			dni: '20123123',
+			email: 'mario@gmail.com',
+			first_name: 'Mario',
+			last_name: 'Bressano'
+		})
+	};
+	await show_count(t_client);
+	return clients;
+}
+
 async function seed() {
 	console.log('\n------- Cleaning tables 🧹 -------');
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_client);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_sale_line);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_sale);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_product_price);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
@@ -190,6 +215,7 @@ async function seed() {
 	await seed_users(roles);
 	const categories = await seed_categories();
 	await seed_products(categories);
+	await seed_clients();
 
 	console.log('\n-----------------------------------');
 	console.log('------- Seeding finished 🌱 -------');
