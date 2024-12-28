@@ -34,27 +34,3 @@ fi
 # Attach to the session
 tmux attach -t $SESSION_NAME
 
-# Name of the tmux session
-SESSION_NAME="my_session"
-
-# Commands for the second window
-COMMANDS=("ls" "pwd" "echo 'Hello from tmux!'")
-
-# Check if the session exists
-tmux has-session -t $SESSION_NAME 2>/dev/null
-
-if [ $? != 0 ]; then
-  # Create a new session and window 1
-  tmux new-session -d -s $SESSION_NAME -n "window1"
-  
-  # Create window 2
-  tmux new-window -t $SESSION_NAME -n "window2"
-  
-  # Run commands in window 2
-  for CMD in "${COMMANDS[@]}"; do
-    tmux send-keys -t $SESSION_NAME:2 "$CMD" C-m
-  done
-fi
-
-# Attach to the session
-tmux attach -t $SESSION_NAME
