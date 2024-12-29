@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	}
 
 	const dni = url.searchParams.get('dni');
-	if (!dni) {
+	if (!dni || dni.length < 4) {
 		return new Response('Missing dni', { status: 400 });
 	}
 

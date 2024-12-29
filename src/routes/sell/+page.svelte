@@ -111,6 +111,7 @@
 						<Dialog.Footer>
 							<Button
 								type="submit"
+								disabled={$input.client.dni.length < 4}
 								on:click={() =>
 									search_client({
 										on_found: () => {
@@ -124,8 +125,10 @@
 										on_error: () => {
 											toast.error('Error al buscar cliente');
 										}
-									})}>Buscar Cliente</Button
+									})}
 							>
+								Buscar Cliente
+							</Button>
 						</Dialog.Footer>
 					{/if}
 
