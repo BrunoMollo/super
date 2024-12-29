@@ -4,7 +4,7 @@
 	import * as Table from '$lib/components/ui/table';
 	import type { Role } from '$lib/user';
 	import UserTableAction from './user-table-action.svelte';
-	import { toProperCase } from '$lib/utils';
+	import { translateRole } from './utils';
 
 	export let users: Array<{
 		id: number;
@@ -17,12 +17,12 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'username',
-			header: 'Username'
+			header: 'Usuario'
 		}),
 		table.column({
 			accessor: 'roles',
 			header: 'Roles',
-			cell: (x) => x.value.map((x) => toProperCase(x.name)).join(', ')
+			cell: (x) => x.value.map((x) => translateRole(x.name)).join(', ')
 		}),
 
 		table.column({

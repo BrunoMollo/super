@@ -6,11 +6,11 @@
 	import { createEventDispatcher } from 'svelte';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { toProperCase } from '$lib/utils';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
 	import { toast } from 'svelte-sonner';
+	import { translateRole } from '../utils';
 
 	export let data: SuperValidated<Edit_User_Dto>;
 	let error_message = '';
@@ -20,7 +20,7 @@
 		validators: zodClient(edit_user_validator),
 		onUpdate: (res) => {
 			if (res.result.type == 'success') {
-				toast.success('User has been modified');
+				toast.success('El usuario fue modificado');
 				dispatch('success', {
 					ok: true
 				});
@@ -57,7 +57,7 @@
 	<Form.Fieldset {form} name="roles_id" class="space-y-0">
 		<div class="mb-4">
 			<Form.Legend class="scroll-m-20 text-xl font-semibold tracking-tight">Roles</Form.Legend>
-			<Form.Description class="pb-2">Define permisions</Form.Description>
+			<Form.Description class="pb-2">Define roles</Form.Description>
 			<Form.Field {form} name="roles_id">
 				{#each roles as role}
 					{@const checked = $formData.roles_id.includes(role.id)}
@@ -75,7 +75,7 @@
 								}}
 							/>
 							<Form.Label class="text-sm font-normal">
-								{toProperCase(role.name)}
+								{translateRole(role.name)}
 							</Form.Label>
 							<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
 						</Form.Control>
@@ -87,7 +87,7 @@
 	</Form.Fieldset>
 
 	<div class="mt-4 flex justify-end gap-3">
-		<Form.Button class="w-6/12 " disabled={changed}>Submit Changes</Form.Button>
+		<Form.Button class="w-6/12 " disabled={changed}>Aplicar Cambios</Form.Button>
 	</div>
 </form>
 
