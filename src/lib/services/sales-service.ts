@@ -1,7 +1,11 @@
 import { product_repo, sale_repo } from '$lib';
 import type { User } from '$lib/user';
 
-export async function register_sale(input: { product_id: number; quantity: number }[], user: User) {
+export async function register_sale(
+	input: { product_id: number; quantity: number }[],
+	user: User,
+	client_id?: number
+) {
 	if (!user.has_role('SELLER')) {
 		return { ok: false, type: 'unautorized' as const };
 	}
@@ -28,6 +32,6 @@ export async function register_sale(input: { product_id: number; quantity: numbe
 	}
 
 	const seller_id = user.getId();
-	await sale_repo.register_sale({ seller_id, products: sale });
+	await sale_repo.register_sale({ seller_id, products: sale, client_id });
 	return { ok: true };
 }

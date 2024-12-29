@@ -3,6 +3,13 @@ export type Sell = {
 		product_id: number;
 		quantity: number;
 	}>;
+	client: {
+		dni: string;
+		first_name: string;
+		last_name: string;
+		email: string;
+		_exits: boolean | 'PENDING';
+	};
 };
 
 export async function fetch_submit_sell(sell: Sell) {

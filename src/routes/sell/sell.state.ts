@@ -58,7 +58,8 @@ class InputState {
 				first_name: '',
 				last_name: '',
 				email: '',
-				_exits: 'PENDING' as boolean | 'PENDING'
+				_exits: 'PENDING' as boolean | 'PENDING',
+				_ok: false
 			}
 		};
 	}
@@ -126,8 +127,10 @@ export function create_state_sell() {
 	}
 
 	async function submit_sell(calls: { on_success: () => unknown; on_error: () => unknown }) {
+		const { client } = input.getCurrent();
 		const { ok } = await fetch_submit_sell({
-			products: sell_list.getProducts()
+			products: sell_list.getProducts(),
+			client
 		});
 		if (ok) {
 			sell_list.reset();
