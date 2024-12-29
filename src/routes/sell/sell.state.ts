@@ -1,3 +1,4 @@
+import { fetch_if_exits_with_dni } from './api/client/client.client';
 import { fetch_product_by_bar_code } from './api/product/product.client';
 import { fetch_submit_sell } from './api/sell/sell.client';
 import { derived, readonly, writable } from 'svelte/store';
@@ -141,13 +142,14 @@ export function create_state_sell() {
 		}
 	}
 
-	function search_client(calls: {
+	async function search_client(calls: {
 		on_found: () => unknown;
 		on_not_found: () => unknown;
 		on_error: () => unknown;
 	}) {
 		const { dni } = input.getCurrent().client;
-		if (dni === '1234') {
+		const { exists } = await fetch_if_exits_with_dni(dni);
+		if (exists) {
 			calls.on_found();
 			input.set_client_as_existing();
 			dialog_open.set(false);

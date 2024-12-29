@@ -21,4 +21,12 @@ export class Client_Repo {
 			.where(eq(t_client.dni, dni))
 			.then((x) => x.at(0));
 	}
+
+	async exists_with_dni(dni: string) {
+		return await this.ctx
+			.select({ id: t_client.id })
+			.from(t_client)
+			.where(eq(t_client.dni, dni))
+			.then((x) => !!x.at(0));
+	}
 }
