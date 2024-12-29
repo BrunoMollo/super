@@ -1,4 +1,4 @@
-import { and, desc, eq, max } from 'drizzle-orm';
+import { and, desc, eq, inArray, lte, max } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import {
 	t_category,
@@ -9,6 +9,34 @@ import {
 
 export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
+
+	async get_by_code_bar(code_bar: number) {
+		const product = await this.ctx
+			.select()
+			.from(t_product)
+			.where(eq(t_product.bar_code, code_bar))
+			.then((x) => x.at(0));
+
+		if (!product) {
+			return null;
+		}
+
+		const price = await this.ctx
+			.select()
+			.from(t_product_price)
+			.where(
+				and(eq(t_product_price.product_id, product.id), lte(t_product_price.date_from, new Date()))
+			)
+			.orderBy(desc(t_product_price.date_from))
+			.limit(1)
+			.then((x) => x[0])
+			.then((x) => Number(x.price_amount));
+
+		return {
+			...product,
+			price
+		};
+	}
 
 	async update(data: {
 		id: number;
@@ -61,6 +89,17 @@ export class Product_Repo_Drizzle {
 		return { ...product, categories, price };
 	}
 
+	private async get_last_date_prices() {
+		return this.ctx.$with('sq_last_date').as(
+			this.ctx
+				.select({
+					product_id: t_product_price.product_id,
+					last_date: max(t_product_price.date_from).as('last_date')
+				})
+				.from(t_product_price)
+				.groupBy(t_product_price.product_id)
+		);
+	}
 	async list_all() {
 		const data = await this.ctx.select().from(t_product).orderBy(desc(t_product.id));
 
@@ -74,15 +113,7 @@ export class Product_Repo_Drizzle {
 			categories: [] as { id: number; name: string }[]
 		}));
 
-		const sq_last_date_prices = this.ctx.$with('sq_last_date').as(
-			this.ctx
-				.select({
-					product_id: t_product_price.product_id,
-					last_date: max(t_product_price.date_from).as('last_date')
-				})
-				.from(t_product_price)
-				.groupBy(t_product_price.product_id)
-		);
+		const sq_last_date_prices = await this.get_last_date_prices();
 
 		const prices = await this.ctx
 			.with(sq_last_date_prices)
@@ -121,6 +152,45 @@ export class Product_Repo_Drizzle {
 
 		for (const product of products) {
 			product.categories = categories.get(product.id) || [];
+		}
+
+		return products;
+	}
+
+	async check_every_one_exists_by_id(ids: number[]) {
+		const result = await this.ctx
+			.select({ id: t_product.id })
+			.from(t_product)
+			.where(inArray(t_product.id, ids));
+		return result.length === ids.length;
+	}
+
+	async list_all_by_id(ids: number[]) {
+		const products = await this.ctx
+			.select()
+			.from(t_product)
+			.where(inArray(t_product.id, ids))
+			.then((arr) => arr.map((x) => ({ ...x, price: 0 })));
+
+		const sq_last_date_prices = await this.get_last_date_prices();
+
+		const prices = await this.ctx
+			.with(sq_last_date_prices)
+			.select({ product_id: t_product_price.product_id, price: t_product_price.price_amount })
+			.from(t_product_price)
+			.innerJoin(
+				sq_last_date_prices,
+				and(
+					eq(t_product_price.product_id, sq_last_date_prices.product_id),
+					eq(t_product_price.date_from, sq_last_date_prices.last_date)
+				)
+			);
+
+		for (const { product_id, price } of prices) {
+			const product = products.find((x) => x.id === product_id);
+			if (product) {
+				product.price = Number(price);
+			}
 		}
 
 		return products;
