@@ -6,11 +6,11 @@
 	import { createEventDispatcher } from 'svelte';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { toProperCase } from '$lib/utils';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ExclamationTriangle from 'svelte-radix/ExclamationTriangle.svelte';
 	import { fly } from 'svelte/transition';
 	import { roles } from '$lib/user';
+	import { translateRole } from './utils';
 
 	export let data: SuperValidated<Create_user_dto>;
 	let error_message = '';
@@ -79,7 +79,7 @@
 								}}
 							/>
 							<Form.Label class="text-sm font-normal">
-								{toProperCase(role.name)}
+								{translateRole(role.name)}
 							</Form.Label>
 							<input hidden type="checkbox" name={attrs.name} value={role.id} {checked} />
 						</Form.Control>
