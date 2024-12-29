@@ -100,13 +100,9 @@ class InputState {
 	set_client_as_pending() {
 		this.inputStore.update((x) => {
 			x.client._exits = 'PENDING';
-			return x;
-		});
-	}
-
-	reset_client() {
-		this.inputStore.update((x) => {
-			x.client = InputState.default_value().client;
+			x.client.first_name = '';
+			x.client.last_name = '';
+			x.client.email = '';
 			return x;
 		});
 	}
