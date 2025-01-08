@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { readable } from 'svelte/store';
-	import { createTable, Render, Subscribe } from 'svelte-headless-table';
+	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import * as Table from '$lib/components/ui/table';
+	import SellTableActions from './sell-table-actions.svelte';
 
 	export let lines: Array<{
 		id: number;
@@ -35,13 +36,24 @@
 					.reduce((acum, prod) => acum + prod.price * prod.amount, 0);
 				return '$' + acum.toFixed(2);
 			}
+		}),
+		table.column({
+			accessor: ({ id }) => id,
+			header: '',
+			cell: ({ value }) => {
+				return createRender(SellTableActions, {
+					delete_row: () => {
+						console.log('delete_row ', value);
+					}
+				});
+			}
 		})
 	]);
 
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
 </script>
 
-<div class="w-[450px] rounded-md border">
+<div class="w-[600px] rounded-md border">
 	<Table.Root {...$tableAttrs}>
 		<Table.Header>
 			{#each $headerRows as headerRow}
