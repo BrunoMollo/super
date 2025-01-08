@@ -6,12 +6,36 @@ export class Sale_Repo {
 	constructor(private ctx: DB_Context) {}
 
 	async get_sales() {
-		return this.ctx
-			.select()
+		const result = await this.ctx
+			.select({
+				sale_id: t_sale.id,
+				line: {
+					quantity: t_sale_line.quantity,
+					product_id: t_product.id,
+					desc: t_product.desc,
+					unit_price: t_sale_line.unit_price
+				}
+			})
 			.from(t_sale)
 			.innerJoin(t_sale_line, eq(t_sale_line.sale_id, t_sale.id))
 			.innerJoin(t_product, eq(t_product.id, t_sale_line.product_id))
 			.orderBy(desc(t_sale.id));
+
+		type Line = (typeof result)[0]['line'];
+		type Sale = {
+			id: number;
+			lines: Line[];
+		};
+
+		const map = new Map<number, Sale>();
+		for (const { sale_id, line } of result) {
+			if (!map.has(sale_id)) {
+				map.set(sale_id, { id: sale_id, lines: [line] });
+			} else {
+				map.get(sale_id)?.lines.push(line);
+			}
+		}
+		return Array.from(map.values());
 	}
 
 	async register_sale({
