@@ -59,7 +59,7 @@ class SellState {
 class InputState {
 	private static default_value() {
 		return {
-			bar_code: '7702004003509',
+			bar_code: '',
 			amount: 1,
 			client: {
 				dni: '',
@@ -188,3 +188,5 @@ export function create_state_sell() {
 		dialog_open
 	};
 }
+
+export type GSellState = ReturnType<typeof create_state_sell>;
