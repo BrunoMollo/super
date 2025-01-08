@@ -12,7 +12,16 @@ echo "            /_/                   "
 # Name of the tmux session
 SESSION_NAME="super"
 
-# # Commands for the second window
+
+# Install dependencies 
+if  ls | grep -q "node_modules" ;
+  then
+    echo "Setup Ready"
+  else
+    cp .env.example .env
+    pnpm i
+fi
+
 
 # Check if the session exists
 tmux has-session -t $SESSION_NAME 2>/dev/null
