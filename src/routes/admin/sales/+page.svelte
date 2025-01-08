@@ -1,5 +1,6 @@
 <script>
 	import { Skeleton } from '$lib/components/ui/skeleton';
+	import SalesTableAdmin from './sales-table-admin.svelte';
 
 	export let data;
 </script>
@@ -18,7 +19,6 @@
 			{/each}
 		</div>
 	{:then sales}
-		<p>hola</p>
-		<pre>{JSON.stringify(sales, null, 2)}</pre>
+		<SalesTableAdmin {sales} />
 	{/await}
 </main>

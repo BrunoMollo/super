@@ -2,6 +2,8 @@ import { desc, eq } from 'drizzle-orm/expressions';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_product, t_sale, t_sale_line } from '$lib/server/drizzle/schema';
 
+export type Sale = Awaited<ReturnType<Sale_Repo['get_sales']>>[0];
+
 export class Sale_Repo {
 	constructor(private ctx: DB_Context) {}
 
@@ -21,13 +23,12 @@ export class Sale_Repo {
 			.innerJoin(t_product, eq(t_product.id, t_sale_line.product_id))
 			.orderBy(desc(t_sale.id));
 
-		type Line = (typeof result)[0]['line'];
-		type Sale = {
+		type _Sale = {
 			id: number;
-			lines: Line[];
+			lines: Array<(typeof result)[0]['line']>;
 		};
 
-		const map = new Map<number, Sale>();
+		const map = new Map<number, _Sale>();
 		for (const { sale_id, line } of result) {
 			if (!map.has(sale_id)) {
 				map.set(sale_id, { id: sale_id, lines: [line] });
