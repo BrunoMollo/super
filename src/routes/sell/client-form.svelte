@@ -4,10 +4,9 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { toast } from 'svelte-sonner';
-	import { getContext } from 'svelte';
-	import type { GSellState } from './sell.state';
+	import { get_global_state_sell } from './sell.state';
 
-	const { input, search_client, create_client } = getContext<GSellState>('sell_state');
+	const { input, search_client, create_client } = get_global_state_sell();
 </script>
 
 <div class="grid gap-4 py-4">

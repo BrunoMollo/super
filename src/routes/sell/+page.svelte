@@ -4,9 +4,8 @@
 	import { Label } from '$lib/components/ui/label';
 	import { toast } from 'svelte-sonner';
 	import SellTable from './sell-table.svelte';
-	import { create_state_sell } from './sell.state';
+	import { create_global_state_sell } from './sell.state';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import { setContext } from 'svelte';
 	import ClientForm from './client-form.svelte';
 
 	const {
@@ -17,7 +16,7 @@
 		search_product,
 		submit_sell,
 		remove_product_from_sell
-	} = setContext('sell_state', create_state_sell());
+	} = create_global_state_sell();
 
 	function on_not_found() {
 		alert('Producto no encontrado');

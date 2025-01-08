@@ -2,6 +2,7 @@ import { fetch_if_exits_with_dni } from './api/client/client.client';
 import { fetch_product_by_bar_code } from './api/product/product.client';
 import { fetch_submit_sell } from './api/sell/sell.client';
 import { derived, readonly, writable } from 'svelte/store';
+import { getContext, setContext } from 'svelte';
 
 class SellState {
 	private readonly listStore = writable(
@@ -117,7 +118,7 @@ class InputState {
 	}
 }
 
-export function create_state_sell() {
+function create_state_sell() {
 	const input = new InputState();
 	const sell_list = new SellState();
 
@@ -189,4 +190,16 @@ export function create_state_sell() {
 	};
 }
 
-export type GSellState = ReturnType<typeof create_state_sell>;
+//
+// Public API
+//
+
+const g_key = 'sell_state';
+
+export function create_global_state_sell() {
+	return setContext(g_key, create_state_sell());
+}
+
+export function get_global_state_sell() {
+	return getContext<ReturnType<typeof create_global_state_sell>>(g_key);
+}
