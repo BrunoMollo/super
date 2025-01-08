@@ -15,7 +15,8 @@
 		submit_sell,
 		search_client,
 		dialog_open,
-		create_client
+		create_client,
+		remove_product_from_sell
 	} = create_state_sell();
 	function on_not_found() {
 		alert('Producto no encontrado');
@@ -49,7 +50,7 @@
 
 	<div class="flex flex-row gap-4 pl-4 pt-4">
 		{#key $sell_list}
-			<SellTable lines={$sell_list} />
+			<SellTable lines={$sell_list} delete_row={remove_product_from_sell} />
 		{/key}
 
 		{#if $total > 0}

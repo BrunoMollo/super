@@ -26,6 +26,13 @@ class SellState {
 		return readonly(this.listStore);
 	}
 
+	remove_product_from_sell(id: number) {
+		this.listStore.update((x) => {
+			x.delete(id);
+			return x;
+		});
+	}
+
 	totalStore() {
 		return derived(this.listStore, (x) =>
 			Array.from(x.values()).reduce((acc, cur) => acc + cur.amount * cur.price, 0)
@@ -165,6 +172,10 @@ export function create_state_sell() {
 		return { ok: true };
 	}
 
+	function remove_product_from_sell(id: number) {
+		sell_list.remove_product_from_sell(id);
+	}
+
 	return {
 		input: input.getStore(),
 		sell_list: derived(sell_list.getListStore(), (x) => Array.from(x.values())),
@@ -173,6 +184,7 @@ export function create_state_sell() {
 		submit_sell,
 		search_client,
 		create_client,
+		remove_product_from_sell,
 		dialog_open
 	};
 }
