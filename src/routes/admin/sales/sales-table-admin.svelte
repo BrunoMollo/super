@@ -17,7 +17,9 @@
 			accessor: 'lines',
 			header: 'Total',
 			cell: (x) => {
-				const total = x.value.reduce((acc, line) => acc + Number(line.unit_price), 0).toFixed(2);
+				const total = x.value
+					.reduce((acc, line) => acc + Number(line.unit_price) * line.quantity, 0)
+					.toFixed(2);
 				return `$ ${total}`;
 			}
 		})
