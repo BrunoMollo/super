@@ -2,8 +2,11 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
+	import { get_global_state_sell } from './sell.state';
 
-	export let delete_row: () => unknown;
+	export let product_id: number;
+
+	const { remove_product_from_sell } = get_global_state_sell();
 </script>
 
 <DropdownMenu.Root>
@@ -16,7 +19,9 @@
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>Acciones</DropdownMenu.Label>
-			<DropdownMenu.Item on:click={delete_row}>Remover</DropdownMenu.Item>
+			<DropdownMenu.Item on:click={() => remove_product_from_sell(product_id)}
+				>Remover</DropdownMenu.Item
+			>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

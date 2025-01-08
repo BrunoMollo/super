@@ -8,15 +8,8 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import ClientForm from './client-form.svelte';
 
-	const {
-		input,
-		sell_list,
-		total,
-		dialog_open,
-		search_product,
-		submit_sell,
-		remove_product_from_sell
-	} = create_global_state_sell();
+	const { input, sell_list, total, dialog_open, search_product, submit_sell } =
+		create_global_state_sell();
 
 	function on_not_found() {
 		alert('Producto no encontrado');
@@ -50,7 +43,7 @@
 
 	<div class="flex flex-row gap-4 pl-4 pt-4">
 		{#key $sell_list}
-			<SellTable lines={$sell_list} delete_row={remove_product_from_sell} />
+			<SellTable lines={$sell_list} />
 		{/key}
 
 		{#if $total > 0}

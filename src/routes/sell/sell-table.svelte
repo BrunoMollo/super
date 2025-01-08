@@ -10,7 +10,6 @@
 		amount: number;
 		price: number;
 	}>;
-	export let delete_row: (id: number) => unknown;
 
 	const table = createTable(readable(lines));
 
@@ -43,7 +42,7 @@
 			header: '',
 			cell: ({ value }) => {
 				return createRender(SellTableActions, {
-					delete_row: () => delete_row(value)
+					product_id: value
 				});
 			}
 		})
