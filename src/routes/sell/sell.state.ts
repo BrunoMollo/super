@@ -29,6 +29,7 @@ class SellState {
 
 	remove_product_from_sell(id: number) {
 		this.listStore.update((x) => {
+			//eslint-disable-next-line drizzle/enforce-delete-with-where
 			x.delete(id);
 			return x;
 		});

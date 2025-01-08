@@ -69,7 +69,7 @@
 				<Dialog.Content class="sm:max-w-[425px]">
 					<Dialog.Header>
 						<Dialog.Title>Cliente</Dialog.Title>
-						<Dialog.Description>TODO: rewrite</Dialog.Description>
+						<Dialog.Description>Registro del cliente</Dialog.Description>
 					</Dialog.Header>
 					<ClientForm />
 				</Dialog.Content>

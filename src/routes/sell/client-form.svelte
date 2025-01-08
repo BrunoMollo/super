@@ -69,7 +69,7 @@
 			on:click={() =>
 				create_client({
 					on_success: () => {
-						toast.success('Cliente creado exitosamente');
+						toast.success('Cliente guardado');
 					},
 					on_error: () => {
 						toast.error('Error al crear cliente');
