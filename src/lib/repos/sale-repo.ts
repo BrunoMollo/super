@@ -6,15 +6,17 @@ export class Sale_Repo {
 
 	async register_sale({
 		seller_id,
-		products
+		products,
+		client_id
 	}: {
 		seller_id: number;
 		products: { product_id: number; quantity: number; unit_price: number }[];
+		client_id?: number;
 	}) {
 		this.ctx.transaction(async (tx) => {
 			const { sale_id } = await tx
 				.insert(t_sale)
-				.values({ seller_id })
+				.values({ seller_id, client_id })
 				.returning({ sale_id: t_sale.id })
 				.then((x) => x[0]);
 
