@@ -48,8 +48,12 @@ export const commands: Router = [
 		place: ['navbar', 'command-palette'],
 		hrefs: [
 			{
-				label: '[PENDING]',
-				href: '#'
+				label: 'Producto específico',
+				href: '/admin/analisis/producto'
+			},
+			{
+				label: 'Categoría',
+				href: '/admin/analisis/categoria'
 			}
 		]
 	},
