@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 		return new Response('Missing code_bar', { status: 400 });
 	}
 
-	const product = await product_repo.get_by_code_bar(code_bar);
+	const product = await product_repo.get_by_barcode(code_bar);
 
 	if (!product) {
 		return new Response('Product not found', { status: 404 });

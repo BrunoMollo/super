@@ -49,11 +49,11 @@ export const commands: Router = [
 		hrefs: [
 			{
 				label: 'Producto específico',
-				href: '/admin/analisis/producto'
+				href: '/admin/analisis/product'
 			},
 			{
 				label: 'Categoría',
-				href: '/admin/analisis/categoria'
+				href: '/admin/analisis/category'
 			}
 		]
 	},

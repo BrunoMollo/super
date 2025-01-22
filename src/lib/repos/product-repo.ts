@@ -10,7 +10,7 @@ import {
 export class Product_Repo_Drizzle {
 	constructor(private ctx: DB_Context) {}
 
-	async get_by_code_bar(code_bar: number) {
+	async get_by_barcode(code_bar: number) {
 		const product = await this.ctx
 			.select()
 			.from(t_product)
