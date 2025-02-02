@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Chart, type ChartConfiguration } from 'chart.js/auto';
-	import { onMount } from 'svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
@@ -9,23 +8,34 @@
 
 	let current_barcode: number;
 	let loading: boolean = false;
+	let prediction_loading: boolean = false;
+	let tabs_value: string = 'stats';
 
 	let product_info: any = null;
 	let raw_data: null | { date: string; quantity: number; price: string }[] = null;
+	let prediction_data: any = null;
 
-	let current_product_price: number = 0;
-	let current_product_stock: number = 0;
 	let current_product_sales_today: number = 0;
-	let current_product_weekly_sales_avg: number = 0;
 
 	let bars_canvas: HTMLCanvasElement;
+	let bars_chart: Chart;
+
 	let line_canvas: HTMLCanvasElement;
 	let line_chart: Chart;
 
+	let line_prediction_canvas: HTMLCanvasElement;
+	let line_prediction_chart: Chart;
+
 	async function search_handler() {
 		if (Number(current_barcode) > 0) {
-			product_info = null;
 			loading = true;
+			product_info = null;
+			raw_data = null;
+			tabs_value = 'stats';
+			prediction_data = null;
+
+			if (line_chart) line_chart.destroy();
+			if (bars_chart) bars_chart.destroy();
 
 			[product_info, raw_data] = await Promise.all([
 				fetch('./api/product/' + current_barcode).then((res) => res.json()),
@@ -34,45 +44,135 @@
 				loading = false;
 			});
 			if (raw_data) {
-				raw_data = raw_data.map((d) => ({ ...d, date: d.date.split('T')[0] }));
+				raw_data = await raw_data.map((d) => ({ ...d, date: d.date.split('T')[0] }));
+				const raw_data_months = await raw_data.map((d) => ({
+					...d,
+					date: d.date.split('-')[0] + '-' + d.date.split('-')[1]
+				}));
 
 				const df_raw_data = new DataFrame(raw_data);
 				const df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
-				current_product_sales_today = raw_data?.filter(
-					(e) => e.date == new Date().toISOString().split('T')[0]
-				)[0].quantity;
-				current_product_price = product_info.price;
-				current_product_stock = product_info.stock;
 
-				line_chart.data.labels = df_grouped_sum['date'].values;
-				line_chart.data.datasets[0].data = df_grouped_sum['quantity_sum'].values;
-				line_chart.update();
+				const df_raw_data_months = new DataFrame(raw_data_months);
+				const df_grouped_monthly_sum = df_raw_data_months.groupby(['date']).col(['quantity']).sum();
+
+				const sale_today = raw_data?.filter((e) => {
+					e.date === new Date().toISOString().split('T')[0];
+				});
+				current_product_sales_today = sale_today.length !== 0 ? sale_today[0].quantity : 0;
+
+				line_chart = new Chart(line_canvas, {
+					type: 'line',
+					data: {
+						labels: df_grouped_sum['date'].values,
+						datasets: [
+							{
+								label: 'Ventas',
+								data: df_grouped_sum['quantity_sum'].values
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						plugins: {
+							legend: {
+								display: false
+							}
+						}
+					}
+				});
+
+				bars_chart = new Chart(bars_canvas, {
+					type: 'bar',
+					data: {
+						labels: df_grouped_monthly_sum['date'].values,
+						datasets: [
+							{
+								label: 'Ventas',
+								data: df_grouped_monthly_sum['quantity_sum'].values
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						plugins: {
+							legend: {
+								display: false
+							}
+						}
+					}
+				});
 			}
 		}
 	}
 
-	onMount(() => {
-		line_chart = new Chart(line_canvas, {
+	async function get_sales_predictions() {
+		if (raw_data === null) return;
+		if (prediction_data !== null) return;
+
+		prediction_loading = true;
+		prediction_data = {
+			labels: [],
+			datasets: []
+		};
+		if (line_prediction_chart) line_prediction_chart.destroy();
+
+		const prediction_api_raw_data = await fetch(
+			'./api/product/' + current_barcode + '/sales_predictions'
+		).then((res) => res.json());
+
+		console.log(prediction_api_raw_data);
+
+		for (const [model, predictions] of Object.entries(prediction_api_raw_data)) {
+			prediction_data.datasets.push({
+				label: model,
+				data: predictions.map((p: any) => {
+					return {
+						date: p.date.split('T')[0],
+						quantity: p.quantity
+					};
+				})
+			});
+		}
+
+		const df_raw_data = new DataFrame(raw_data);
+		const df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
+
+		console.log(df_grouped_sum['date'].values);
+
+		const last_week_date = new Date();
+		last_week_date.setDate(new Date().getDate() - 7);
+
+		const df_last_week_sales = df_grouped_sum.loc({
+			rows: df_grouped_sum['date'].values.map((date: string) => {
+				return date >= last_week_date.toISOString().split('T')[0];
+			})
+		});
+
+		prediction_data.datasets.push({
+			label: 'Ventas última semana',
+			data: Array.from({ length: df_last_week_sales['quantity_sum'].values.length }, (_, i) => {
+				return {
+					date: df_last_week_sales['date'].values[i],
+					quantity: df_last_week_sales['quantity_sum'].values[i]
+				};
+			})
+		});
+
+		prediction_loading = false;
+
+		line_prediction_chart = new Chart(line_prediction_canvas, {
 			type: 'line',
-			data: {
-				labels: [],
-				datasets: [
-					{
-						label: 'Unidades',
-						data: []
-					}
-				]
-			},
+			data: prediction_data,
 			options: {
 				responsive: true,
-				plugins: {
-					legend: {
-						display: false
-					}
+				parsing: {
+					xAxisKey: 'date',
+					yAxisKey: 'quantity'
 				}
 			}
 		});
-	});
+	}
 </script>
 
 <div class="flex-1 space-y-4 p-8 pt-6">
@@ -91,16 +191,17 @@
 		<Button on:click={search_handler}>Submit</Button>
 		<p>{'Loading: ' + loading}</p>
 	</div>
-	<!-- {#if product_info === null} -->
-	{#if 1 !== 1}
+	{#if product_info === null}
 		{#if loading}
 			<p>loading</p>
 		{/if}
 	{:else}
-		<Tabs.Root value="stats" class=" space-y-4">
+		<Tabs.Root bind:value={tabs_value} class=" space-y-4">
 			<Tabs.List>
 				<Tabs.Trigger value="stats">Estadísticos</Tabs.Trigger>
-				<Tabs.Trigger value="analytics">Analytics</Tabs.Trigger>
+				<Tabs.Trigger value="forecast" on:click={get_sales_predictions}
+					>Predicción de demanda</Tabs.Trigger
+				>
 				<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
 				<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
 			</Tabs.List>
@@ -169,7 +270,7 @@
 										<Card.Title>Nivel de stock</Card.Title>
 									</Card.Header>
 									<Card.Content>
-										<p>{current_product_stock}</p>
+										<p>{product_info?.stock}</p>
 									</Card.Content>
 								</Card.Root>
 								<Card.Root class="md:col-span-1 lg:col-span-2">
@@ -185,13 +286,19 @@
 										<Card.Title>Precio actual</Card.Title>
 									</Card.Header>
 									<Card.Content>
-										<p>{current_product_price}</p>
+										<p>{product_info?.price}</p>
 									</Card.Content>
 								</Card.Root>
 							</div>
 						</Card.Content>
 					</Card.Root>
 				</div>
+			</Tabs.Content>
+			<Tabs.Content value="forecast" class="space-y-2">
+				{#if prediction_loading}
+					<p>loading</p>
+				{/if}
+				<canvas bind:this={line_prediction_canvas}></canvas>
 			</Tabs.Content>
 		</Tabs.Root>
 	{/if}
