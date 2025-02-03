@@ -44,12 +44,18 @@ export class Product_Repo_Drizzle {
 		bar_code: number;
 		order_point: number;
 		price: number;
+		iva_percentage: number;
 		categories_ids: number[];
 	}) {
 		return await this.ctx.transaction(async (tx) => {
 			await tx
 				.update(t_product)
-				.set({ desc: data.desc, bar_code: data.bar_code, order_point: data.order_point })
+				.set({
+					desc: data.desc,
+					bar_code: data.bar_code,
+					order_point: data.order_point,
+					iva_percentage: data.iva_percentage.toFixed(2)
+				})
 				.where(eq(t_product.id, data.id));
 
 			const price_amount = data.price.toString();
