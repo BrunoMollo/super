@@ -70,6 +70,8 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product.id, id))
 			.then((x) => x.at(0));
 
+		if (!product) return null;
+
 		const price = await this.ctx
 			.select()
 			.from(t_product_price)
@@ -86,7 +88,7 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product_has_category.product_id, id))
 			.then((x) => x.map(({ category }) => category));
 
-		return { ...product, categories, price };
+		return { ...product, iva_percentage: Number(product?.iva_percentage), categories, price };
 	}
 
 	private async get_last_date_prices() {
