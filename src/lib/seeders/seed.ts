@@ -93,6 +93,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003508,
 			order_point: 20,
 			price: 1200.5,
+			iva_percent: 21,
 			categories_ids: [categories.FRUTAS_Y_VERDURAS_ID]
 		}),
 		FILETE_DE_RES_ID: await repo.create({
@@ -100,6 +101,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003509,
 			order_point: 10,
 			price: 999.99,
+			iva_percent: 10,
 			categories_ids: [categories.CARNES_Y_PESCADOS_ID]
 		}),
 		LECHE_ENTERA_ID: await repo.create({
@@ -107,6 +109,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003510,
 			order_point: 15,
 			price: 800,
+			iva_percent: 10,
 			categories_ids: [categories.LACTEOS_Y_HUEVOS_ID]
 		}),
 		PAN_DE_MOLDE_INTEGRAL_ID: await repo.create({
@@ -114,6 +117,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003511,
 			order_point: 25,
 			price: 1800,
+			iva_percent: 21,
 			categories_ids: [categories.PANADERIA_Y_PASTELERIA_ID]
 		}),
 		COCA_COLA_1L_ID: await repo.create({
@@ -121,6 +125,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003512,
 			order_point: 50,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.BEBIDAS_ID]
 		}),
 		PAPAS_FRITAS_BOLSA_200G_ID: await repo.create({
@@ -128,6 +133,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003513,
 			order_point: 20,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.SNACKS_Y_DULCES_ID]
 		}),
 		DETERGENTE_LIQUIDO_1L_ID: await repo.create({
@@ -135,6 +141,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003514,
 			order_point: 10,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.LIMPIEZA_DEL_HOGAR_ID]
 		}),
 		SHAMPOO_ANTICASPA_500ML_ID: await repo.create({
@@ -142,6 +149,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003515,
 			order_point: 12,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.CUIDADO_PERSONAL_ID]
 		}),
 		PIZZA_CONGELADA_ID: await repo.create({
@@ -149,6 +157,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003516,
 			order_point: 5,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.CONGELADOS_ID]
 		}),
 		LASANA_PREPARADA_ID: await repo.create({
@@ -156,6 +165,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003517,
 			order_point: 3,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.COMIDAS_PREPARADAS_ID]
 		}),
 		YOGURT_CON_FRUTAS_ID: await repo.create({
@@ -163,6 +173,7 @@ async function seed_products(categories: Awaited<ReturnType<typeof seed_categori
 			bar_code: 7702004003518,
 			order_point: 15,
 			price: 501.7,
+			iva_percent: 21,
 			categories_ids: [categories.LACTEOS_Y_HUEVOS_ID, categories.FRUTAS_Y_VERDURAS_ID]
 		})
 	};
@@ -189,11 +200,11 @@ async function seed_clients() {
 async function seed() {
 	console.log('\n------- Cleaning tables 🧹 -------');
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
-	await db.delete(t_client);
-	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_sale_line);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_sale);
+	//eslint-disable-next-line drizzle/enforce-delete-with-where
+	await db.delete(t_client);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where
 	await db.delete(t_product_price);
 	//eslint-disable-next-line drizzle/enforce-delete-with-where

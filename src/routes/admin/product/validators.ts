@@ -6,6 +6,7 @@ export const create_product_validator = z.object({
 	bar_code: z.coerce.number().int().min(100_000_000_000).max(999_999_999_999),
 	order_point: z.coerce.number().min(0).max(10_000_000),
 	price: z.coerce.number().min(0).max(10_000_000),
+	iva_percentage: z.coerce.number().min(1).max(100),
 	categories_ids: z.array(z.coerce.number().int().min(0))
 });
 
@@ -17,6 +18,7 @@ export const update_product_validator = z.object({
 	bar_code: z.number().int().min(100_000_000_000).max(999_999_999_999),
 	order_point: z.coerce.number().min(0).max(10_000_000),
 	price: z.coerce.number().min(0).max(10_000_000),
+	iva_percentage: z.coerce.number().min(1).max(100),
 	categories_ids: z.array(z.coerce.number().int().min(0))
 });
 

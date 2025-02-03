@@ -201,14 +201,21 @@ export class Product_Repo_Drizzle {
 		bar_code: number;
 		order_point: number;
 		price: number;
+		iva_percentage: number;
 		categories_ids: Array<number>;
 	}) {
-		const { desc, bar_code, order_point, price } = product;
+		const { desc, bar_code, order_point, price, iva_percentage } = product;
 
 		return this.ctx.transaction(async (tx) => {
 			const { product_id } = await tx
 				.insert(t_product)
-				.values({ desc, bar_code, order_point, stock: 0 })
+				.values({
+					desc,
+					bar_code,
+					order_point,
+					stock: 0,
+					iva_percentage: iva_percentage.toString()
+				})
 				.returning({ product_id: t_product.id })
 				.then((x) => x[0]);
 
