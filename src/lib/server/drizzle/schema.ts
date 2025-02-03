@@ -51,6 +51,7 @@ export const t_product = pgTable(
 		order_point: integer('order_point').notNull(),
 		stock: integer('stock').default(0).notNull(),
 		bar_code: bigint('bar_code', { mode: 'number' }).unique().notNull(),
+		iva_percentage: numeric('iva_percentage', { precision: 100, scale: 2 }).notNull(),
 		created_at: timestamp('created_at').defaultNow().notNull()
 	},
 	(t) => ({

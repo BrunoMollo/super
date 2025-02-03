@@ -74,6 +74,14 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
+	<Form.Field {form} name="iva_percentage">
+		<Form.Control let:attrs>
+			<Form.Label class="text-lg">Iva (%)</Form.Label>
+			<Input {...attrs} bind:value={$formData.iva_percentage} class="w-64" max="100" step="0.01" />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+
 	<Form.Field {form} name="order_point">
 		<Form.Control let:attrs>
 			<Form.Label class="text-lg">Order Point</Form.Label>

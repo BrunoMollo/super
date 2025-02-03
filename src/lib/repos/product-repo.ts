@@ -44,12 +44,18 @@ export class Product_Repo_Drizzle {
 		bar_code: number;
 		order_point: number;
 		price: number;
+		iva_percentage: number;
 		categories_ids: number[];
 	}) {
 		return await this.ctx.transaction(async (tx) => {
 			await tx
 				.update(t_product)
-				.set({ desc: data.desc, bar_code: data.bar_code, order_point: data.order_point })
+				.set({
+					desc: data.desc,
+					bar_code: data.bar_code,
+					order_point: data.order_point,
+					iva_percentage: data.iva_percentage.toFixed(2)
+				})
 				.where(eq(t_product.id, data.id));
 
 			const price_amount = data.price.toString();
@@ -70,6 +76,8 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product.id, id))
 			.then((x) => x.at(0));
 
+		if (!product) return null;
+
 		const price = await this.ctx
 			.select()
 			.from(t_product_price)
@@ -86,7 +94,7 @@ export class Product_Repo_Drizzle {
 			.where(eq(t_product_has_category.product_id, id))
 			.then((x) => x.map(({ category }) => category));
 
-		return { ...product, categories, price };
+		return { ...product, iva_percentage: Number(product?.iva_percentage), categories, price };
 	}
 
 	private async get_last_date_prices() {
@@ -201,14 +209,21 @@ export class Product_Repo_Drizzle {
 		bar_code: number;
 		order_point: number;
 		price: number;
+		iva_percentage: number;
 		categories_ids: Array<number>;
 	}) {
-		const { desc, bar_code, order_point, price } = product;
+		const { desc, bar_code, order_point, price, iva_percentage } = product;
 
 		return this.ctx.transaction(async (tx) => {
 			const { product_id } = await tx
 				.insert(t_product)
-				.values({ desc, bar_code, order_point, stock: 0 })
+				.values({
+					desc,
+					bar_code,
+					order_point,
+					stock: 0,
+					iva_percentage: iva_percentage.toString()
+				})
 				.returning({ product_id: t_product.id })
 				.then((x) => x[0]);
 
