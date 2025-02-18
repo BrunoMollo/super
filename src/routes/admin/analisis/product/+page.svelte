@@ -4,7 +4,7 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { DataFrame } from 'danfojs/dist/danfojs-base';
+	import { DataFrame, merge } from 'danfojs/dist/danfojs-base';
 
 	let current_barcode: number;
 	let loading: boolean = false;
@@ -26,6 +26,28 @@
 	let line_prediction_canvas: HTMLCanvasElement;
 	let line_prediction_chart: Chart;
 
+	function complete_missing_data(df_raw_data: DataFrame) {
+		// Fill missing dates with 0 quantity
+
+		const all_dates = [];
+		for (
+			let d = new Date(df_raw_data['date'].head(1).values[0]);
+			d <= df_raw_data.tail(1)['date'].values[0];
+			d.setDate(d.getDate() + 1)
+		) {
+			all_dates.push({ date: new Date(d).toISOString().split('T')[0] });
+		}
+
+		//!  FIX
+		const df_new = new DataFrame(all_dates, { columns: ['date', 'quantity'] });
+		let df_merged = merge({ left: df_new, right: df_raw_data, on: ['date'], how: 'left' });
+
+		df_merged['quantity'] = df_merged['quantity'].fillNa(0);
+		console.log(df_merged);
+
+		return df_merged;
+	}
+
 	async function search_handler() {
 		if (Number(current_barcode) > 0) {
 			loading = true;
@@ -45,13 +67,15 @@
 			});
 			if (raw_data) {
 				raw_data = await raw_data.map((d) => ({ ...d, date: d.date.split('T')[0] }));
+
 				const raw_data_months = await raw_data.map((d) => ({
 					...d,
 					date: d.date.split('-')[0] + '-' + d.date.split('-')[1]
 				}));
 
 				const df_raw_data = new DataFrame(raw_data);
-				const df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
+				let df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
+				df_grouped_sum = complete_missing_data(df_grouped_sum);
 
 				const df_raw_data_months = new DataFrame(raw_data_months);
 				const df_grouped_monthly_sum = df_raw_data_months.groupby(['date']).col(['quantity']).sum();
@@ -123,6 +147,7 @@
 
 		console.log(prediction_api_raw_data);
 
+		// Adding the sales forecasts to the chart data
 		for (const [model, predictions] of Object.entries(prediction_api_raw_data)) {
 			prediction_data.datasets.push({
 				label: model,
@@ -140,24 +165,24 @@
 
 		console.log(df_grouped_sum['date'].values);
 
-		const last_week_date = new Date();
-		last_week_date.setDate(new Date().getDate() - 7);
+		// const last_week_date = new Date();
+		// last_week_date.setDate(new Date().getDate() - 7);
 
-		const df_last_week_sales = df_grouped_sum.loc({
-			rows: df_grouped_sum['date'].values.map((date: string) => {
-				return date >= last_week_date.toISOString().split('T')[0];
-			})
-		});
+		// const df_last_week_sales = df_grouped_sum.loc({
+		// 	rows: df_grouped_sum['date'].values.map((date: string) => {
+		// 		return date >= last_week_date.toISOString().split('T')[0];
+		// 	})
+		// });
 
-		prediction_data.datasets.push({
-			label: 'Ventas última semana',
-			data: Array.from({ length: df_last_week_sales['quantity_sum'].values.length }, (_, i) => {
-				return {
-					date: df_last_week_sales['date'].values[i],
-					quantity: df_last_week_sales['quantity_sum'].values[i]
-				};
-			})
-		});
+		// prediction_data.datasets.push({
+		// 	label: 'Ventas última semana',
+		// 	data: Array.from({ length: df_last_week_sales['quantity_sum'].values.length }, (_, i) => {
+		// 		return {
+		// 			date: df_last_week_sales['date'].values[i],
+		// 			quantity: df_last_week_sales['quantity_sum'].values[i]
+		// 		};
+		// 	})
+		// });
 
 		prediction_loading = false;
 
@@ -183,12 +208,12 @@
 			bind:value={current_barcode}
 			type="text"
 			name="barcode"
-			placeholder="Codigo de barras"
+			placeholder="Código de barras"
 			on:keypress={(e) => {
 				if (e.key === 'Enter') search_handler();
 			}}
 		/>
-		<Button on:click={search_handler}>Submit</Button>
+		<Button on:click={search_handler}>Buscar</Button>
 		<p>{'Loading: ' + loading}</p>
 	</div>
 	{#if product_info === null}
@@ -226,8 +251,8 @@
 						</Card.Content>
 					</Card.Root>
 				</div>
-				<div class="grid gap-2 md:grid-cols-2 lg:grid-cols-2">
-					<Card.Root>
+				<div class="grid gap-2 md:grid-cols-3 lg:grid-cols-3">
+					<Card.Root class="md:col-span-2 lg:col-span-2">
 						<Card.Header>
 							<Card.Title>Tendencia de ventas</Card.Title>
 						</Card.Header>
@@ -237,7 +262,7 @@
 							</div>
 						</Card.Content>
 					</Card.Root>
-					<Card.Root>
+					<Card.Root class="md:col-span-1 lg:col-span-1">
 						<Card.Header>
 							<Card.Title>Estadísticos</Card.Title>
 						</Card.Header>
@@ -245,15 +270,11 @@
 							<div class="grid gap-1 md:grid-cols-3 lg:grid-cols-6">
 								<Card.Root class="md:col-span-1 lg:col-span-2">
 									<Card.Header>
-										<Card.Title>Ventas mismo dia, año pasado (temp)</Card.Title>
-									</Card.Header>
-									<Card.Content></Card.Content>
-								</Card.Root>
-								<Card.Root class="md:col-span-1 lg:col-span-2">
-									<Card.Header>
 										<Card.Title>Promedio ventas semanales</Card.Title>
 									</Card.Header>
-									<Card.Content></Card.Content>
+									<Card.Content>
+										<p>{product_info?.avg_sales_weekly}</p>
+									</Card.Content>
 								</Card.Root>
 								<Card.Root class="md:col-span-1 lg:col-span-2">
 									<Card.Header>
@@ -277,9 +298,7 @@
 									<Card.Header>
 										<Card.Title>Rendimiento</Card.Title>
 									</Card.Header>
-									<Card.Content>
-										<p>tiene en cuenta el nivel de ventas y si va subiendo o bajando</p>
-									</Card.Content>
+									<Card.Content></Card.Content>
 								</Card.Root>
 								<Card.Root class="md:col-span-1 lg:col-span-2">
 									<Card.Header>
