@@ -4,7 +4,8 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { DataFrame, merge } from 'danfojs/dist/danfojs-base';
+	import { DataFrame } from 'danfojs/dist/danfojs-base';
+	import { complete_missing_data, date_operation, filter_by_date } from './utils';
 
 	let current_barcode: number;
 	let loading: boolean = false;
@@ -26,28 +27,11 @@
 	let line_prediction_canvas: HTMLCanvasElement;
 	let line_prediction_chart: Chart;
 
-	function complete_missing_data(df_raw_data: DataFrame) {
-		// Fill missing dates with 0 quantity
-
-		const all_dates = [];
-		for (
-			let d = new Date(df_raw_data['date'].head(1).values[0]);
-			d <= df_raw_data.tail(1)['date'].values[0];
-			d.setDate(d.getDate() + 1)
-		) {
-			all_dates.push({ date: new Date(d).toISOString().split('T')[0] });
-		}
-
-		//!  FIX
-		const df_new = new DataFrame(all_dates, { columns: ['date', 'quantity'] });
-		df_new.print();
-		let df_merged = merge({ left: df_new, right: df_raw_data, on: ['date'], how: 'right' });
-		df_merged.print();
-
-		df_merged['quantity'] = df_merged['quantity'].fillNa(0);
-		df_merged.print();
-		return df_merged;
-	}
+	/**
+	 * Fills in missing dates in a DataFrame with quantity_sum = 0
+	 * @param {DataFrame} df - The danfojs DataFrame with date and quantity_sum columns
+	 * @returns {DataFrame} A new DataFrame with all dates in range and missing dates filled with quantity_sum = 0
+	 */
 
 	async function search_handler() {
 		if (Number(current_barcode) > 0) {
@@ -69,28 +53,31 @@
 			if (raw_data) {
 				raw_data = await raw_data.map((d) => ({ ...d, date: d.date.split('T')[0] }));
 				const df_raw_data = new DataFrame(raw_data);
-				let df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
-				df_grouped_sum = complete_missing_data(df_grouped_sum);
-				df_grouped_sum.print();
+				let df_day_data = df_raw_data.groupby(['date']).col(['quantity']).sum();
+				df_day_data = complete_missing_data(df_day_data);
+				let df_grouped_sum = filter_by_date(df_day_data, date_operation(1, 'month'));
 
-				const raw_data_months = await raw_data.map((d) => ({
-					...d,
-					date: d.date.split('-')[0] + '-' + d.date.split('-')[1]
-				}));
+				current_product_sales_today = filter_by_date(df_grouped_sum, date_operation(1, 'day'))[
+					'quantity_sum'
+				].values[0];
 
-				const df_raw_data_months = new DataFrame(raw_data_months);
-				const df_grouped_monthly_sum = df_raw_data_months.groupby(['date']).col(['quantity']).sum();
+				let df_monthly_data = filter_by_date(df_day_data, date_operation(6, 'month'));
 
-				const sale_today = raw_data?.filter((e) => {
-					e.date === new Date().toISOString().split('T')[0];
-				});
+				let date_month_col_data = df_monthly_data['date'].values.map((d: string) => d.slice(0, 7));
 
-				current_product_sales_today = sale_today.length !== 0 ? sale_today[0].quantity : 0;
+				df_monthly_data.addColumn('date_month', date_month_col_data, { inplace: true });
+				df_monthly_data.print();
+
+				let df_grouped_monthly_sum = df_monthly_data
+					.groupby(['date_month'])
+					.col(['quantity_sum'])
+					.sum();
+				df_grouped_monthly_sum.print();
 
 				line_chart = new Chart(line_canvas, {
 					type: 'line',
 					data: {
-						labels: df_grouped_sum['date'].values,
+						labels: df_grouped_sum['date'].values.map((d) => new Date(d).toLocaleDateString()),
 						datasets: [
 							{
 								label: 'Ventas',
@@ -104,18 +91,19 @@
 							legend: {
 								display: false
 							}
-						}
+						},
+						maintainAspectRatio: false
 					}
 				});
 
 				bars_chart = new Chart(bars_canvas, {
 					type: 'bar',
 					data: {
-						labels: df_grouped_monthly_sum['date'].values,
+						labels: df_grouped_monthly_sum['date_month'].values,
 						datasets: [
 							{
 								label: 'Ventas',
-								data: df_grouped_monthly_sum['quantity_sum'].values
+								data: df_grouped_monthly_sum['quantity_sum_sum'].values
 							}
 						]
 					},
@@ -125,7 +113,8 @@
 							legend: {
 								display: false
 							}
-						}
+						},
+						maintainAspectRatio: false
 					}
 				});
 			}
@@ -247,7 +236,7 @@
 							<Card.Title>Ventas totales por período</Card.Title>
 						</Card.Header>
 						<Card.Content>
-							<div class="lg:max-h-32 lg:max-w-full">
+							<div class="lg:max-h-full lg:max-w-full">
 								<canvas bind:this={bars_canvas}></canvas>
 							</div>
 						</Card.Content>
@@ -259,7 +248,7 @@
 							<Card.Title>Tendencia de ventas</Card.Title>
 						</Card.Header>
 						<Card.Content>
-							<div class="lg:h-full lg:w-full">
+							<div class="lg:min-h-64 lg:max-w-full">
 								<canvas bind:this={line_canvas}></canvas>
 							</div>
 						</Card.Content>
