@@ -40,11 +40,12 @@
 
 		//!  FIX
 		const df_new = new DataFrame(all_dates, { columns: ['date', 'quantity'] });
-		let df_merged = merge({ left: df_new, right: df_raw_data, on: ['date'], how: 'left' });
+		df_new.print();
+		let df_merged = merge({ left: df_new, right: df_raw_data, on: ['date'], how: 'right' });
+		df_merged.print();
 
 		df_merged['quantity'] = df_merged['quantity'].fillNa(0);
-		console.log(df_merged);
-
+		df_merged.print();
 		return df_merged;
 	}
 
@@ -67,15 +68,15 @@
 			});
 			if (raw_data) {
 				raw_data = await raw_data.map((d) => ({ ...d, date: d.date.split('T')[0] }));
+				const df_raw_data = new DataFrame(raw_data);
+				let df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
+				df_grouped_sum = complete_missing_data(df_grouped_sum);
+				df_grouped_sum.print();
 
 				const raw_data_months = await raw_data.map((d) => ({
 					...d,
 					date: d.date.split('-')[0] + '-' + d.date.split('-')[1]
 				}));
-
-				const df_raw_data = new DataFrame(raw_data);
-				let df_grouped_sum = df_raw_data.groupby(['date']).col(['quantity']).sum();
-				df_grouped_sum = complete_missing_data(df_grouped_sum);
 
 				const df_raw_data_months = new DataFrame(raw_data_months);
 				const df_grouped_monthly_sum = df_raw_data_months.groupby(['date']).col(['quantity']).sum();
@@ -83,6 +84,7 @@
 				const sale_today = raw_data?.filter((e) => {
 					e.date === new Date().toISOString().split('T')[0];
 				});
+
 				current_product_sales_today = sale_today.length !== 0 ? sale_today[0].quantity : 0;
 
 				line_chart = new Chart(line_canvas, {
