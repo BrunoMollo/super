@@ -60,12 +60,12 @@ export function factura_consumidor_final_template(data: {
 				<p>${data.company.adress}</p>
 				<p>IIBB: ${data.company.iibb}</p>
 				<p>Inicio de actividad: ${data.company.start_date}</p>
+				<p>IVA Responsable Inscripto</p>
 			</td>
 		</tr>
 		<tr>
 			<td class="border-top padding-t-3 padding-b-3">
-				<p class="text-center text-lg">FACTURA C</p>
-				<p class="text-center">Codigo 11</p>
+				<p class="text-center text-lg">FACTURA B</p>
 				<p>P.V: ${data.bill.punto_de_venta} </p>
 				<p>Nro: ${data.bill.billNumber}</p>
 				<p>Fecha: ${today}</p>
