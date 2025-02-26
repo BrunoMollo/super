@@ -1,6 +1,6 @@
 import type Afip from '@afipsdk/afip.js';
 import { round } from '$lib/utils/utils';
-import { calcImporteIVA, calcImporteIvaNoGrabado, calcImporteNetoGrabado } from './calcultations';
+import { iva_calc } from './calcultations';
 import { CONCEPTO, CONCIDICION_IVA_RECEPTOR, FACTURA, ID_IVA, TIPO_DE_DOCUMENTO } from './enums';
 
 export class FactruraBuilder {
@@ -64,15 +64,16 @@ export class FactruraBuilder {
 				this.data.Iva.push({
 					Percentage: item.iva_percentage,
 					Id: ID_IVA.find((i) => i.percentage === item.iva_percentage)?.id! ?? 0,
-					BaseImp: calcImporteNetoGrabado(item),
-					Importe: calcImporteIVA(item)
+					BaseImp: iva_calc.neto(item),
+					Importe: iva_calc.importe_iva(item)
 				});
+			} else {
+				iva_entry.BaseImp += iva_calc.neto(item);
+				iva_entry.Importe += iva_calc.importe_iva(item);
 			}
 
-			this.data.ImpNeto += calcImporteNetoGrabado(item); // Importe neto gravado
-
-			this.data.ImpIVA += calcImporteIVA(item); //Importe total de IVA
-			this.data.ImpTotConc += calcImporteIvaNoGrabado(item); // Importe neto no gravado
+			this.data.ImpNeto += iva_calc.neto(item); // Importe neto gravado
+			this.data.ImpIVA += iva_calc.importe_iva(item); //Importe total de IVA
 		}
 
 		this.data.ImpTrib = 0; //Importe total de tributos

@@ -1,16 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { calcImporteIVA, calcImporteIvaNoGrabado, calcImporteNetoGrabado } from './calcultations';
+import { iva_calc } from './calcultations';
 
-describe('calcular importe neto', () => {
+describe('importe neto iva', () => {
 	test.each([
-		{ price: 12_100, iva: 21, quantity: 1, expected: 10_000 },
-		{ price: 12_100, iva: 21, quantity: 2, expected: 20_000 },
+		{ price: 121, iva: 21, quantity: 1, expected: 100 },
+		{ price: 121, iva: 21, quantity: 2, expected: 200 },
 		{ price: 100, iva: 0, quantity: 1, expected: 100 },
 		{ price: 100, iva: 0, quantity: 2, expected: 200 }
 	])(
-		'precio=$price , iva=$iva, cantidad=$quantity => $expected',
+		'precio_unitario=$price | porcentaje_iva=$iva | cantidad=$quantity | neto=$expected',
 		({ price, iva, quantity, expected }) => {
-			const result = calcImporteNetoGrabado({
+			const result = iva_calc.neto({
 				price,
 				iva_percentage: iva,
 				quantity
@@ -21,40 +21,42 @@ describe('calcular importe neto', () => {
 	);
 });
 
-describe('calcular importe iva', () => {
+describe('importe bruto iva', () => {
 	test.each([
-		{ price: 10_000, iva: 21, quantity: 1, expected: 2_100 },
-		{ price: 10_000, iva: 21, quantity: 2, expected: 4_200 },
-		{ price: 100, iva: 21, quantity: 1, expected: 21 },
-		{ price: 100, iva: 21, quantity: 2, expected: 42 },
-		{ price: 100, iva: 0, quantity: 1, expected: 0 },
-		{ price: 100, iva: 0, quantity: 2, expected: 0 }
+		{ price: 121, iva: 21, quantity: 1, expected: 121 },
+		{ price: 121, iva: 21, quantity: 2, expected: 242 },
+		{ price: 100, iva: 0, quantity: 1, expected: 100 },
+		{ price: 100, iva: 0, quantity: 2, expected: 200 }
 	])(
-		'precio=$price, iva=$iva, cantidad=$quantity => $expected',
+		'precio_unitario=$price | porcentaje_iva=$iva | cantidad=$quantity | bruto=$expected',
 		({ price, iva, quantity, expected }) => {
-			const res = calcImporteIVA({
+			const result = iva_calc.bruto({
 				price,
 				iva_percentage: iva,
 				quantity
 			});
 
-			expect(expected).toBe(res);
+			expect(result).toBe(expected);
 		}
 	);
 });
 
-describe('calcular importe total sin iva', () => {
+describe('importe iva', () => {
 	test.each([
-		{ price: 100, iva: 0, quantity: 1, expected: 100 },
-		{ price: 100, iva: 0, quantity: 2, expected: 200 },
-		{ price: 100, iva: 10, quantity: 1, expected: 0 },
-		{ price: 100, iva: 21, quantity: 2, expected: 0 }
+		{ price: 121, iva: 21, quantity: 1, expected: 21 },
+		{ price: 121, iva: 21, quantity: 2, expected: 42 },
+		{ price: 100, iva: 0, quantity: 1, expected: 0 },
+		{ price: 100, iva: 0, quantity: 2, expected: 0 }
 	])(
-		'precio=$price, iva=$iva, cantidad=$quantity => $expected',
+		'precio_unitario=$price | porcentaje_iva=$iva | cantidad=$quantity | importe_iva=$expected',
 		({ price, iva, quantity, expected }) => {
-			const res = calcImporteIvaNoGrabado({ price, iva_percentage: iva, quantity });
+			const result = iva_calc.importe_iva({
+				price,
+				iva_percentage: iva,
+				quantity
+			});
 
-			expect(res).toBe(expected);
+			expect(result).toBe(expected);
 		}
 	);
 });
