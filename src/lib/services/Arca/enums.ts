@@ -30,3 +30,10 @@ export const CONCIDICION_IVA_RECEPTOR = {
 	IVA_LIBERADO_LEY_N_19_640: 10,
 	IVA_NO_ALCANZADO: 15
 } as const;
+
+export const ID_IVA = [
+	{ id: 2, percentage: 0 },
+	{ id: 4, percentage: 10.5 },
+	{ id: 5, percentage: 21 },
+	{ id: 6, percentage: 27 }
+] as const;

@@ -15,7 +15,9 @@ async function faturar() {
 
 	builder.addDni(dni);
 
-	builder.addAmounts([{ name: 'Cafe Americano', quantity: 1, price: 100, iva_percentage: 21 }]);
+	const products = [{ name: 'Cafe Americano', quantity: 1, price: 121, iva_percentage: 21 }];
+
+	builder.addAmounts(products);
 
 	const { cae, vencimiento, billNumber } = await builder.build();
 
@@ -48,20 +50,7 @@ async function faturar() {
 				vencimiento,
 				billNumber
 			},
-			products: [
-				{
-					quantity: 2,
-					name: 'Cafe Americano',
-					iva: 21,
-					price: 1.5
-				},
-				{
-					quantity: 1,
-					name: 'Cafe Japones',
-					iva: 10,
-					price: 20
-				}
-			]
+			products
 		}),
 		file_name: name,
 		options: options

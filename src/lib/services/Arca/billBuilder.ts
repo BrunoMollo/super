@@ -1,6 +1,7 @@
 import type Afip from '@afipsdk/afip.js';
+import { round } from '$lib/utils/utils';
 import { calcImporteIVA, calcImporteIvaNoGrabado, calcImporteNetoGrabado } from './calcultations';
-import { CONCEPTO, CONCIDICION_IVA_RECEPTOR, FACTURA, TIPO_DE_DOCUMENTO } from './enums';
+import { CONCEPTO, CONCIDICION_IVA_RECEPTOR, FACTURA, ID_IVA, TIPO_DE_DOCUMENTO } from './enums';
 
 export class FactruraBuilder {
 	private tipo_de_factura = FACTURA.B;
@@ -51,16 +52,40 @@ export class FactruraBuilder {
 		this.data.ImpIVA = 0; //Importe total de IVA
 		this.data.ImpTotConc = 0; // Importe neto no gravado
 
-		for (const item of data) {
-			this.data.ImpNeto += calcImporteNetoGrabado(item) * item.quantity; // Importe neto gravado
+		this.data.Iva = [];
 
-			this.data.ImpIVA += calcImporteIVA(item) * item.quantity; //Importe total de IVA
-			this.data.ImpTotConc += calcImporteIvaNoGrabado(item) * item.quantity; // Importe neto no gravado
+		for (const item of data) {
+			console.log(item);
+			const iva_entry = this.data.Iva.find(
+				(i: { Percentage: number }) => i.Percentage === item.iva_percentage
+			);
+
+			if (!iva_entry) {
+				this.data.Iva.push({
+					Percentage: item.iva_percentage,
+					Id: ID_IVA.find((i) => i.percentage === item.iva_percentage)?.id! ?? 0,
+					BaseImp: calcImporteNetoGrabado(item),
+					Importe: calcImporteIVA(item)
+				});
+			}
+
+			this.data.ImpNeto += calcImporteNetoGrabado(item); // Importe neto gravado
+
+			this.data.ImpIVA += calcImporteIVA(item); //Importe total de IVA
+			this.data.ImpTotConc += calcImporteIvaNoGrabado(item); // Importe neto no gravado
 		}
 
-		this.data.ImpTotal = this.data.ImpNeto + this.data.ImpTrib; // Importe total del comprobante
 		this.data.ImpTrib = 0; //Importe total de tributos
 		this.data.ImpOpEx = 0; // Importe exento de IVA
+		this.data.ImpTotal = round(
+			this.data.ImpTotConc +
+				this.data.ImpNeto +
+				this.data.ImpOpEx +
+				this.data.ImpTrib +
+				this.data.ImpIVA
+		); // Importe total del comprobante
+
+		console.log(this.data);
 	}
 
 	async build() {
