@@ -55,7 +55,6 @@ export class FactruraBuilder {
 		this.data.Iva = [];
 
 		for (const item of data) {
-			console.log(item);
 			const iva_entry = this.data.Iva.find(
 				(i: { Percentage: number }) => i.Percentage === item.iva_percentage
 			);
@@ -84,7 +83,17 @@ export class FactruraBuilder {
 				this.data.ImpOpEx +
 				this.data.ImpTrib +
 				this.data.ImpIVA
-		); // Importe total del comprobante
+		);
+
+		for (const key in this.data) {
+			if (typeof this.data[key] == 'number') {
+				this.data[key] = round(this.data[key]);
+			}
+		}
+		this.data.Iva.map((item: any) => {
+			item.BaseImp = round(item.BaseImp);
+			item.Importe = round(item.Importe);
+		});
 
 		console.log(this.data);
 	}

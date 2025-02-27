@@ -4,21 +4,21 @@ import { FactruraBuilder } from './billBuilder';
 
 const punto_de_venta = 13;
 
-async function faturar() {
-	const dni = 20111111112;
-
-	const afipClient = new Afip({ CUIT: 20409378472 });
-
-	const builder = new FactruraBuilder(afipClient, punto_de_venta);
+export async function faturar(props: {
+	afipClient: Afip;
+	builder: FactruraBuilder;
+	dni: number;
+	products: Array<{
+		name: string;
+		quantity: number;
+		price: number;
+		iva_percentage: number;
+	}>;
+}) {
+	const { afipClient, dni, builder, products } = props;
 
 	await builder.fetchLastVoucher();
-
 	builder.addDni(dni);
-
-	const products = [
-		{ name: 'Cafe Americano', quantity: 1, price: 121, iva_percentage: 21 },
-		{ name: 'Cafe Colombiano', quantity: 2, price: 211, iva_percentage: 21 }
-	];
 
 	builder.addAmounts(products);
 
@@ -39,6 +39,7 @@ async function faturar() {
 	// Creamos el PDF
 	const res = await afipClient.ElectronicBilling.createPDF({
 		html: factura_consumidor_final_template({
+			//TODO: cambiar
 			company: {
 				name: 'Empresa imaginaria S.A.',
 				adress: 'Calle falsa 123',
@@ -59,8 +60,6 @@ async function faturar() {
 		options: options
 	});
 
-	// Mostramos la url del archivo creado
-	console.log(res.file);
+	console.log('ok');
+	return res;
 }
-
-faturar();

@@ -32,8 +32,10 @@ export const CONCIDICION_IVA_RECEPTOR = {
 } as const;
 
 export const ID_IVA = [
-	{ id: 2, percentage: 0 },
+	{ id: 3, percentage: 0 },
 	{ id: 4, percentage: 10.5 },
 	{ id: 5, percentage: 21 },
-	{ id: 6, percentage: 27 }
+	{ id: 6, percentage: 27 },
+	{ id: 8, percentage: 5 },
+	{ id: 9, percentage: 2.5 }
 ] as const;
