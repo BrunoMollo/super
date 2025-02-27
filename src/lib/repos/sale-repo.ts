@@ -7,16 +7,25 @@ export class Sale_Repo {
 	async register_sale({
 		seller_id,
 		products,
-		client_id
+		client_id,
+		bill
 	}: {
 		seller_id: number;
 		products: { product_id: number; quantity: number; unit_price: number }[];
 		client_id?: number;
+		bill:{
+			cae: string;
+			expiration_date_of_cae: Date;
+			voucher_number: number;
+		}
 	}) {
+		const { cae, expiration_date_of_cae, voucher_number } = bill;
 		this.ctx.transaction(async (tx) => {
 			const { sale_id } = await tx
 				.insert(t_sale)
-				.values({ seller_id, client_id })
+				.values({ seller_id, client_id, cae, expiration_date_of_cae, voucher_number
+					
+				 })
 				.returning({ sale_id: t_sale.id })
 				.then((x) => x[0]);
 

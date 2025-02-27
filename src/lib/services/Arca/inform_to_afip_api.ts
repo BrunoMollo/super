@@ -22,6 +22,7 @@ export async function infomr_to_afip_api(props: {
 
 	const { cae, expiration_date, billNumber } = await builder.addAmounts(products).build();
 
-	return { cae, expiration_date, billNumber };
+	return { cae, expiration_date_of_cae: new Date(expiration_date)
+		, billNumber };
 
 }

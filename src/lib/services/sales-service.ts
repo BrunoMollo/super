@@ -34,9 +34,15 @@ export async function get_products(
 export async function register_sale(
 	products: { product_id: number; quantity: number; unit_price: number; iva_percentage: number }[],
 	user: User,
-	client_id?: number
+	billData: {
+		cae: string;
+		expiration_date_of_cae: Date;
+		billNumber: number;
+	},
+	client_id?: number,
 ) {
+	const { cae, expiration_date_of_cae, billNumber } = billData;
 	const seller_id = user.getId();
-	await sale_repo.register_sale({ seller_id, products, client_id });
+	await sale_repo.register_sale({ seller_id, products, client_id, bill: { cae, expiration_date_of_cae, voucher_number: billNumber } });
 	return { ok: true };
 }

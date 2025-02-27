@@ -44,11 +44,11 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
 	const afipClient = new Afip({ CUIT: 20409378472 });
 	const builder = new FactruraBuilder(afipClient, 13);
-	const aaaa= await inform_to_afip_api({afipClient, builder, products: productData, dni: Number(client.dni)});
-	console.log(aaaa)
+	const billData= await inform_to_afip_api({afipClient, builder, products: productData, dni: Number(client.dni)});
+	console.log(billData)
 
 	// REgsitroe ne l base de datos
-	const res = await register_sale(productData, user, client_id);
+	const res = await register_sale(productData, user, billData, client_id);
 
 	// Generar comprobante
 
