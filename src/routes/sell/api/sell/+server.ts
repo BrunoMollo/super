@@ -44,7 +44,20 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
 	const afipClient = new Afip({ CUIT: 20409378472 });
 	const builder = new FactruraBuilder(afipClient, 13);
-	const billData= await inform_to_afip_api({afipClient, builder, products: productData, dni: Number(client.dni)});
+	let billData 
+	try {
+		billData = await inform_to_afip_api({ afipClient, builder, products: productData, dni: Number(client.dni) });
+	}
+	catch (e ) {
+		if(e instanceof Error){
+			return new Response(e.message, { status: 400 });
+		}
+	}
+
+	if(!billData){	
+		return new Response('Error inesperado', { status: 200 });
+		}
+
 	console.log(billData)
 
 	// REgsitroe ne l base de datos

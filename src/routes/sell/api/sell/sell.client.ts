@@ -20,9 +20,9 @@ export async function fetch_submit_sell(sell: Sell) {
 	})
 		.then(async (res) => {
 			if (res.status === 200) {
-				return (await res.json()) as { ok: boolean };
+				return  { ok: true}  as const;
 			}
-			return { ok: false };
+			return { ok: false, msj: await res.text()} as const;
 		})
-		.catch(() => ({ ok: false }));
+		.catch(() => ({ ok: false, msj: "Error del servidor" } as const));
 }

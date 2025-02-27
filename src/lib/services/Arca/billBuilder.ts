@@ -41,13 +41,20 @@ export class FactruraBuilder {
 	}
 
 	addDni(dni: number) {
-// 		const LIMIT=417288
-// constAfipWebServiceError: bridge(10015) (CbteDesde igual a CbteHasta) menor 
-// a $, si DocTipo es distinto a 99, DocNro debe ser mayor a 0. 
+ 		const LIMIT=417_288
 
+		if (this.data.ImpTotal < LIMIT) {
+			this.data.DocTipo = TIPO_DE_DOCUMENTO.CONSUMIDOR_FINAL
+			this.data.DocNro = 0; 
+		}
+		else {
+			if(!dni){
+				throw new Error(`El DNI es obligatorio para facturas mayores a $${LIMIT}`)
+			}
+			this.data.DocTipo = TIPO_DE_DOCUMENTO.DNI; // Tipo de documento del comprador (ver tipos disponibles)
+			this.data.DocNro = dni; // Numero de documento del comprador
+		}
 
-		this.data.DocTipo = TIPO_DE_DOCUMENTO.DNI; // Tipo de documento del comprador (ver tipos disponibles)
-		this.data.DocNro = dni; // Numero de documento del comprador
 		return this;
 	}
 

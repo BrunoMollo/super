@@ -136,18 +136,18 @@ function create_state_sell() {
 		input.reset();
 	}
 
-	async function submit_sell(calls: { on_success: () => unknown; on_error: () => unknown }) {
+	async function submit_sell(calls: { on_success: () => unknown; on_error: (x:string) => unknown }) {
 		const { client } = input.getCurrent();
-		const { ok } = await fetch_submit_sell({
+		const res = await fetch_submit_sell({
 			products: sell_list.getProducts(),
 			client
 		});
-		if (ok) {
+		if (res.ok) {
 			sell_list.reset();
 			input.reset();
 			calls.on_success();
 		} else {
-			calls.on_error();
+			calls.on_error(res.msj);
 		}
 	}
 

@@ -54,8 +54,8 @@
 						on_success: () => {
 							toast.success('Compra realizada exitosamente');
 						},
-						on_error: () => {
-							toast.error('Error al realizar la compra');
+						on_error: (err) => {
+							toast.error(err)
 						}
 					})}
 			>
