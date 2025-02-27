@@ -1,7 +1,7 @@
 import Afip from '@afipsdk/afip.js';
 import { round } from '$lib/utils/utils';
 import { FactruraBuilder } from '../billBuilder';
-import { faturar } from '../conexion';
+import { infomr_to_afip_api } from '../inform_to_afip_api';
 
 const dni = 123456789;
 const afipClient = new Afip({ CUIT: 20409378472 });
@@ -33,7 +33,7 @@ async function fuzz_test() {
 		const products = Array.from({ length: getRandomNumber(1, 10) }).map(() => getRandomProduct());
 		console.log(products);
 
-		await faturar({
+		await infomr_to_afip_api({
 			afipClient,
 			builder,
 			dni,

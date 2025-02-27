@@ -1,27 +1,3 @@
-import Afip from '@afipsdk/afip.js';
-import { factura_consumidor_final_template } from './bill';
-import { FactruraBuilder } from './billBuilder';
-
-const punto_de_venta = 13;
-
-export async function faturar(props: {
-	afipClient: Afip;
-	builder: FactruraBuilder;
-	dni: number;
-	products: Array<{
-		name: string;
-		quantity: number;
-		price: number;
-		iva_percentage: number;
-	}>;
-}) {
-	const { afipClient, dni, builder, products } = props;
-
-	await builder.fetchLastVoucher();
-
-	builder.addDni(dni);
-
-	const { cae, vencimiento, billNumber } = await builder.addAmounts(products).build();
 
 	const options = {
 		width: 8, // Ancho de pagina en pulgadas. Usar 3.1 para ticket
@@ -56,4 +32,3 @@ export async function faturar(props: {
 	});
 
 	return res;
-}

@@ -41,13 +41,18 @@ export class FactruraBuilder {
 	}
 
 	addDni(dni: number) {
+// 		const LIMIT=417288
+// constAfipWebServiceError: bridge(10015) (CbteDesde igual a CbteHasta) menor 
+// a $, si DocTipo es distinto a 99, DocNro debe ser mayor a 0. 
+
+
 		this.data.DocTipo = TIPO_DE_DOCUMENTO.DNI; // Tipo de documento del comprador (ver tipos disponibles)
 		this.data.DocNro = dni; // Numero de documento del comprador
 		return this;
 	}
 
 	addAmounts(
-		data: Array<{ quantity: number; name: string; iva_percentage: number; price: number }>
+		data: Array<{ quantity: number; iva_percentage: number; unit_price: number }>
 	) {
 		this.data.ImpNeto = 0; // Importe neto gravado
 		this.data.ImpIVA = 0; //Importe total de IVA
@@ -102,7 +107,7 @@ export class FactruraBuilder {
 		const res = await this.afip.ElectronicBilling.createVoucher(this.data);
 		return {
 			cae: res.CAE as string, //CAE asignado a la Factura
-			vencimiento: res.CAEFchVto as string, //Fecha de vencimiento del CAE
+			expiration_date: res.CAEFchVto as string, //Fecha de vencimiento del CAE
 			billNumber: this.data.CbteDesde as number
 		};
 	}
