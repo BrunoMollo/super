@@ -94,8 +94,6 @@ export class FactruraBuilder {
 			item.BaseImp = round(item.BaseImp);
 			item.Importe = round(item.Importe);
 		});
-
-		console.log(this.data);
 	}
 
 	async build() {

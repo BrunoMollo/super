@@ -1,7 +1,7 @@
 import Afip from '@afipsdk/afip.js';
 import { round } from '$lib/utils/utils';
-import { FactruraBuilder } from './billBuilder';
-import { faturar } from './conexion';
+import { FactruraBuilder } from '../billBuilder';
+import { faturar } from '../conexion';
 
 const dni = 123456789;
 const afipClient = new Afip({ CUIT: 20409378472 });

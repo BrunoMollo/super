@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { iva_calc } from './calcultations';
+import { iva_calc } from '../calcultations';
 
 describe('importe neto iva', () => {
 	test.each([
