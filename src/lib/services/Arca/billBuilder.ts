@@ -43,6 +43,7 @@ export class FactruraBuilder {
 	addDni(dni: number) {
 		this.data.DocTipo = TIPO_DE_DOCUMENTO.DNI; // Tipo de documento del comprador (ver tipos disponibles)
 		this.data.DocNro = dni; // Numero de documento del comprador
+		return this;
 	}
 
 	addAmounts(
@@ -94,6 +95,7 @@ export class FactruraBuilder {
 			item.BaseImp = round(item.BaseImp);
 			item.Importe = round(item.Importe);
 		});
+		return this;
 	}
 
 	async build() {

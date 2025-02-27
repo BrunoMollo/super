@@ -18,16 +18,11 @@ export async function faturar(props: {
 	const { afipClient, dni, builder, products } = props;
 
 	await builder.fetchLastVoucher();
+
 	builder.addDni(dni);
 
-	builder.addAmounts(products);
+	const { cae, vencimiento, billNumber } = await builder.addAmounts(products).build();
 
-	const { cae, vencimiento, billNumber } = await builder.build();
-
-	// Nombre para el archivo (sin .pdf)
-	const name = 'Factura';
-
-	// Opciones para el archivo
 	const options = {
 		width: 8, // Ancho de pagina en pulgadas. Usar 3.1 para ticket
 		marginLeft: 0.4, // Margen izquierdo en pulgadas. Usar 0.1 para ticket
@@ -56,10 +51,9 @@ export async function faturar(props: {
 			},
 			products
 		}),
-		file_name: name,
+		file_name: 'Ticket',
 		options: options
 	});
 
-	console.log('ok');
 	return res;
 }
