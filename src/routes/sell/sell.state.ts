@@ -125,7 +125,7 @@ function create_state_sell() {
 
 	const dialog_open_client = writable(false);
 	const dialog_open_ticket = writable(false);
-	let last_ticket_url = '';
+	const last_ticket_url = writable('');
 
 	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
 		const { bar_code, amount } = input.getCurrent();
@@ -148,7 +148,7 @@ function create_state_sell() {
 			client
 		});
 		if (res.ok) {
-			last_ticket_url = res.file_url;
+			last_ticket_url.set(res.file_url);
 			sell_list.reset();
 			input.reset();
 			dialog_open_ticket.set(true);
@@ -156,10 +156,6 @@ function create_state_sell() {
 		} else {
 			calls.on_error(res.msj);
 		}
-	}
-
-	function print_ticket() {
-		window.open(last_ticket_url);
 	}
 
 	async function search_client(calls: {
@@ -198,7 +194,7 @@ function create_state_sell() {
 		search_client,
 		create_client,
 		remove_product_from_sell,
-		print_ticket,
+		last_ticket_url,
 		dialog_open_ticket,
 		dialog_open_client
 	};

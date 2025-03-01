@@ -14,14 +14,18 @@
 		sell_list,
 		total,
 		dialog_open_client,
-		print_ticket,
 		dialog_open_ticket,
+		last_ticket_url,
 		search_product,
 		submit_sell
 	} = create_global_state_sell();
 
 	function on_not_found() {
 		alert('Producto no encontrado');
+	}
+
+	function print_ticket() {
+		window.open($last_ticket_url, '_blank')!;
 	}
 </script>
 
