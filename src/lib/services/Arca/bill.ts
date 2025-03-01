@@ -3,7 +3,7 @@ function list_of_products(
 		quantity: number;
 		name: string;
 		iva_percentage: number;
-		price: number;
+		unit_price: number;
 	}>
 ) {
 	return arr
@@ -12,7 +12,7 @@ function list_of_products(
 							  <td>${x.quantity}</td>
 							  <td>${x.name}</td>
 							  <td>${x.iva_percentage}%</td>
-							  <td>${x.price.toFixed(2)}</td>
+							  <td>${x.unit_price.toFixed(2)}</td>
 						  </tr>`
 		)
 		.join('');
@@ -37,7 +37,7 @@ export function factura_consumidor_final_template(data: {
 		quantity: number;
 		name: string;
 		iva_percentage: number;
-		price: number;
+		unit_price: number;
 	}>;
 }) {
 	const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -93,7 +93,7 @@ export function factura_consumidor_final_template(data: {
 					<table>
 						<tr>
 							<td>TOTAL</td>
-							<td>${data.products.reduce((acc, x) => acc + x.price, 0).toFixed(2)}</td>
+							<td>${data.products.reduce((acc, x) => acc + x.unit_price, 0).toFixed(2)}</td>
 						</tr>
 					</table>
 				</div>

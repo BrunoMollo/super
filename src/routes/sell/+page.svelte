@@ -14,6 +14,7 @@
 		sell_list,
 		total,
 		dialog_open_client,
+		print_ticket,
 		dialog_open_ticket,
 		search_product,
 		submit_sell
@@ -94,7 +95,7 @@
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>NO</AlertDialog.Cancel>
-			<AlertDialog.Action>SI</AlertDialog.Action>
+			<AlertDialog.Action on:click={print_ticket}>SI</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

@@ -1,3 +1,20 @@
+import type Afip from '@afipsdk/afip.js';
+import { factura_consumidor_final_template } from './bill';
+
+export async function create_pdf(props: {
+	afipClient: Afip;
+	punto_de_venta: number;
+	cae: string;
+	expiration_date_of_cae: Date;
+	billNumber: number;
+	products: Array<{
+		product_id: number;
+		quantity: number;
+		unit_price: number;
+		iva_percentage: number;
+	}>;
+}) {
+	const { afipClient, punto_de_venta, cae, expiration_date_of_cae, billNumber, products } = props;
 
 	const options = {
 		width: 8, // Ancho de pagina en pulgadas. Usar 3.1 para ticket
@@ -20,10 +37,10 @@
 				start_date: '25/10/2023'
 			},
 			bill: {
-				punto_de_venta,
+				punto_de_venta: Number(punto_de_venta),
 				cae,
-				vencimiento,
-				billNumber
+				vencimiento: expiration_date_of_cae.toISOString().split('T')[0],
+				billNumber: billNumber
 			},
 			products
 		}),
@@ -32,3 +49,4 @@
 	});
 
 	return res;
+}

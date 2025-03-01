@@ -1,10 +1,11 @@
 import { client_repo } from '$lib';
-import { infomr_to_afip_api as inform_to_afip_api } from '$lib/services/Arca/inform_to_afip_api';
-import { get_products, register_sale } from '$lib/services/sales-service';
 import Afip from '@afipsdk/afip.js';
+import { FactruraBuilder } from '$lib/services/Arca/billBuilder';
+import { infomr_to_afip_api as inform_to_afip_api } from '$lib/services/Arca/inform_to_afip_api';
+import { create_pdf } from '$lib/services/Arca/qr';
+import { get_products, register_sale } from '$lib/services/sales-service';
 import type { Sell } from './sell.client';
 import { type RequestHandler, json } from '@sveltejs/kit';
-import { FactruraBuilder } from '$lib/services/Arca/billBuilder';
 
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const { user } = locals;
@@ -13,7 +14,6 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	}
 
 	const { products, client } = (await request.json()) as Sell;
-
 
 	// BUESCAR CLIENTE
 	let client_id = undefined as number | undefined;
@@ -31,39 +31,47 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	}
 
 	// buscar datos
-	const fooo=await get_products(products);
-	if(fooo.ok===false){
+	const fooo = await get_products(products);
+	if (fooo.ok === false) {
 		return new Response(fooo.type, { status: 400 });
 	}
+
 	const productData = fooo.products;
 
 	// Facturacion
 	// products, dni -> CAE, Fecha venviemienot, numero de compraboante
 
-
-
 	const afipClient = new Afip({ CUIT: 20409378472 });
 	const builder = new FactruraBuilder(afipClient, 13);
-	let billData 
+	let billData;
 	try {
-		billData = await inform_to_afip_api({ afipClient, builder, products: productData, dni: Number(client.dni) });
-	}
-	catch (e ) {
-		if(e instanceof Error){
+		billData = await inform_to_afip_api({
+			afipClient,
+			builder,
+			products: productData,
+			dni: Number(client.dni)
+		});
+	} catch (e) {
+		if (e instanceof Error) {
 			return new Response(e.message, { status: 400 });
 		}
 	}
 
-	if(!billData){	
+	if (!billData) {
 		return new Response('Error inesperado', { status: 200 });
-		}
+	}
 
-	console.log(billData)
+	console.log(billData);
 
-	// REgsitroe ne l base de datos
+	// REgsitroe el base de datos
 	const res = await register_sale(productData, user, billData, client_id);
 
 	// Generar comprobante
 
-	return json(res);
+	const punto_de_venta = 13;
+
+	console.log(productData);
+	const pdf = await create_pdf({ afipClient, punto_de_venta, ...billData, products: productData });
+
+	return json({ ...res, file_url: pdf.file });
 };
