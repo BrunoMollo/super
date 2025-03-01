@@ -11,8 +11,8 @@ function list_of_products(
 			(x) => `<tr>
 							  <td>${x.quantity}</td>
 							  <td>${x.name}</td>
-							  <td>${x.iva_percentage}%</td>
-							  <td>${x.unit_price.toFixed(2)}</td>
+							  <td>($${x.unit_price.toFixed(2)})</td>
+							  <td>$${(x.quantity * x.unit_price).toFixed(2)}</td>
 						  </tr>`
 		)
 		.join('');
@@ -93,7 +93,7 @@ export function factura_consumidor_final_template(data: {
 					<table>
 						<tr>
 							<td>TOTAL</td>
-							<td>${data.products.reduce((acc, x) => acc + x.unit_price, 0).toFixed(2)}</td>
+							<td>$${data.products.reduce((acc, x) => acc + x.unit_price * x.quantity, 0).toFixed(2)}</td>
 						</tr>
 					</table>
 				</div>
