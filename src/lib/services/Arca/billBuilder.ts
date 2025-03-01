@@ -111,6 +111,7 @@ export class FactruraBuilder {
 	}
 
 	async build() {
+    console.log(this.data)
 		const res = await this.afip.ElectronicBilling.createVoucher(this.data);
 		return {
 			cae: res.CAE as string, //CAE asignado a la Factura

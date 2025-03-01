@@ -29,7 +29,7 @@
 		"@types/pg": "^8.11.6",
 		"@vitest/coverage-istanbul": "^2.0.5",
 		"autoprefixer": "^10.4.19",
-		"bits-ui": "^0.21.13",
+		"bits-ui": "^0.22.0",
 		"drizzle-kit": "^0.24.0",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",

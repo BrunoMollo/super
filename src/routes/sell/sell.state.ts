@@ -123,7 +123,8 @@ function create_state_sell() {
 	const input = new InputState();
 	const sell_list = new SellState();
 
-	const dialog_open = writable(false);
+	const dialog_open_client = writable(false);
+	const dialog_open_ticket = writable(false);
 
 	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
 		const { bar_code, amount } = input.getCurrent();
@@ -136,7 +137,10 @@ function create_state_sell() {
 		input.reset();
 	}
 
-	async function submit_sell(calls: { on_success: () => unknown; on_error: (x:string) => unknown }) {
+	async function submit_sell(calls: {
+		on_success: () => unknown;
+		on_error: (x: string) => unknown;
+	}) {
 		const { client } = input.getCurrent();
 		const res = await fetch_submit_sell({
 			products: sell_list.getProducts(),
@@ -145,6 +149,7 @@ function create_state_sell() {
 		if (res.ok) {
 			sell_list.reset();
 			input.reset();
+			dialog_open_ticket.set(true);
 			calls.on_success();
 		} else {
 			calls.on_error(res.msj);
@@ -161,7 +166,7 @@ function create_state_sell() {
 		if (exists) {
 			calls.on_found();
 			input.set_client_as_existing();
-			dialog_open.set(false);
+			dialog_open_client.set(false);
 		} else {
 			input.set_client_as_not_existing();
 			calls.on_not_found();
@@ -169,7 +174,7 @@ function create_state_sell() {
 	}
 
 	function create_client(calls: { on_success: () => unknown; on_error: () => unknown }) {
-		dialog_open.set(false);
+		dialog_open_client.set(false);
 		calls.on_success();
 		return { ok: true };
 	}
@@ -187,7 +192,8 @@ function create_state_sell() {
 		search_client,
 		create_client,
 		remove_product_from_sell,
-		dialog_open
+		dialog_open_ticket,
+		dialog_open_client
 	};
 }
 
