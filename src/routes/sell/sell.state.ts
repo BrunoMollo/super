@@ -126,6 +126,7 @@ function create_state_sell() {
 	const dialog_open_client = writable(false);
 	const dialog_open_ticket = writable(false);
 	const last_ticket_url = writable('');
+	const buffering_submit_sale = writable(false);
 
 	async function search_product({ on_not_found }: { on_not_found: () => unknown }) {
 		const { bar_code, amount } = input.getCurrent();
@@ -143,9 +144,12 @@ function create_state_sell() {
 		on_error: (x: string) => unknown;
 	}) {
 		const { client } = input.getCurrent();
+		buffering_submit_sale.set(true);
 		const res = await fetch_submit_sell({
 			products: sell_list.getProducts(),
 			client
+		}).finally(() => {
+			buffering_submit_sale.set(false);
 		});
 		if (res.ok) {
 			last_ticket_url.set(res.file_url);
@@ -192,6 +196,7 @@ function create_state_sell() {
 		search_product,
 		submit_sell,
 		search_client,
+		buffering_submit_sale,
 		create_client,
 		remove_product_from_sell,
 		last_ticket_url,

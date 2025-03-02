@@ -17,6 +17,7 @@
 		dialog_open_ticket,
 		last_ticket_url,
 		search_product,
+		buffering_submit_sale,
 		submit_sell
 	} = create_global_state_sell();
 
@@ -61,6 +62,7 @@
 
 		{#if $total > 0}
 			<Button
+				disabled={$buffering_submit_sale}
 				class=""
 				on:click={() =>
 					submit_sell({
@@ -72,7 +74,11 @@
 						}
 					})}
 			>
-				Confirmar
+				{#if $buffering_submit_sale}
+					<span> Enviando </span>
+				{:else}
+					Confirmar
+				{/if}
 			</Button>
 
 			<Dialog.Root bind:open={$dialog_open_client}>
