@@ -1,4 +1,5 @@
 import { DataFrame } from 'danfojs/dist/danfojs-base';
+import { string } from 'zod';
 
 /**
  * Groups data by week of the month and calculates accumulated quantities
@@ -101,29 +102,44 @@ export function groupByWeekOfMonth(df: DataFrame) {
 	return new DataFrame(groupedData);
 }
 
+/**
+ * Fills in missing dates in a DataFrame with quantity_sum = 0
+ * @param {DataFrame} df - The danfojs DataFrame with date and quantity_sum columns
+ * @returns {DataFrame} A new DataFrame with all dates in range and missing dates filled with quantity_sum = 0
+ */
 export function complete_missing_data(df: DataFrame) {
-	// Convert the date strings to Date objects for comparison
-	const dates = df['date'].values.map((dateStr) => new Date(dateStr));
+	// Convert the date strings to UTC Date objects for comparison
+	const dates = df['date'].values.map((dateStr) => {
+		// Parse the date string into year, month, day components
+		const [year, month, day] = dateStr.split('-').map((num) => parseInt(num));
+		// Create a UTC date (months are 0-indexed in JavaScript Date)
+		return new Date(Date.UTC(year, month - 1, day));
+	});
 
-	// Find the minimum and maximum dates in the DataFrame
+	// Find the minimum date in the DataFrame
 	const minDate = new Date(Math.min(...dates));
-	const maxDate = new Date();
+
+	// Set the maximum date to current UTC time
+	const maxDate = new Date(
+		Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())
+	);
 
 	// Create a complete array of all dates in the range
 	const allDates = [];
 	const currentDate = new Date(minDate);
 
-	// Loop through each day from min to max date
+	// Loop through each day from min to max date in UTC
 	while (currentDate <= maxDate) {
 		allDates.push(new Date(currentDate));
-		currentDate.setDate(currentDate.getDate() + 1);
+		// Add one day in UTC time
+		currentDate.setUTCDate(currentDate.getUTCDate() + 1);
 	}
 
-	// Format all dates as YYYY-MM-DD strings
+	// Format all dates as YYYY-MM-DD strings in UTC
 	const allDateStrings = allDates.map((date) => {
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
+		const year = date.getUTCFullYear();
+		const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+		const day = String(date.getUTCDate()).padStart(2, '0');
 		return `${year}-${month}-${day}`;
 	});
 
@@ -173,8 +189,12 @@ export function filter_by_date(df: DataFrame, startDate: string) {
  * @returns {string} Date string in the specified format
  */
 export function date_operation(amount: number, unitType: string) {
-	// Start with today's date
-	const today = new Date();
+	// Get current date in UTC
+	const now = new Date();
+
+	// Create a UTC date with only the date portion (no time)
+	const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
 	let resultDate = new Date(today);
 
 	// Normalize unit type to handle plural forms
@@ -183,18 +203,23 @@ export function date_operation(amount: number, unitType: string) {
 	// Calculate the relative date based on amount and unit type
 	switch (unit) {
 		case 'day':
-			resultDate.setDate(today.getDate() - amount);
+		case 'days':
+			resultDate.setUTCDate(today.getUTCDate() - amount);
 			break;
-
 		case 'month':
-			resultDate.setMonth(today.getMonth() - amount);
+		case 'months':
+			resultDate.setUTCMonth(today.getUTCMonth() - amount);
 			break;
-
 		case 'year':
-			resultDate.setFullYear(today.getFullYear() - amount);
+		case 'years':
+			resultDate.setUTCFullYear(today.getUTCFullYear() - amount);
 			break;
 	}
 
-	// Format the date
-	return resultDate.toISOString().split('T')[0];
+	// Format the date as YYYY-MM-DD
+	const year = resultDate.getUTCFullYear();
+	const month = String(resultDate.getUTCMonth() + 1).padStart(2, '0');
+	const day = String(resultDate.getUTCDate()).padStart(2, '0');
+
+	return `${year}-${month}-${day}`;
 }
