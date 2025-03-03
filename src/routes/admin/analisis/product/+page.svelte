@@ -4,7 +4,9 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Select from '$lib/components/ui/select';
+	import * as Table from '$lib/components/ui/table';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { DataFrame } from 'danfojs/dist/danfojs-base';
 	import {
 		complete_missing_data,
@@ -13,6 +15,7 @@
 		groupByWeekOfMonth
 	} from './utils';
 	import { toast } from 'svelte-sonner';
+	import Label from '$lib/components/ui/label/label.svelte';
 
 	// variables and flags
 	let current_barcode: number;
@@ -21,6 +24,7 @@
 	let tabs_value: string = 'stats';
 	let current_period: string = 'mensual';
 	let rows_with_data: number = 0;
+	let query_results: any[] | null = null;
 
 	// data
 	let product_info: any = null;
@@ -45,11 +49,47 @@
 	let line_prediction_canvas: HTMLCanvasElement;
 	let line_prediction_chart: Chart;
 
+	async function search_name_query_handler(search_query: string) {
+		if (search_query.length < 3) {
+			toast.warning('La búsqueda debe contener al menos 3 letras');
+			query_results = null;
+			return;
+		}
+
+		loading = true;
+		product_info = null;
+		raw_data = null;
+		tabs_value = 'stats';
+		prediction_data = null;
+		current_product_avg_weekly_sales = 0;
+		current_product_sales_today = 0;
+
+		await fetch('./api/product?name=' + search_query)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.length === 0) {
+					toast.error('No se encontraron productos con ese nombre');
+					query_results = null;
+					return;
+				}
+				query_results = data;
+				console.log('query_results: ', query_results);
+			})
+			.catch((err) => {
+				toast.error('Error al buscar el producto');
+				query_results = null;
+			})
+			.finally(() => {
+				loading = false;
+			});
+	}
+
 	async function search_handler() {
 		if (Number(current_barcode) > 0) {
 			// reset everything
 			loading = true;
 			product_info = null;
+			query_results = null;
 			raw_data = null;
 			tabs_value = 'stats';
 			prediction_data = null;
@@ -289,18 +329,52 @@
 <div class="flex-1 space-y-4 p-8 pt-6">
 	<h2 class="text-3xl font-bold tracking-tight">Analisis de producto</h2>
 
-	<div class="flex w-full max-w-sm items-center space-x-2">
-		<Input
-			bind:value={current_barcode}
-			type="text"
-			name="barcode"
-			placeholder="Código de barras"
-			on:keypress={(e) => {
-				if (e.key === 'Enter') search_handler();
-			}}
-		/>
-		<Button on:click={search_handler}>Buscar</Button>
+	<div class="flex w-full max-w-sm items-end space-x-2">
+		<div class="flex w-full max-w-sm flex-col gap-1.5">
+			<Label for="product_search_query">Buscar por nombre del producto</Label>
+			<Input
+				class="w-96"
+				type="text"
+				name="product_search_query"
+				placeholder="Ej. Yogurt"
+				on:keypress={(e) => {
+					if (e.key === 'Enter') search_name_query_handler(e.target.value);
+				}}
+			></Input>
+		</div>
+		<div class="flex w-full max-w-sm flex-col gap-1.5 justify-self-end">
+			<Label for="barcode">Buscar por código de barras</Label>
+			<Input
+				class="w-60"
+				bind:value={current_barcode}
+				type="text"
+				name="barcode"
+				placeholder="Ej. 7702004003518"
+				on:keypress={(e) => {
+					if (e.key === 'Enter') search_handler();
+				}}
+			/>
+		</div>
+		<!-- <Button on:click={search_handler}>Buscar</Button> -->
 	</div>
+	{#if query_results !== null}
+		<ScrollArea>
+			<Table.Root>
+				<Table.Body>
+					{#each query_results as product}
+						<Table.Row>
+							<Table.Cell
+								on:click={() => {
+									current_barcode = product.bar_code;
+									search_handler();
+								}}>{product.desc}</Table.Cell
+							>
+						</Table.Row>
+					{/each}
+				</Table.Body>
+			</Table.Root>
+		</ScrollArea>
+	{/if}
 	{#if product_info === null}
 		{#if loading}
 			<div class="grid h-screen items-center justify-center">
@@ -332,7 +406,7 @@
 								<Card.Content>
 									<ul>
 										<li>
-											<p>EAN: {product_info?.bar_code}</p>
+											<p>Código: {product_info?.bar_code}</p>
 										</li>
 										<li>
 											<p>Punto reposición: {product_info?.order_point}</p>

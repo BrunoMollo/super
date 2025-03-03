@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, lte, max } from 'drizzle-orm';
+import { and, desc, eq, ilike, inArray, like, lte, max } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import {
 	t_category,
@@ -87,6 +87,14 @@ export class Product_Repo_Drizzle {
 			.then((x) => x.map(({ category }) => category));
 
 		return { ...product, categories, price };
+	}
+
+	async get_by_description(description: string) {
+		return await this.ctx
+			.select()
+			.from(t_product)
+			.where(ilike(t_product.desc, '%' + description + '%'))
+			.orderBy(t_product.desc);
 	}
 
 	private async get_last_date_prices() {

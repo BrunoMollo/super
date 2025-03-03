@@ -109,8 +109,8 @@ importers:
         specifier: ^10.4.19
         version: 10.4.20(postcss@8.4.41)
       bits-ui:
-        specifier: ^0.21.13
-        version: 0.21.13(svelte@4.2.18)
+        specifier: ^0.22.0
+        version: 0.22.0(svelte@4.2.18)
       drizzle-kit:
         specifier: ^0.24.0
         version: 0.24.0
@@ -1425,6 +1425,11 @@ packages:
     resolution: {integrity: sha512-7nmOh6Ig7ND4DXZHv1FhNsY9yUGrad0+mf3tc4YN//3MgnJT1LnHtk4HZAKgmxCOe7txSX7/39LtYHbkrXokAQ==}
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.118
+
+  bits-ui@0.22.0:
+    resolution: {integrity: sha512-r7Fw1HNgA4YxZBRcozl7oP0bheQ8EHh+kfMBZJgyFISix8t4p/nqDcHLmBgIiJ3T5XjYnJRorYDjIWaCfhb5fw==}
+    peerDependencies:
+      svelte: ^4.0.0 || ^5.0.0
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -4665,6 +4670,13 @@ snapshots:
   binary-extensions@2.3.0: {}
 
   bits-ui@0.21.13(svelte@4.2.18):
+    dependencies:
+      '@internationalized/date': 3.7.0
+      '@melt-ui/svelte': 0.76.2(svelte@4.2.18)
+      nanoid: 5.0.7
+      svelte: 4.2.18
+
+  bits-ui@0.22.0(svelte@4.2.18):
     dependencies:
       '@internationalized/date': 3.7.0
       '@melt-ui/svelte': 0.76.2(svelte@4.2.18)
