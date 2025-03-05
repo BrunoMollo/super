@@ -24,6 +24,7 @@
 	let tabs_value: string = 'stats';
 	let current_period: string = 'mensual';
 	let rows_with_data: number = 0;
+	let ticket_avg: number = 0;
 	let query_results: any[] | null = null;
 
 	// data
@@ -119,6 +120,9 @@
 			if (raw_data) {
 				raw_data = await raw_data.map((d) => ({ ...d, date: d.date.split('T')[0] }));
 				const df_raw_data = new DataFrame(raw_data).sortValues('date', { ascending: true });
+				ticket_avg =
+					df_raw_data['quantity'].values.reduce((a: number, b: number) => a + b) /
+					df_raw_data.tail(90)['quantity'].values.length;
 				let df_day_data = df_raw_data.groupby(['date']).col(['quantity']).sum();
 				rows_with_data = df_day_data.shape[0];
 				df_day_data = complete_missing_data(df_day_data).sortValues('date', { ascending: true });
@@ -152,10 +156,9 @@
 				const df_grouped_week_data = groupByWeekOfMonth(df_day_data);
 
 				if (df_grouped_week_data['total_quantity'].values.length > 0) {
-					current_product_avg_weekly_sales = Math.ceil(
+					current_product_avg_weekly_sales =
 						df_grouped_week_data['total_quantity'].values.reduce((a: number, b: number) => a + b) /
-							df_grouped_week_data['total_quantity'].values.length
-					);
+						df_grouped_week_data['total_quantity'].values.length;
 					current_product_7day_window_sales = df_day_data
 						.tail(7)
 						['quantity_sum'].values.reduce((a: number, b: number) => a + b);
@@ -465,7 +468,7 @@
 										<Card.Title>Promedio ventas semanales</Card.Title>
 									</Card.Header>
 									<Card.Content>
-										<p>{current_product_avg_weekly_sales}</p>
+										<p>{current_product_avg_weekly_sales.toFixed(2)}</p>
 									</Card.Content>
 								</Card.Root>
 								<Card.Root class="md:col-span-1 lg:col-span-2 ">
@@ -480,10 +483,10 @@
 								</Card.Root>
 								<Card.Root class="md:col-span-1 lg:col-span-2">
 									<Card.Header>
-										<Card.Title>Nivel de stock</Card.Title>
+										<Card.Title>Cantidad promedio por ticket</Card.Title>
 									</Card.Header>
 									<Card.Content>
-										<p>{product_info?.stock}</p>
+										<p>{ticket_avg.toFixed(2)}</p>
 									</Card.Content>
 								</Card.Root>
 								<Card.Root
@@ -495,9 +498,10 @@
 									</Card.Header>
 									<Card.Content>
 										<p>
-											{Math.round(
-												(current_product_7day_window_sales / current_product_avg_weekly_sales) * 100
-											)}%
+											{(
+												(current_product_7day_window_sales / current_product_avg_weekly_sales) *
+												100
+											).toFixed(2)}%
 										</p>
 									</Card.Content>
 								</Card.Root>
