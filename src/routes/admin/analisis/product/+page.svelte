@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { Chart, type ChartConfiguration } from 'chart.js/auto';
+	import { Info } from 'lucide-svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Select from '$lib/components/ui/select';
 	import * as Table from '$lib/components/ui/table';
+	import * as HoverCard from '$lib/components/ui/hover-card';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { DataFrame } from 'danfojs/dist/danfojs-base';
@@ -13,7 +15,7 @@
 		date_operation,
 		filter_by_date,
 		groupByWeekOfMonth
-	} from './utils';
+	} from '../utils';
 	import { toast } from 'svelte-sonner';
 	import Label from '$lib/components/ui/label/label.svelte';
 
@@ -31,6 +33,7 @@
 	let product_info: any = null;
 	let raw_data: null | { date: string; quantity: number; price: string }[] = null;
 	let prediction_data: any = null;
+	let prediction_table_data: any = null;
 	let df_grouped_sum: DataFrame | null;
 
 	// estadisticos
@@ -64,6 +67,9 @@
 		prediction_data = null;
 		current_product_avg_weekly_sales = 0;
 		current_product_sales_today = 0;
+		// destroy charts
+		if (bars_chart) bars_chart.destroy();
+		if (bars_chart) bars_chart.destroy();
 
 		await fetch('./api/product?name=' + search_query)
 			.then((res) => res.json())
@@ -276,25 +282,48 @@
 			'./api/product/' + current_barcode + '/sales_predictions'
 		).then((res) => res.json());
 
+		const temp_prediction_table_data = {
+			dates: prediction_api_raw_data['prophet'].map((p: any) => {
+				const date = p.date.split('T')[0];
+				const date_arr = date.split('-');
+				return `${date_arr[2]}/${date_arr[1]}/${date_arr[0]}`;
+			}),
+			avgs: Array(prediction_api_raw_data['prophet'].length).fill(0)
+		};
 		// Adding the sales forecasts to the chart data
 		for (const [model, predictions] of Object.entries(prediction_api_raw_data)) {
 			prediction_data.datasets.push({
-				label: model,
+				label: 'Modelo ' + model,
 				data: predictions.map((p: any) => {
+					const date = p.date.split('T')[0];
+					const date_arr = date.split('-');
+
 					return {
-						date: p.date.split('T')[0],
+						date: `${date_arr[2]}/${date_arr[1]}/${date_arr[0]}`,
 						quantity: p.quantity
 					};
 				})
 			});
+			temp_prediction_table_data.avgs = predictions.map((entry, i) => {
+				return temp_prediction_table_data.avgs[i] + entry.quantity;
+			});
 		}
+		temp_prediction_table_data.avgs = temp_prediction_table_data.avgs.map((avg) =>
+			(avg / 3).toFixed(2)
+		);
+		prediction_table_data = temp_prediction_table_data;
+		console.log('prediction_table_data: ', prediction_table_data);
+
 		const df_week_data = df_grouped_sum.tail(7);
 		prediction_data.datasets.push({
 			label: 'Ventas últimos 7 dias',
 			data: df_week_data['quantity_sum'].values
 		});
 		df_week_data.print();
-		prediction_data.labels = df_week_data['date'].values;
+		prediction_data.labels = df_week_data['date'].values.map((d: string) => {
+			const date_arr = d.split('-');
+			return `${date_arr[2]}/${date_arr[1]}/${date_arr[0]}`;
+		});
 
 		prediction_loading = false;
 
@@ -489,12 +518,25 @@
 										<p>{ticket_avg.toFixed(2)}</p>
 									</Card.Content>
 								</Card.Root>
-								<Card.Root
-									class="md:col-span-1 lg:col-span-4"
-									title="Mide el rendimiento del producto en la ultima semana en base a lo esperado en semanas anteriores"
-								>
+								<Card.Root class="md:col-span-1 lg:col-span-4">
 									<Card.Header>
-										<Card.Title class="">Rendimiento</Card.Title>
+										<Card.Title class="flex items-center justify-between">
+											Rendimiento
+											<HoverCard.Root>
+												<HoverCard.Trigger>
+													<Info />
+												</HoverCard.Trigger>
+												<HoverCard.Content>
+													<p>
+														Mide el rendimiento del producto en la ultima semana en base a lo
+														esperado en semanas anteriores
+													</p>
+													<span class="text-xs text-muted-foreground">
+														Valores mayores al 100% indican que se ha superado el valor semanal</span
+													>
+												</HoverCard.Content>
+											</HoverCard.Root>
+										</Card.Title>
 									</Card.Header>
 									<Card.Content>
 										<p>
@@ -525,7 +567,47 @@
 						<p></p>
 					</div>
 				{/if}
-				<canvas bind:this={line_prediction_canvas}></canvas>
+				<div class="h-64">
+					<canvas bind:this={line_prediction_canvas}></canvas>
+				</div>
+				{#if prediction_table_data !== null}
+					<Card.Root>
+						<Card.Content>
+							<Table.Root>
+								<Table.Header>
+									<Table.Row>
+										<Table.Cell>Modelo</Table.Cell>
+										{#each prediction_table_data.dates as date}
+											<Table.Cell>{date}</Table.Cell>
+										{/each}
+									</Table.Row>
+								</Table.Header>
+								<Table.Body>
+									{#each prediction_data.datasets as dataset}
+										{#if dataset.label !== 'Ventas últimos 7 dias'}
+											<Table.Row>
+												<Table.Cell>{dataset.label}</Table.Cell>
+												{#each dataset.data as data}
+													<Table.Cell>{data.quantity}</Table.Cell>
+												{/each}
+											</Table.Row>
+										{/if}
+									{/each}
+								</Table.Body>
+								<Table.Footer>
+									<Table.Row>
+										<Table.Cell>Promedio</Table.Cell>
+										{#each prediction_table_data.avgs as avg}
+											<Table.Cell>
+												{avg}
+											</Table.Cell>
+										{/each}
+									</Table.Row>
+								</Table.Footer>
+							</Table.Root>
+						</Card.Content>
+					</Card.Root>
+				{/if}
 			</Tabs.Content>
 		</Tabs.Root>
 	{/if}

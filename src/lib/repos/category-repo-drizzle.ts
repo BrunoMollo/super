@@ -1,4 +1,4 @@
-import { count, eq } from 'drizzle-orm';
+import { count, eq, ilike } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_category, t_product_has_category } from '$lib/server/drizzle/schema';
 
@@ -67,6 +67,21 @@ export class Category_Repo_Drizzle {
 		return { id, name };
 	}
 
+	async get_one_with_count(id: number) {
+		const category = await this.get_one(id);
+		if (!category) {
+			return undefined;
+		}
+
+		const cat_count = await this.ctx
+			.select({ category_id: t_product_has_category.category_id, count: count() })
+			.from(t_product_has_category)
+			.where(eq(t_product_has_category.category_id, id))
+			.groupBy(t_product_has_category.category_id);
+
+		return { count: cat_count[0].count, ...category };
+	}
+
 	async remove(id: number) {
 		const can_delete = await this.ctx
 			.select()
@@ -87,5 +102,13 @@ export class Category_Repo_Drizzle {
 		if (target) {
 			await this.ctx.update(t_category).set({ name }).where(eq(t_category.id, id));
 		}
+	}
+
+	async get_all_by_name(name: string) {
+		return await this.ctx
+			.select()
+			.from(t_category)
+			.where(ilike(t_category.name, `%${name}%`))
+			.orderBy(t_category.id);
 	}
 }

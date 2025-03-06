@@ -1,6 +1,6 @@
-import { eq, gte } from 'drizzle-orm';
+import { eq, gte, sql, sum } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
-import { t_product, t_sale, t_sale_line } from '$lib/server/drizzle/schema';
+import { t_product, t_product_has_category, t_sale, t_sale_line } from '$lib/server/drizzle/schema';
 
 export class Sale_Line_Repo {
 	constructor(private ctx: DB_Context) {}
@@ -19,5 +19,21 @@ export class Sale_Line_Repo {
 			.innerJoin(t_product, eq(t_product.id, t_sale_line.product_id))
 			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id))
 			.where(eq(t_product.bar_code, barcode), gte(t_sale.created_at, threeYearsAgo));
+	}
+
+	async get_all_sales_by_category_id(cat_id) {
+		const threeYearsAgo = new Date();
+		threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+
+		return await this.ctx
+			.select({ date: sql`DATE(sale.created_at)`, quantity_sum: sum(t_sale_line.quantity) })
+			.from(t_sale_line) //cantidad
+			.innerJoin(
+				t_product_has_category,
+				eq(t_product_has_category.product_id, t_sale_line.product_id)
+			) //categoria
+			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id)) //fecha
+			.where(eq(t_product_has_category.category_id, cat_id), gte(t_sale.created_at, threeYearsAgo))
+			.groupBy(sql`DATE(sale.created_at)`);
 	}
 }
