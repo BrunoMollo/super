@@ -34,25 +34,21 @@ export const commands: Router = [
 		place: ['navbar', 'command-palette'],
 		hrefs: [
 			{
-				label: '[PENDING]',
-				href: '#'
-			},
-			{
-				label: '[PENDING]',
-				href: '#'
+				label: 'Productos menos vendidos',
+				href: '/admin/promotions/least_sold'
 			}
 		]
 	},
 	{
-		name: 'Analisis',
+		name: 'Análisis',
 		place: ['navbar', 'command-palette'],
 		hrefs: [
 			{
-				label: 'Producto específico',
+				label: 'Análisis de producto específico',
 				href: '/admin/analisis/product'
 			},
 			{
-				label: 'Categoría',
+				label: 'Análisis de categoría',
 				href: '/admin/analisis/category'
 			}
 		]

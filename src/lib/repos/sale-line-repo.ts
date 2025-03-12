@@ -1,4 +1,4 @@
-import { eq, gte, sql, sum } from 'drizzle-orm';
+import { eq, gte, max, sql, sum } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import { t_product, t_product_has_category, t_sale, t_sale_line } from '$lib/server/drizzle/schema';
 
@@ -35,5 +35,25 @@ export class Sale_Line_Repo {
 			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id)) //fecha
 			.where(eq(t_product_has_category.category_id, cat_id), gte(t_sale.created_at, threeYearsAgo))
 			.groupBy(sql`DATE(sale.created_at)`);
+	}
+
+	async get_least_sold_products() {
+		const oneYearAgo = new Date();
+		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 3);
+
+		return await this.ctx
+			.select({
+				id: t_product.id,
+				name: t_product.desc,
+				quantity: sum(t_sale_line.quantity),
+				last_sale: max(t_sale.created_at)
+			})
+			.from(t_product)
+			.innerJoin(t_sale_line, eq(t_sale_line.product_id, t_product.id))
+			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id))
+			.where(gte(t_sale.created_at, oneYearAgo))
+			.groupBy(t_product.id, t_product.desc)
+			.orderBy(max(t_sale.created_at))
+			.limit(20);
 	}
 }
