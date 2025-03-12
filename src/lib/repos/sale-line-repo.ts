@@ -1,6 +1,12 @@
-import { eq, gte, max, sql, sum } from 'drizzle-orm';
+import { and, eq, gte, max, sql, sum } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
-import { t_product, t_product_has_category, t_sale, t_sale_line } from '$lib/server/drizzle/schema';
+import {
+	t_product,
+	t_product_has_category,
+	t_product_price,
+	t_sale,
+	t_sale_line
+} from '$lib/server/drizzle/schema';
 
 export class Sale_Line_Repo {
 	constructor(private ctx: DB_Context) {}
@@ -41,18 +47,36 @@ export class Sale_Line_Repo {
 		const oneYearAgo = new Date();
 		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 3);
 
+		const prices = this.ctx
+			.select({
+				product_id: t_product_price.product_id,
+				last_date: max(t_product_price.date_from).as('last_date')
+			})
+			.from(t_product_price)
+			.groupBy(t_product_price.product_id)
+			.as('prices');
+
 		return await this.ctx
 			.select({
 				id: t_product.id,
 				name: t_product.desc,
 				quantity: sum(t_sale_line.quantity),
-				last_sale: max(t_sale.created_at)
+				last_sale: max(t_sale.created_at),
+				price: t_product_price.price_amount
 			})
 			.from(t_product)
 			.innerJoin(t_sale_line, eq(t_sale_line.product_id, t_product.id))
 			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id))
+			.innerJoin(prices, eq(prices.product_id, t_product.id))
+			.innerJoin(
+				t_product_price,
+				and(
+					eq(t_product_price.product_id, t_product.id),
+					eq(t_product_price.date_from, prices.last_date)
+				)
+			)
 			.where(gte(t_sale.created_at, oneYearAgo))
-			.groupBy(t_product.id, t_product.desc)
+			.groupBy(t_product.id, t_product.desc, t_product_price.price_amount)
 			.orderBy(max(t_sale.created_at))
 			.limit(20);
 	}

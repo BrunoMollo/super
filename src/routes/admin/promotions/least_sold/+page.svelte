@@ -5,8 +5,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	let least_sold_data: [{ id: number; name: string; quantity: string; last_sale: string }] | [] =
-		[];
+	let least_sold_data: [] = [];
 	onMount(async () => {
 		const response = await fetch('./api/least_sold');
 		least_sold_data = await response.json();
@@ -24,6 +23,7 @@
 		<Table.Header>
 			<Table.Row>
 				<Table.Head>Producto</Table.Head>
+				<Table.Head>Precio actual</Table.Head>
 				<Table.Head>Unidades vendidas</Table.Head>
 				<Table.Head>Fecha de la última venta</Table.Head>
 				<Table.Head></Table.Head>
@@ -33,6 +33,7 @@
 			{#each least_sold_data as product}
 				<Table.Row>
 					<Table.Cell>{product.name}</Table.Cell>
+					<Table.Cell class="w-[150px]">${product.price}</Table.Cell>
 					<Table.Cell class="w-[150px]">{product.quantity}</Table.Cell>
 					<Table.Cell class="w-[200px]"
 						>{new Date(product.last_sale).toLocaleDateString()}</Table.Cell
