@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import * as Table from '$lib/components/ui/table';
-	import { Ellipsis, Info } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
-	import Input from '$lib/components/ui/input/input.svelte';
+	import * as Table from '$lib/components/ui/table';
 
-	let least_sold_data: [] = [];
+	let least_sold_data:
+		| [{ name: string; id: number; quantity: string; last_sale: string; price: string }]
+		| [] = [];
 	onMount(async () => {
 		const response = await fetch('./api/least_sold');
 		least_sold_data = await response.json();

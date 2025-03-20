@@ -36,6 +36,10 @@ export const commands: Router = [
 			{
 				label: 'Productos menos vendidos',
 				href: '/admin/promotions/least_sold'
+			},
+			{
+				label: 'Comportamiento de los clientes',
+				href: '/admin/promotions/demand_behaviour'
 			}
 		]
 	},

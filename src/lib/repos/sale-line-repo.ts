@@ -1,6 +1,7 @@
 import { and, eq, gte, max, sql, sum } from 'drizzle-orm';
 import type { DB_Context } from '$lib/server/drizzle/drizzle-client';
 import {
+	t_category,
 	t_product,
 	t_product_has_category,
 	t_product_price,
@@ -41,6 +42,27 @@ export class Sale_Line_Repo {
 			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id)) //fecha
 			.where(eq(t_product_has_category.category_id, cat_id), gte(t_sale.created_at, threeYearsAgo))
 			.groupBy(sql`DATE(sale.created_at)`);
+	}
+
+	async get_sale_count_by_category() {
+		const threeYearsAgo = new Date();
+		threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+
+		return await this.ctx
+			.select({
+				category_id: t_product_has_category.category_id,
+				category_name: t_category.name,
+				count: sum(t_sale_line.quantity).mapWith(Number)
+			})
+			.from(t_sale_line)
+			.innerJoin(
+				t_product_has_category,
+				eq(t_product_has_category.product_id, t_sale_line.product_id)
+			)
+			.innerJoin(t_category, eq(t_category.id, t_product_has_category.category_id))
+			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id))
+			.where(gte(t_sale.created_at, threeYearsAgo))
+			.groupBy(t_product_has_category.category_id, t_category.name);
 	}
 
 	async get_least_sold_products() {
