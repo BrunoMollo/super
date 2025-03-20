@@ -40,6 +40,7 @@ export const actions: Actions = {
 			return setError(form, 'bar_code', 'Este código de barras ya existe');
 		}
 
+		console.log(form.data);
 		await product_repo.create(form.data);
 		return { form };
 	}
