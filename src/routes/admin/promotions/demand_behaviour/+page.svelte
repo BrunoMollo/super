@@ -25,7 +25,10 @@
 	let chart: Chart;
 	let chart_option: string = 'sales';
 
-	let clustering_data = {};
+	let clustering_data = {
+		clients: [],
+		sales: []
+	};
 	let clustering_option: string = 'clients';
 
 	const demand_behaviour_cfg: ChartConfiguration = {
@@ -89,13 +92,18 @@
 					(x: number) => x + Math.random() / 2
 				);
 				chart.data.datasets[0].data = df_sales['sale_total'].values;
+				// @ts-ignore
 				chart.options.scales.x.title.text = 'Cantidad de items por ticket';
+				// @ts-ignore
 				chart.options.scales.y.title.text = 'Total de la venta';
 				break;
 			case 'clients':
+				// @ts-ignore
 				chart.data.labels = df_clients['count'].values.map((x: number) => x + Math.random() / 2);
 				chart.data.datasets[0].data = df_clients['spent'].values;
+				// @ts-ignore
 				chart.options.scales.x.title.text = 'Cantidad de compras';
+				// @ts-ignore
 				chart.options.scales.y.title.text = 'Total gastado';
 				break;
 		}
@@ -185,7 +193,7 @@
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
-							{#each df_sales_per_category.values as row}
+							{#each Array(df_sales_per_category.values) as row}
 								<Table.Row>
 									<Table.Cell>{row[1]}</Table.Cell>
 									<Table.Cell>{row[2]}</Table.Cell>

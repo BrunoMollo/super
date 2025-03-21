@@ -109,9 +109,9 @@ export function groupByWeekOfMonth(df: DataFrame) {
  */
 export function complete_missing_data(df: DataFrame) {
 	// Convert the date strings to UTC Date objects for comparison
-	const dates = df['date'].values.map((dateStr) => {
+	const dates = df['date'].values.map((dateStr: string) => {
 		// Parse the date string into year, month, day components
-		const [year, month, day] = dateStr.split('-').map((num) => parseInt(num));
+		const [year, month, day] = dateStr.split('-').map((num: string) => parseInt(num));
 		// Create a UTC date (months are 0-indexed in JavaScript Date)
 		return new Date(Date.UTC(year, month - 1, day));
 	});
@@ -144,7 +144,7 @@ export function complete_missing_data(df: DataFrame) {
 	});
 
 	// Create a map of existing date strings to quantity_sum values
-	const dateToQuantityMap = {};
+	const dateToQuantityMap: Record<string, number> = {};
 	for (let i = 0; i < df.shape[0]; i++) {
 		dateToQuantityMap[df['date'].values[i]] = df['quantity_sum'].values[i];
 	}
@@ -173,7 +173,7 @@ export function filter_by_date(df: DataFrame, startDate: string) {
 	const startDateObj = new Date(startDate);
 
 	// Create a mask for rows where date column is >= startDate
-	const mask = df['date'].map((dateStr) => {
+	const mask = df['date'].map((dateStr: string) => {
 		const rowDate = new Date(dateStr);
 		return rowDate >= startDateObj;
 	});
@@ -195,7 +195,7 @@ export function date_operation(amount: number, unitType: string) {
 	// Create a UTC date with only the date portion (no time)
 	const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-	let resultDate = new Date(today);
+	const resultDate = new Date(today);
 
 	// Normalize unit type to handle plural forms
 	const unit = unitType.toLowerCase();

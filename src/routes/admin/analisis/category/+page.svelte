@@ -7,7 +7,6 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as Table from '$lib/components/ui/table';
 	import * as HoverCard from '$lib/components/ui/hover-card';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { DataFrame } from 'danfojs/dist/danfojs-base';
 	import {
@@ -28,6 +27,7 @@
 	let rows_with_data: number = 0;
 	let ticket_avg: number = 0;
 	let query_results: any[] | null = null;
+	let input_value: string = '';
 
 	// data
 	let category_info: any = null;
@@ -173,7 +173,7 @@
 						['quantity_sum'].values.reduce((a: number, b: number) => a + b);
 				}
 
-				const line_cfg = {
+				const line_cfg: ChartConfiguration = {
 					type: 'line',
 					data: {
 						labels: df_grouped_sum['date'].values.map((d: string) => {
@@ -226,7 +226,7 @@
 						}
 					}
 				};
-				const weekMonthArray = df_grouped_week_data.tail(6).apply((row) => {
+				const weekMonthArray = df_grouped_week_data.tail(6).apply((row: any[]) => {
 					return `Sem ${row[1]} - ${row[0]}`;
 				});
 
@@ -293,11 +293,12 @@
 			}),
 			avgs: Array(prediction_api_raw_data['prophet'].length).fill(0)
 		};
+
 		// Adding the sales forecasts to the chart data
 		for (const [model, predictions] of Object.entries(prediction_api_raw_data)) {
 			prediction_data.datasets.push({
 				label: 'Modelo ' + model,
-				data: predictions.map((p: any) => {
+				data: (predictions as { date: string; quantity: number }[]).map((p) => {
 					const date = p.date.split('T')[0];
 					const date_arr = date.split('-');
 
@@ -307,9 +308,11 @@
 					};
 				})
 			});
-			temp_prediction_table_data.avgs = predictions.map((entry, i) => {
-				return temp_prediction_table_data.avgs[i] + entry.quantity;
-			});
+			temp_prediction_table_data.avgs = (predictions as { date: string; quantity: number }[]).map(
+				(entry, i) => {
+					return temp_prediction_table_data.avgs[i] + entry.quantity;
+				}
+			);
 		}
 		temp_prediction_table_data.avgs = temp_prediction_table_data.avgs.map((avg) =>
 			(avg / 3).toFixed(2)
@@ -317,6 +320,7 @@
 		prediction_table_data = temp_prediction_table_data;
 		console.log('prediction_table_data: ', prediction_table_data);
 
+		if (df_grouped_sum === null) return;
 		const df_week_data = df_grouped_sum.tail(7);
 		prediction_data.datasets.push({
 			label: 'Ventas últimos 7 dias',
@@ -344,7 +348,7 @@
 		});
 	}
 
-	function change_period_handler(e) {
+	function change_period_handler(e: any) {
 		if (e.value === current_period) return;
 		current_period = e.value;
 
@@ -371,9 +375,10 @@
 				class="w-96"
 				type="text"
 				name="category_search_query"
+				bind:value={input_value}
 				placeholder="Ej. Lácteos"
 				on:keypress={(e) => {
-					if (e.key === 'Enter') search_name_query_handler(e.target.value);
+					if (e.key === 'Enter') search_name_query_handler(input_value);
 				}}
 			></Input>
 		</div>
@@ -404,7 +409,7 @@
 				<p></p>
 			</div>
 		{/if}
-	{:else if raw_data?.length > 0}
+	{:else if raw_data !== null && raw_data.length > 0}
 		<Tabs.Root bind:value={tabs_value} class=" space-y-4">
 			<Tabs.List>
 				<Tabs.Trigger value="stats">Estadísticos</Tabs.Trigger>

@@ -25,10 +25,10 @@ export class Sale_Line_Repo {
 			.from(t_sale_line)
 			.innerJoin(t_product, eq(t_product.id, t_sale_line.product_id))
 			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id))
-			.where(eq(t_product.bar_code, barcode), gte(t_sale.created_at, threeYearsAgo));
+			.where(and(eq(t_product.bar_code, Number(barcode)), gte(t_sale.created_at, threeYearsAgo)));
 	}
 
-	async get_all_sales_by_category_id(cat_id) {
+	async get_all_sales_by_category_id(cat_id: number) {
 		const threeYearsAgo = new Date();
 		threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
 
@@ -40,7 +40,9 @@ export class Sale_Line_Repo {
 				eq(t_product_has_category.product_id, t_sale_line.product_id)
 			) //categoria
 			.innerJoin(t_sale, eq(t_sale.id, t_sale_line.sale_id)) //fecha
-			.where(eq(t_product_has_category.category_id, cat_id), gte(t_sale.created_at, threeYearsAgo))
+			.where(
+				and(eq(t_product_has_category.category_id, cat_id), gte(t_sale.created_at, threeYearsAgo))
+			)
 			.groupBy(sql`DATE(sale.created_at)`);
 	}
 
