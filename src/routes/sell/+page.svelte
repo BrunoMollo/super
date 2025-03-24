@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { toast } from 'svelte-sonner';
@@ -14,7 +13,6 @@
 		sell_list,
 		total,
 		dialog_open_client,
-		dialog_open_ticket,
 		last_ticket_url,
 		search_product,
 		buffering_submit_sale,
@@ -68,6 +66,7 @@
 					submit_sell({
 						on_success: () => {
 							toast.success('Compra realizada exitosamente');
+							print_ticket();
 						},
 						on_error: (err) => {
 							toast.error(err);
@@ -75,7 +74,7 @@
 					})}
 			>
 				{#if $buffering_submit_sale}
-					<span> Enviando </span>
+					<span> Facturando </span>
 				{:else}
 					Confirmar
 				{/if}
@@ -96,16 +95,3 @@
 		{/if}
 	</div>
 </main>
-
-<AlertDialog.Root bind:open={$dialog_open_ticket}>
-	<AlertDialog.Content>
-		<AlertDialog.Header>
-			<AlertDialog.Title>¿Desea imprimir su ticket?</AlertDialog.Title>
-			<AlertDialog.Description></AlertDialog.Description>
-		</AlertDialog.Header>
-		<AlertDialog.Footer>
-			<AlertDialog.Cancel>NO</AlertDialog.Cancel>
-			<AlertDialog.Action on:click={print_ticket}>SI</AlertDialog.Action>
-		</AlertDialog.Footer>
-	</AlertDialog.Content>
-</AlertDialog.Root>

@@ -41,15 +41,14 @@ export class FactruraBuilder {
 	}
 
 	addDni(dni: number) {
- 		const LIMIT=417_288
+		const LIMIT = 417_288;
 
 		if (this.data.ImpTotal < LIMIT) {
-			this.data.DocTipo = TIPO_DE_DOCUMENTO.CONSUMIDOR_FINAL
-			this.data.DocNro = 0; 
-		}
-		else {
-			if(!dni){
-				throw new Error(`El DNI es obligatorio para facturas mayores a $${LIMIT}`)
+			this.data.DocTipo = TIPO_DE_DOCUMENTO.CONSUMIDOR_FINAL;
+			this.data.DocNro = 0;
+		} else {
+			if (!dni) {
+				throw new Error(`El DNI es obligatorio para facturas mayores a $${LIMIT}`);
 			}
 			this.data.DocTipo = TIPO_DE_DOCUMENTO.DNI; // Tipo de documento del comprador (ver tipos disponibles)
 			this.data.DocNro = dni; // Numero de documento del comprador
@@ -58,9 +57,7 @@ export class FactruraBuilder {
 		return this;
 	}
 
-	addAmounts(
-		data: Array<{ quantity: number; iva_percentage: number; unit_price: number }>
-	) {
+	addAmounts(data: Array<{ quantity: number; iva_percentage: number; unit_price: number }>) {
 		this.data.ImpNeto = 0; // Importe neto gravado
 		this.data.ImpIVA = 0; //Importe total de IVA
 		this.data.ImpTotConc = 0; // Importe neto no gravado
@@ -111,7 +108,7 @@ export class FactruraBuilder {
 	}
 
 	async build() {
-    console.log(this.data)
+		console.log(this.data);
 		const res = await this.afip.ElectronicBilling.createVoucher(this.data);
 		return {
 			cae: res.CAE as string, //CAE asignado a la Factura

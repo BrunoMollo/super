@@ -17,10 +17,10 @@ export async function infomr_to_afip_api(props: {
 
 	await builder.fetchLastVoucher();
 
+	const { cae, expiration_date, billNumber } = await builder
+		.addAmounts(products)
+		.addDni(dni)
+		.build();
 
-	const { cae, expiration_date, billNumber } = await builder.addAmounts(products).addDni(dni).build();
-
-	return { cae, expiration_date_of_cae: new Date(expiration_date)
-		, billNumber };
-
+	return { cae, expiration_date_of_cae: new Date(expiration_date), billNumber };
 }

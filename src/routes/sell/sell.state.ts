@@ -124,7 +124,6 @@ function create_state_sell() {
 	const sell_list = new SellState();
 
 	const dialog_open_client = writable(false);
-	const dialog_open_ticket = writable(false);
 	const last_ticket_url = writable('');
 	const buffering_submit_sale = writable(false);
 
@@ -155,7 +154,6 @@ function create_state_sell() {
 			last_ticket_url.set(res.file_url);
 			sell_list.reset();
 			input.reset();
-			dialog_open_ticket.set(true);
 			calls.on_success();
 		} else {
 			calls.on_error(res.msj);
@@ -200,7 +198,6 @@ function create_state_sell() {
 		create_client,
 		remove_product_from_sell,
 		last_ticket_url,
-		dialog_open_ticket,
 		dialog_open_client
 	};
 }
