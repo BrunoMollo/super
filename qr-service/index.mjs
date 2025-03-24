@@ -64,8 +64,9 @@ server.get('/', async (request, reply) => {
 // Start the server
 const start = async () => {
 	try {
-		await server.listen({ port: 3000 });
-		server.log.info('Server listening on port 3000');
+		const port = process.env.PORT || 8000;
+		await server.listen({ port: 8000 });
+		server.log.info('Server listening on port ' + port);
 	} catch (err) {
 		server.log.error(err);
 		process.exit(1);
