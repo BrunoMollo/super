@@ -1,4 +1,6 @@
 <script lang="ts">
+	/* eslint-disable @typescript-eslint/no-explicit-any */
+
 	export let clustering_data: any;
 	import * as Card from '$lib/components/ui/card';
 	import * as Table from '$lib/components/ui/table';

@@ -97,18 +97,18 @@
 					(x: number) => x + Math.random() / 2
 				);
 				chart.data.datasets[0].data = df_sales['sale_total'].values;
-				// @ts-ignore
+				// @ts-expect-error
 				chart.options.scales.x.title.text = 'Cantidad de items por ticket';
-				// @ts-ignore
+				// @ts-expect-error
 				chart.options.scales.y.title.text = 'Total de la venta';
 				break;
 			case 'clients':
-				// @ts-ignore
+				// @ts-expect-error
 				chart.data.labels = df_clients['count'].values.map((x: number) => x + Math.random() / 2);
 				chart.data.datasets[0].data = df_clients['spent'].values;
-				// @ts-ignore
+				// @ts-expect-error
 				chart.options.scales.x.title.text = 'Cantidad de compras';
-				// @ts-ignore
+				// @ts-expect-error
 				chart.options.scales.y.title.text = 'Total gastado';
 				break;
 		}

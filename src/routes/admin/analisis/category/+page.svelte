@@ -1,4 +1,6 @@
 <script lang="ts">
+	/* eslint-disable @typescript-eslint/no-explicit-any */
+
 	import { Chart, type ChartConfiguration } from 'chart.js/auto';
 	import { Info } from 'lucide-svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
