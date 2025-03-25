@@ -30,13 +30,17 @@
 		</div>
 		<div class="pl-1">
 			<Label class="pl-1">Código de Barras</Label>
-			<Input class="w-40" type="text" placeholder="codigo de barras" bind:value={$input.bar_code} />
+
+			<!-- * Incorporo esto para que sea compatible con el funcionamiento de escaneres de codigo de barras -->
+			<Input
+				class="w-40"
+				type="text"
+				placeholder="codigo de barras"
+				bind:value={$input.bar_code}
+				on:keypress={(e) => (e.key === 'Enter' ? search_product({ on_not_found }) : null)}
+			/>
 		</div>
 		<div class="relative w-48">
-			<Button class="absolute bottom-0" on:click={() => search_product({ on_not_found })}>
-				Agregar
-			</Button>
-
 			<span class="absolute bottom-0 right-0 w-20 text-2xl">Total: ${$total.toFixed(2)}</span>
 		</div>
 	</div>
@@ -61,19 +65,20 @@
 			>
 				Confirmar
 			</Button>
-
-			<Dialog.Root bind:open={$dialog_open}>
-				<Dialog.Trigger class={buttonVariants({ variant: 'default' })}>
-					Indicar Cliente
-				</Dialog.Trigger>
-				<Dialog.Content class="sm:max-w-[425px]">
-					<Dialog.Header>
-						<Dialog.Title>Cliente</Dialog.Title>
-						<Dialog.Description>Registro del cliente</Dialog.Description>
-					</Dialog.Header>
-					<ClientForm />
-				</Dialog.Content>
-			</Dialog.Root>
 		{/if}
+
+		<!-- * Note: Este dialog deberia estar afuera, siendo accesible previo a la venta -->
+		<Dialog.Root bind:open={$dialog_open}>
+			<Dialog.Trigger class={buttonVariants({ variant: 'default' })}>
+				Indicar Cliente
+			</Dialog.Trigger>
+			<Dialog.Content class="sm:max-w-[425px]">
+				<Dialog.Header>
+					<Dialog.Title>Cliente</Dialog.Title>
+					<Dialog.Description>Registro del cliente</Dialog.Description>
+				</Dialog.Header>
+				<ClientForm />
+			</Dialog.Content>
+		</Dialog.Root>
 	</div>
 </main>
