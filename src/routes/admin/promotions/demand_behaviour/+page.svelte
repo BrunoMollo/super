@@ -11,15 +11,20 @@
 	import { DataFrame } from 'danfojs/dist/danfojs-base';
 	import { Info } from 'lucide-svelte';
 	import ClusteringTable from './Clustering_table.svelte';
+	import { toast } from 'svelte-sonner';
 
 	export let data: PageData;
 
 	const { sales, clients, sales_per_category } = data;
+
 	const df_sales = new DataFrame(sales);
+	const total_sales_amount = sales.length;
+	console.log(total_sales_amount);
 	const df_clients = new DataFrame(clients, { columns: Object.keys(clients[0]) });
 	const df_sales_per_category = new DataFrame(sales_per_category).sortValues('count', {
 		ascending: false
 	});
+	const arr_sales_per_category = df_sales_per_category.values as Array<[number, string, number]>;
 
 	let canvas: HTMLCanvasElement;
 	let chart: Chart;
@@ -113,12 +118,19 @@
 	onMount(async () => {
 		chart = new Chart(canvas, demand_behaviour_cfg);
 
+		if (total_sales_amount <= 100) {
+			toast.error(
+				'No hay suficientes datos para realizar la identificación de grupos (Numero de ventas menor a 100)'
+			);
+			return;
+		}
 		const client_cluster_res = await fetch('http://localhost:8000/client_clusters');
 		const sales_cluster_res = await fetch('http://localhost:8000/sales_clusters');
+		console.log('client_cluster_res: ', client_cluster_res);
+
 		const client_cluster_data = await client_cluster_res.json();
 		const sales_cluster_data = await sales_cluster_res.json();
-
-		console.log(Object.values(client_cluster_data.clusters_data), sales_cluster_data);
+		console.log('client_cluster_data: ', client_cluster_data);
 
 		clustering_data = {
 			clients: Object.values(client_cluster_data.clusters_data),
@@ -193,7 +205,7 @@
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
-							{#each Array(df_sales_per_category.values) as row}
+							{#each arr_sales_per_category as row}
 								<Table.Row>
 									<Table.Cell>{row[1]}</Table.Cell>
 									<Table.Cell>{row[2]}</Table.Cell>
@@ -225,9 +237,28 @@
 								</HoverCard.Trigger>
 								<HoverCard.Content class="w-1/3">
 									{#if clustering_option === 'sales'}
-										<p class="text-justify text-base"></p>
+										<p class="text-justify text-base">
+											En la tabla se describen las caracteristicas de los diferentes tipos de venta
+											que se han podido identificar en base a las ventas registradas.
+											<br />
+											Los valores representados debajo de cada categoría representan la cantidad promedio
+											de ese item que el grupo compró.
+											<br />
+											Esto permite identificar las afinidades entre productos, y de esta manera poder
+											identificar propuestas de venta cruzada u promociones.
+										</p>
 									{:else}
-										<p></p>
+										<p class="text-justify text-base">
+											En la tabla se describen las caracteristicas de los diferentes tipos de
+											clientes que compran en el negocio en base a las tendencias se presentan en
+											sus compras.
+											<br />
+											Los valores representados debajo de cada categoría representan la cantidad promedio
+											de ese item que el tipo de cliente compró.
+											<br />
+											Esto permite identificar los grupos de clientes que realizan compras similares,
+											permitiendo realizar promociones dirigidas personalizadas para cada cliente.
+										</p>
 									{/if}
 								</HoverCard.Content>
 							</HoverCard.Root>
@@ -244,10 +275,12 @@
 							</div>
 						</RadioGroup.Root>
 					</Card.Header>
-					{#if clustering_option === 'sales'}
-						<ClusteringTable clustering_data={clustering_data.sales} />
-					{:else if clustering_option === 'clients'}
-						<ClusteringTable clustering_data={clustering_data.clients} />
+					{#if total_sales_amount > 100}
+						{#if clustering_option === 'sales'}
+							<ClusteringTable clustering_data={clustering_data.sales} />
+						{:else if clustering_option === 'clients'}
+							<ClusteringTable clustering_data={clustering_data.clients} />
+						{/if}
 					{/if}
 				</Card.Root>
 			</div>
