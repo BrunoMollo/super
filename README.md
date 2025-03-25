@@ -15,6 +15,7 @@ You can see the site in [this link](https://super-flame.vercel.app/admin/users) 
 |----------|:-------------:|---------:|
 | Admin | bruno | 1234 |
 | Seller | rami | 1234 |
+| Seller | faus | 4321 |
 
 ## Developing
 
