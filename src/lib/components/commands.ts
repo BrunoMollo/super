@@ -62,10 +62,6 @@ export const commands: Router = [
 		place: ['command-palette', 'avatar-dropdown'],
 		hrefs: [
 			{
-				label: 'Subscripcion',
-				href: '#'
-			},
-			{
 				confirmation: '¿Seguro que quieres salir?',
 				label: 'Cerrar sesión',
 				href: '/logout'

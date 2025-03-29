@@ -31,7 +31,7 @@
 <Command.Dialog bind:open>
 	<Command.Input placeholder="Escribe para buscar..." />
 	<Command.List>
-		<Command.Empty>No results found.</Command.Empty>
+		<Command.Empty>No se encontraron resultados.</Command.Empty>
 		{#each commands as { name, hrefs }}
 			<Command.Group heading={name}>
 				{#each hrefs as { label, href, confirmation }}

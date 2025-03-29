@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return redirect(307, url);
 	}
 
-	const categories = category_repo.get_all_with_count();
+	const categories = await category_repo.get_all_with_count();
 
 	return {
 		categories,

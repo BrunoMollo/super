@@ -18,8 +18,8 @@
 		"seed": "drizzle-kit push && vite-node --options.transformMode.ssr='/.*/'  src/lib/seeders/seed.ts"
 	},
 	"devDependencies": {
-		"@internationalized/date": "^3.7.0",
 		"@faker-js/faker": "^9.4.0",
+		"@internationalized/date": "^3.7.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
@@ -75,5 +75,16 @@
 		"tailwind-variants": "^0.2.1",
 		"zod": "^3.23.8",
 		"zod-i18n-map": "^2.27.0"
+	},
+	"pnpm": {
+		"ignoredBuiltDependencies": [
+			"@sveltejs/kit",
+			"core-js",
+			"esbuild",
+			"svelte-preprocess"
+		],
+		"onlyBuiltDependencies": [
+			"bcrypt"
+		]
 	}
 }

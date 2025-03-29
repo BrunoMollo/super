@@ -72,7 +72,7 @@
 			</DropdownMenu.Group>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<a {href} on:click={goto_category}>Edit Category</a>
+				<a {href} on:click={goto_category}>Editar Categoria</a>
 			</DropdownMenu.Item>
 			<DropdownMenu.Item on:click={() => deleteCategory(id)}>Borrar Categoria</DropdownMenu.Item>
 		</DropdownMenu.Content>
