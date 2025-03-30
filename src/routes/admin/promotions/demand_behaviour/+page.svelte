@@ -14,16 +14,18 @@
 	import { toast } from 'svelte-sonner';
 
 	export let data: PageData;
+	export let done: boolean = false;
 
 	const { sales, clients, sales_per_category } = data;
 
 	const df_sales = new DataFrame(sales);
 	const total_sales_amount = sales.length;
-	console.log(total_sales_amount);
+	console.log('total_sales_amount: ', total_sales_amount);
 	const df_clients = new DataFrame(clients, { columns: Object.keys(clients[0]) });
 	const df_sales_per_category = new DataFrame(sales_per_category).sortValues('count', {
 		ascending: false
 	});
+
 	const arr_sales_per_category = df_sales_per_category.values as Array<[number, string, number]>;
 
 	let canvas: HTMLCanvasElement;
@@ -117,7 +119,6 @@
 
 	onMount(async () => {
 		chart = new Chart(canvas, demand_behaviour_cfg);
-
 		if (total_sales_amount <= 100) {
 			toast.error(
 				'No hay suficientes datos para realizar la identificación de grupos (Numero de ventas menor a 100)'
@@ -136,6 +137,7 @@
 			clients: Object.values(client_cluster_data.clusters_data),
 			sales: Object.values(sales_cluster_data.clusters_data)
 		};
+		done = true;
 	});
 </script>
 
@@ -275,7 +277,7 @@
 							</div>
 						</RadioGroup.Root>
 					</Card.Header>
-					{#if total_sales_amount > 100}
+					{#if total_sales_amount > 100 && done}
 						{#if clustering_option === 'sales'}
 							<ClusteringTable clustering_data={clustering_data.sales} />
 						{:else if clustering_option === 'clients'}
