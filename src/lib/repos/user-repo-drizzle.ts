@@ -90,12 +90,10 @@ export class User_Repo_Drizzle {
 		return users.at(0);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	remove(_id: number): Promise<Authorized_User | undefined> {
 		throw new Error('Method not implemented.');
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	update(_user: Authorized_User): Promise<Authorized_User | undefined> {
 		throw new Error('Method not implemented.');
 	}

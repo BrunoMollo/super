@@ -8,11 +8,23 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import ClientForm from './client-form.svelte';
 
-	const { input, sell_list, total, dialog_open, search_product, submit_sell } =
-		create_global_state_sell();
+	const {
+		input,
+		sell_list,
+		total,
+		dialog_open_client,
+		last_ticket_url,
+		search_product,
+		buffering_submit_sale,
+		submit_sell
+	} = create_global_state_sell();
 
 	function on_not_found() {
 		alert('Producto no encontrado');
+	}
+
+	function print_ticket() {
+		window.open($last_ticket_url, '_blank')!;
 	}
 </script>
 
@@ -52,33 +64,38 @@
 
 		{#if $total > 0}
 			<Button
+				disabled={$buffering_submit_sale}
 				class=""
 				on:click={() =>
 					submit_sell({
 						on_success: () => {
 							toast.success('Compra realizada exitosamente');
+							print_ticket();
 						},
-						on_error: () => {
-							toast.error('Error al realizar la compra');
+						on_error: (err) => {
+							toast.error(err);
 						}
 					})}
 			>
-				Confirmar
+				{#if $buffering_submit_sale}
+					<span> Facturando </span>
+				{:else}
+					Confirmar
+				{/if}
 			</Button>
-		{/if}
 
-		<!-- * Note: Este dialog deberia estar afuera, siendo accesible previo a la venta -->
-		<Dialog.Root bind:open={$dialog_open}>
-			<Dialog.Trigger class={buttonVariants({ variant: 'default' })}>
-				Indicar Cliente
-			</Dialog.Trigger>
-			<Dialog.Content class="sm:max-w-[425px]">
-				<Dialog.Header>
-					<Dialog.Title>Cliente</Dialog.Title>
-					<Dialog.Description>Registro del cliente</Dialog.Description>
-				</Dialog.Header>
-				<ClientForm />
-			</Dialog.Content>
-		</Dialog.Root>
+			<Dialog.Root bind:open={$dialog_open_client}>
+				<Dialog.Trigger class={buttonVariants({ variant: 'default' })}>
+					Indicar Cliente
+				</Dialog.Trigger>
+				<Dialog.Content class="sm:max-w-[425px]">
+					<Dialog.Header>
+						<Dialog.Title>Cliente</Dialog.Title>
+						<Dialog.Description>Registro del cliente</Dialog.Description>
+					</Dialog.Header>
+					<ClientForm />
+				</Dialog.Content>
+			</Dialog.Root>
+		{/if}
 	</div>
 </main>
