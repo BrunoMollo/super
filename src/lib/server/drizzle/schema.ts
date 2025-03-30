@@ -82,6 +82,9 @@ export const t_sale = pgTable('sale', {
 		.notNull()
 		.references(() => t_user.id),
 	client_id: integer('client_id').references(() => t_client.id),
+	cae: text('cae'),
+	expiration_date_of_cae: timestamp('expiration_date_of_cae'),
+	voucher_number: integer('voucher_number'),
 	created_at: timestamp('created_at').defaultNow().notNull()
 });
 

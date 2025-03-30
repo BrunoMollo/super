@@ -2,7 +2,6 @@
 	import { Command as CommandPrimitive } from 'cmdk-sv';
 	import { cn } from '$lib/utils.js';
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	type $$Props = CommandPrimitive.ItemProps;
 
 	export let asChild = false;
