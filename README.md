@@ -8,6 +8,9 @@ Miembros del equipo:
 - Ramiro
 - Fausto
 
+Docente:
+- Mario Bressano
+
 ## Preview
 
 You can see the site in [this link](https://super-flame.vercel.app/admin/users) entering with the following credentials:
