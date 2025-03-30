@@ -1,51 +1,49 @@
 function list_of_products(
-  arr: Array<{
-    quantity: number;
-    name: string;
-    unit_price: number;
-  }>
+	arr: Array<{
+		quantity: number;
+		name: string;
+		unit_price: number;
+	}>
 ) {
-  return arr
-    .map(
-      (x) => `<tr>
+	return arr
+		.map(
+			(x) => `<tr>
 							  <td>${x.quantity}</td>
 							  <td>${x.name}</td>
 							  <td>($${x.unit_price.toFixed(2)})</td>
 							  <td>$${(x.quantity * x.unit_price).toFixed(2)}</td>
 						  </tr>`
-    )
-    .join('');
+		)
+		.join('');
 }
 
-
-
 export function factura_consumidor_final_template(data: {
-  company: {
-    name: string;
-    adress: string;
-    cuit: string;
-    type: 'RESPONSABLE INSCRIPTO' | 'MONOTRIBUTISTA';
-    iibb: number;
-    start_date: string;
-  };
-  bill: {
-    punto_de_venta: number;
-    cae: string;
-    vencimiento: string;
-    billNumber: number;
-  };
-  products: Array<{
-    quantity: number;
-    name: string;
-    unit_price: number;
-  }>;
-  qr_params: QRParams;
+	company: {
+		name: string;
+		adress: string;
+		cuit: string;
+		type: 'RESPONSABLE INSCRIPTO' | 'MONOTRIBUTISTA';
+		iibb: number;
+		start_date: string;
+	};
+	bill: {
+		punto_de_venta: number;
+		cae: string;
+		vencimiento: string;
+		billNumber: number;
+	};
+	products: Array<{
+		quantity: number;
+		name: string;
+		unit_price: number;
+	}>;
+	qr_params: QRParams;
 }) {
-  const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    .toISOString()
-    .split('T')[0];
+	const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+		.toISOString()
+		.split('T')[0];
 
-  return `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html>
 <head>
 	<title>Ticket</title>
@@ -117,37 +115,36 @@ export function factura_consumidor_final_template(data: {
 }
 
 function createLongURL(baseURL: string, params: Record<string, string>) {
-  const url = new URL(baseURL);
+	const url = new URL(baseURL);
 
-  for (const key in params) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (params.hasOwnProperty(key)) {
-      url.searchParams.append(key, params[key]);
-    }
-  }
+	for (const key in params) {
+		// eslint-disable-next-line no-prototype-builtins
+		if (params.hasOwnProperty(key)) {
+			url.searchParams.append(key, params[key]);
+		}
+	}
 
-  return url.toString();
+	return url.toString();
 }
 
-
 type QRParams = {
-  ver: string | number
-  fecha: string | number
-  cuit: string | number
-  ptoVta: string | number
-  tipoCmp: string | number
-  nroCmp: string | number
-  importe: string | number
-  moneda: string | number
-  ctz: string | number
-  tipoCodAut: string | number
-  codAut: string | number
+	ver: string | number;
+	fecha: string | number;
+	cuit: string | number;
+	ptoVta: string | number;
+	tipoCmp: string | number;
+	nroCmp: string | number;
+	importe: string | number;
+	moneda: string | number;
+	ctz: string | number;
+	tipoCodAut: string | number;
+	codAut: string | number;
 };
 
 function qr_url(params: QRParams) {
-  const baseURL = 'http://super-flame.vercel.app/sell/api/qr';
-  const url = createLongURL(baseURL, params as Record<string, string>);
-  return url;
+	const baseURL = 'http://super-flame.vercel.app/sell/api/qr';
+	const url = createLongURL(baseURL, params as Record<string, string>);
+	return url;
 }
 const styles = `
 <style type="text/css">
