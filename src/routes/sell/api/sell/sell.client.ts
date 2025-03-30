@@ -19,11 +19,11 @@ export async function fetch_submit_sell(sell: Sell) {
 		headers: { 'Content-Type': 'application/json' }
 	})
 		.then(async (res) => {
-			const { file_url } = await res.json();
-
 			if (res.status === 200) {
+				const { file_url } = await res.json();
 				return { ok: true, file_url } as const;
 			}
+
 			return { ok: false, msj: await res.text() } as const;
 		})
 		.catch(() => ({ ok: false, msj: 'Error del servidor' }) as const);
