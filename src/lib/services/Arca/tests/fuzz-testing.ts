@@ -23,7 +23,7 @@ function getRandomProduct() {
 	return {
 		name: 'Producto 2',
 		quantity: getRandomNumber(1, 20),
-		price: getRandomNumber(1, 1_000_000),
+		unit_price: getRandomNumber(1, 1_000_000),
 		iva_percentage: getRandomIva()
 	};
 }

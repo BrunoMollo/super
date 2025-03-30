@@ -8,6 +8,7 @@ export async function create_pdf(props: {
 	expiration_date_of_cae: Date;
 	billNumber: number;
 	products: Array<{
+		name: string;
 		product_id: number;
 		quantity: number;
 		unit_price: number;

@@ -2,7 +2,6 @@ function list_of_products(
 	arr: Array<{
 		quantity: number;
 		name: string;
-		iva_percentage: number;
 		unit_price: number;
 	}>
 ) {
@@ -36,7 +35,6 @@ export function factura_consumidor_final_template(data: {
 	products: Array<{
 		quantity: number;
 		name: string;
-		iva_percentage: number;
 		unit_price: number;
 	}>;
 }) {
