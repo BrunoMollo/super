@@ -1,6 +1,0 @@
-onlyBuiltDependencies:
-  - '@sveltejs/kit'
-  - bcrypt
-  - core-js
-  - esbuild
-  - svelte-preprocess
