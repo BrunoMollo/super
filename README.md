@@ -1,8 +1,8 @@
 # Super: Proyecto Final
 
-University: UTN FRRO
+Universidad: UTN FRRO
 
-Team members:
+Miembros del equipo:
 
 - Bruno
 - Ramiro
