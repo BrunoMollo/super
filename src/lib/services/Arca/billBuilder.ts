@@ -3,10 +3,37 @@ import { round } from '$lib/utils/utils';
 import { iva_calc } from './calcultations';
 import { CONCEPTO, CONCIDICION_IVA_RECEPTOR, FACTURA, ID_IVA, TIPO_DE_DOCUMENTO } from './enums';
 
+type BillingData = {
+	CantReg: number;
+	PtoVta: number;
+	CbteTipo: number;
+	Concepto: (typeof CONCEPTO)[keyof typeof CONCEPTO];
+	CbteFch: number;
+	MonId: 'PES';
+	MonCotiz: 1;
+	CondicionIVAReceptorId: (typeof CONCIDICION_IVA_RECEPTOR)[keyof typeof CONCIDICION_IVA_RECEPTOR];
+	CbteDesde: number;
+	CbteHasta: number;
+	ImpTotal: number;
+	ImpTrib: number;
+	ImpOpEx: number;
+	DocTipo: (typeof TIPO_DE_DOCUMENTO)[keyof typeof TIPO_DE_DOCUMENTO];
+	DocNro: number;
+	ImpNeto: number;
+	ImpIVA: number;
+	ImpTotConc: number;
+	Iva: Array<{
+		Percentage: number;
+		Id: number;
+		BaseImp: number;
+		Importe: number;
+	}>;
+};
+
 export class FactruraBuilder {
 	private tipo_de_factura = FACTURA.B;
 
-	private data: Record<string, any> = {};
+	private data: Partial<BillingData>; //Record<string, string | number> = {};
 
 	constructor(
 		private afip: Afip,
@@ -42,6 +69,9 @@ export class FactruraBuilder {
 
 	addDni(dni: number) {
 		const LIMIT = 417_288;
+		if (!this.data.ImpTotal) {
+			throw new Error(`Importe total no definidio`);
+		}
 
 		if (this.data.ImpTotal < LIMIT) {
 			this.data.DocTipo = TIPO_DE_DOCUMENTO.CONSUMIDOR_FINAL;
@@ -72,6 +102,7 @@ export class FactruraBuilder {
 			if (!iva_entry) {
 				this.data.Iva.push({
 					Percentage: item.iva_percentage,
+					// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 					Id: ID_IVA.find((i) => i.percentage === item.iva_percentage)?.id! ?? 0,
 					BaseImp: iva_calc.neto(item),
 					Importe: iva_calc.importe_iva(item)
@@ -96,11 +127,13 @@ export class FactruraBuilder {
 		);
 
 		for (const key in this.data) {
+			// @ts-expect-error it am tired boss
 			if (typeof this.data[key] == 'number') {
+				// @ts-expect-error it am tired boss
 				this.data[key] = round(this.data[key]);
 			}
 		}
-		this.data.Iva.map((item: any) => {
+		this.data.Iva.map((item: { BaseImp: number; Importe: number }) => {
 			item.BaseImp = round(item.BaseImp);
 			item.Importe = round(item.Importe);
 		});
