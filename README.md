@@ -2,7 +2,7 @@
 
 Universidad: UTN FRRO
 
-Team members:
+Miembros del equipo:
 
 - Bruno
 - Ramiro
