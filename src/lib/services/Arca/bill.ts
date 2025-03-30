@@ -1,50 +1,49 @@
-import { APP_URL } from '$env/static/private';
 
 function list_of_products(
-	arr: Array<{
-		quantity: number;
-		name: string;
-		unit_price: number;
-	}>
+  arr: Array<{
+    quantity: number;
+    name: string;
+    unit_price: number;
+  }>
 ) {
-	return arr
-		.map(
-			(x) => `<tr>
+  return arr
+    .map(
+      (x) => `<tr>
 							  <td>${x.quantity}</td>
 							  <td>${x.name}</td>
 							  <td>($${x.unit_price.toFixed(2)})</td>
 							  <td>$${(x.quantity * x.unit_price).toFixed(2)}</td>
 						  </tr>`
-		)
-		.join('');
+    )
+    .join('');
 }
 
 export function factura_consumidor_final_template(data: {
-	company: {
-		name: string;
-		adress: string;
-		cuit: string;
-		type: 'RESPONSABLE INSCRIPTO' | 'MONOTRIBUTISTA';
-		iibb: number;
-		start_date: string;
-	};
-	bill: {
-		punto_de_venta: number;
-		cae: string;
-		vencimiento: string;
-		billNumber: number;
-	};
-	products: Array<{
-		quantity: number;
-		name: string;
-		unit_price: number;
-	}>;
+  company: {
+    name: string;
+    adress: string;
+    cuit: string;
+    type: 'RESPONSABLE INSCRIPTO' | 'MONOTRIBUTISTA';
+    iibb: number;
+    start_date: string;
+  };
+  bill: {
+    punto_de_venta: number;
+    cae: string;
+    vencimiento: string;
+    billNumber: number;
+  };
+  products: Array<{
+    quantity: number;
+    name: string;
+    unit_price: number;
+  }>;
 }) {
-	const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-		.toISOString()
-		.split('T')[0];
+  const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    .toISOString()
+    .split('T')[0];
 
-	return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html>
 <head>
 	<title>Ticket</title>
@@ -116,36 +115,37 @@ export function factura_consumidor_final_template(data: {
 }
 
 function createLongURL(baseURL: string, params: Record<string, string>) {
-	const url = new URL(baseURL);
+  const url = new URL(baseURL);
 
-	for (const key in params) {
-		if (params.hasOwnProperty(key)) {
-			url.searchParams.append(key, params[key]);
-		}
-	}
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      url.searchParams.append(key, params[key]);
+    }
+  }
 
-	return url.toString();
+  return url.toString();
 }
 
 function qr_url() {
-	const baseURL = 'super-flame.vercel.app/sell/api/qr';
-	const params = {
-		ver: '1',
-		fecha: '2025-3-12',
-		cuit: '20000000007',
-		ptoVta: '10',
-		tipoCmp: '1',
-		nroCmp: '94',
-		importe: '1500.00',
-		moneda: 'PES',
-		ctz: '1',
-		tipoDocRec: '80',
-		nroDocRec: '20345678901',
-		tipoCodAut: 'E',
-		codAut: '70417054367476'
-	};
+  const baseURL = 'super-flame.vercel.app/sell/api/qr';
+  const params = {
+    ver: '1',
+    fecha: '2025-3-12',
+    cuit: '20000000007',
+    ptoVta: '10',
+    tipoCmp: '1',
+    nroCmp: '94',
+    importe: '1500.00',
+    moneda: 'PES',
+    ctz: '1',
+    tipoDocRec: '80',
+    nroDocRec: '20345678901',
+    tipoCodAut: 'E',
+    codAut: '70417054367476'
+  };
 
-	const url = createLongURL(baseURL, params);
+  const url = createLongURL(baseURL, params);
+  return url
 }
 const styles = `
 <style type="text/css">
