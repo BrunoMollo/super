@@ -70,7 +70,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				'Cache-Control': 'public, max-age=3600'
 			}
 		});
-	} catch (err: any) {
+	} catch (err) {
 		console.error('QR Code generation error:', err);
 		throw error(500, 'Error generating QR code');
 	}

@@ -117,6 +117,7 @@ function createLongURL(baseURL: string, params: Record<string, string>) {
 	const url = new URL(baseURL);
 
 	for (const key in params) {
+		// eslint-disable-next-line no-prototype-builtins
 		if (params.hasOwnProperty(key)) {
 			url.searchParams.append(key, params[key]);
 		}
