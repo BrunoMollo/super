@@ -37,6 +37,7 @@ export function factura_consumidor_final_template(data: {
 		name: string;
 		unit_price: number;
 	}>;
+	qr_params: QRParams;
 }) {
 	const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
 		.toISOString()
@@ -105,7 +106,7 @@ export function factura_consumidor_final_template(data: {
 		</tr>
 		<tr class="text-center">
 			<td>
-				<img id="qrcode" src="${qr_url()}">
+				<img id="qrcode" src="${qr_url(data.qr_params)}">
 			</td>
 		</tr>
 	</table>
@@ -126,25 +127,23 @@ function createLongURL(baseURL: string, params: Record<string, string>) {
 	return url.toString();
 }
 
-function qr_url() {
-	const baseURL = 'super-flame.vercel.app/sell/api/qr';
-	const params = {
-		ver: '1',
-		fecha: '2025-3-12',
-		cuit: '20000000007',
-		ptoVta: '10',
-		tipoCmp: '1',
-		nroCmp: '94',
-		importe: '1500.00',
-		moneda: 'PES',
-		ctz: '1',
-		tipoDocRec: '80',
-		nroDocRec: '20345678901',
-		tipoCodAut: 'E',
-		codAut: '70417054367476'
-	};
+type QRParams = {
+	ver: string | number;
+	fecha: string | number;
+	cuit: string | number;
+	ptoVta: string | number;
+	tipoCmp: string | number;
+	nroCmp: string | number;
+	importe: string | number;
+	moneda: string | number;
+	ctz: string | number;
+	tipoCodAut: string | number;
+	codAut: string | number;
+};
 
-	const url = createLongURL(baseURL, params);
+function qr_url(params: QRParams) {
+	const baseURL = 'http://super-flame.vercel.app/sell/api/qr';
+	const url = createLongURL(baseURL, params as Record<string, string>);
 	return url;
 }
 const styles = `

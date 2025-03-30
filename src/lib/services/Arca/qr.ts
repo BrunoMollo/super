@@ -25,25 +25,41 @@ export async function create_pdf(props: {
 		marginBottom: 0.4 // Margen inferior en pulgadas. Usar 0.1 para ticket
 	};
 
+	const company = {
+		name: 'Empresa imaginaria S.A.',
+		adress: 'Calle falsa 123',
+		cuit: '12345678912',
+		type: 'RESPONSABLE INSCRIPTO' as const,
+		iibb: 12345432,
+		start_date: '25/10/2023'
+	};
+
 	// Creamos el PDF
 	const res = await afipClient.ElectronicBilling.createPDF({
 		html: factura_consumidor_final_template({
-			//TODO: cambiar
-			company: {
-				name: 'Empresa imaginaria S.A.',
-				adress: 'Calle falsa 123',
-				cuit: '12345678912',
-				type: 'RESPONSABLE INSCRIPTO',
-				iibb: 12345432,
-				start_date: '25/10/2023'
-			},
+			company,
 			bill: {
 				punto_de_venta: Number(punto_de_venta),
 				cae,
 				vencimiento: expiration_date_of_cae.toISOString().split('T')[0],
 				billNumber: billNumber
 			},
-			products
+			products,
+			qr_params: {
+				ver: '1',
+				fecha: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+					.toISOString()
+					.split('T')[0],
+				cuit: company.cuit,
+				ptoVta: punto_de_venta,
+				tipoCmp: 82, //TIQUE FACTURA B
+				nroCmp: billNumber.toString(),
+				importe: products.reduce((acc, x) => acc + x.unit_price * x.quantity, 0).toFixed(2),
+				moneda: 'PES',
+				ctz: '1',
+				tipoCodAut: 'E',
+				codAut: cae
+			}
 		}),
 		file_name: 'Ticket',
 		options: options

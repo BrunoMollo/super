@@ -26,8 +26,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			!importe ||
 			!moneda ||
 			!ctz ||
-			!tipoDocRec ||
-			!nroDocRec ||
 			!tipoCodAut ||
 			!codAut
 		) {
