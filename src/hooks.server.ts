@@ -38,7 +38,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (pathname == '/login') {
 		return await resolve(event);
 	}
-	if (pathname == '/sell/api/qr') {
+	if (pathname.match('^/sell/api/qr')) {
 		return await resolve(event);
 	}
 	if (pathname == '/logout') {
