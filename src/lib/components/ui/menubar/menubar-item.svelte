@@ -5,7 +5,7 @@
 	type $$Props = MenubarPrimitive.ItemProps & {
 		inset?: boolean;
 	};
-	//eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 	type $$Events = MenubarPrimitive.ItemEvents;
 
 	let className: $$Props['class'] = undefined;
