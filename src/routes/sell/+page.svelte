@@ -7,6 +7,9 @@
 	import { create_global_state_sell } from './sell.state';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import ClientForm from './client-form.svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { commands } from '$lib/components/commands';
+	import * as Avatar from '$lib/components/ui/avatar/index.js';
 
 	const {
 		input,
@@ -34,6 +37,33 @@
 	>
 		Punto de Venta
 	</h1>
+
+	<div class="absolute right-4 top-4 flex w-full flex-col">
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger class="mr-2 h-10 w-10 self-end ">
+				<Avatar.Root>
+					<Avatar.Image
+						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq8T0hZUoX8kuRi3EZpZbUDtZ_WqqN9Ll15Q&s"
+						alt="User"
+					/>
+					<Avatar.Fallback>US</Avatar.Fallback>
+				</Avatar.Root>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content side="bottom" align="start">
+				<DropdownMenu.Label>Mi cuenta</DropdownMenu.Label>
+				<DropdownMenu.Separator />
+				<DropdownMenu.Group>
+					{#each commands as { hrefs, place }}
+						{#if place.includes('avatar-dropdown')}
+							{#each hrefs as { label, href }}
+								<DropdownMenu.Item {href}>{label}</DropdownMenu.Item>
+							{/each}
+						{/if}
+					{/each}
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+	</div>
 
 	<div class="flex flex-row gap-2 pt-4">
 		<div class="pl-4">
