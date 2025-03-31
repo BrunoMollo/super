@@ -19,11 +19,11 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'desc',
-			header: 'Descripción',
+			header: 'Descripción'
 		}),
 		table.column({
 			accessor: 'bar_code',
-			header: 'Codigo de Barras',
+			header: 'Codigo de Barras'
 		}),
 		table.column({
 			accessor: 'price',
@@ -32,7 +32,7 @@
 		}),
 		table.column({
 			accessor: 'order_point',
-			header: 'Punto de pedido',
+			header: 'Punto de pedido'
 		}),
 		table.column({
 			accessor: 'categories',
