@@ -4,7 +4,7 @@
 	import { cn } from '$lib/utils.js';
 
 	type $$Props = MenubarPrimitive.RadioItemProps;
-	//eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 	type $$Events = MenubarPrimitive.RadioItemEvents;
 
 	let className: $$Props['class'] = undefined;

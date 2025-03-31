@@ -3,7 +3,7 @@
 	import { cn, flyAndScale } from '$lib/utils.js';
 
 	type $$Props = DropdownMenuPrimitive.SubContentProps;
-	//eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 	type $$Events = DropdownMenuPrimitive.SubContentEvents;
 
 	let className: $$Props['class'] = undefined;
