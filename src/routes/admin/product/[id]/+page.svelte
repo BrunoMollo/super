@@ -8,7 +8,7 @@
 	<h2
 		class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 	>
-		Edit Product {data.product.id}
+		Editar Producto #{data.product.id}
 	</h2>
 
 	<ProductForm data={data.form} categories={data.categories} />

@@ -19,11 +19,11 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'desc',
-			header: 'Descripcion'
+			header: 'Descripción'
 		}),
 		table.column({
 			accessor: 'bar_code',
-			header: 'Bar Code'
+			header: 'Codigo de Barras'
 		}),
 		table.column({
 			accessor: 'price',
@@ -32,11 +32,11 @@
 		}),
 		table.column({
 			accessor: 'order_point',
-			header: 'Order Point'
+			header: 'Punto de pedido'
 		}),
 		table.column({
 			accessor: 'categories',
-			header: 'Categories',
+			header: 'Categorías',
 			cell: ({ value }) => value.map(({ name }) => name).join(', ')
 		}),
 		table.column({

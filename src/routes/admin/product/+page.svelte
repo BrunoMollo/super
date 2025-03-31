@@ -14,7 +14,7 @@
 	function on_product_added() {
 		const description = new Date().toLocaleString();
 		is_open = false;
-		toast.success('Product has been created', {
+		toast.success('El producto ha sido creado.', {
 			description
 		});
 	}
@@ -26,9 +26,11 @@
 
 <main class="container pt-6">
 	<div class="relative mb-6">
-		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Admin Productos</h1>
+		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+			Administrar Productos
+		</h1>
 		<div class="absolute right-4 top-1/4 flex justify-end">
-			<Button on:click={() => (is_open = true)}>Add new Product</Button>
+			<Button on:click={() => (is_open = true)}>Agregar nuevo Producto</Button>
 		</div>
 	</div>
 	<b class="text-4xl">
@@ -51,8 +53,8 @@
 <Sheet.Root bind:open={is_open}>
 	<Sheet.Content>
 		<Sheet.Header>
-			<Sheet.Title>New Product</Sheet.Title>
-			<Sheet.Description>By compleating this from you'll create a new Product</Sheet.Description>
+			<Sheet.Title>Nuevo producto</Sheet.Title>
+			<Sheet.Description>Al completar, creará un nuevo producto.</Sheet.Description>
 		</Sheet.Header>
 		<Sheet.Portal>
 			{#await data.categories}

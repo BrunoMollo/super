@@ -52,7 +52,7 @@
 	<input type="hidden" name="id" value={id} />
 	<Form.Field {form} name="desc">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Description</Form.Label>
+			<Form.Label class="text-lg">Descripción</Form.Label>
 			<Input {...attrs} bind:value={$formData.desc} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
@@ -60,7 +60,7 @@
 
 	<Form.Field {form} name="bar_code">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Bar Code</Form.Label>
+			<Form.Label class="text-lg">Código de barras</Form.Label>
 			<Input {...attrs} bind:value={$formData.bar_code} class="w-64" maxlength={12} />
 		</Form.Control>
 		<Form.FieldErrors />
@@ -84,7 +84,7 @@
 
 	<Form.Field {form} name="order_point">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Order Point</Form.Label>
+			<Form.Label class="text-lg">Punto de pedido</Form.Label>
 			<Input {...attrs} bind:value={$formData.order_point} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
@@ -92,8 +92,8 @@
 
 	<Form.Fieldset {form} name="categories_ids" class="space-y-0">
 		<div class="mb-4">
-			<Form.Legend class="text-base">Roles</Form.Legend>
-			<Form.Description class="pb-2">Define permisions</Form.Description>
+			<Form.Legend class="text-base">Categorias</Form.Legend>
+			<Form.Description class="pb-2">Definir categorias</Form.Description>
 			<Form.Field {form} name="categories_ids">
 				{#each categories as { id, name }}
 					{@const checked = $formData.categories_ids.includes(id)}
@@ -123,7 +123,7 @@
 	</Form.Fieldset>
 
 	<div class="mt-4 flex w-64 justify-end gap-3">
-		<Form.Button class="w-6/12 ">Submit</Form.Button>
+		<Form.Button class="w-6/12 ">Guardar</Form.Button>
 	</div>
 </form>
 
