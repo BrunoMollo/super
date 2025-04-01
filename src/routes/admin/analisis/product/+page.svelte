@@ -66,11 +66,13 @@
 		raw_data = null;
 		tabs_value = 'stats';
 		prediction_data = null;
+		prediction_table_data = null;
 		current_product_avg_weekly_sales = 0;
 		current_product_sales_today = 0;
 		// destroy charts
 		if (bars_chart) bars_chart.destroy();
-		if (bars_chart) bars_chart.destroy();
+		if (line_chart) line_chart.destroy();
+		if (line_prediction_chart) line_prediction_chart.destroy();
 
 		await fetch('./api/product?name=' + search_query)
 			.then((res) => res.json())
@@ -101,12 +103,14 @@
 			raw_data = null;
 			tabs_value = 'stats';
 			prediction_data = null;
+			prediction_table_data = null;
 			current_product_avg_weekly_sales = 0;
 			current_product_sales_today = 0;
 
 			// destroy charts
 			if (bars_chart) bars_chart.destroy();
-			if (bars_chart) bars_chart.destroy();
+			if (line_chart) line_chart.destroy();
+			if (line_prediction_chart) line_prediction_chart.destroy();
 
 			// get product data and sales
 			[product_info, raw_data] = await Promise.all([
@@ -301,7 +305,7 @@
 
 					return {
 						date: `${date_arr[2]}/${date_arr[1]}/${date_arr[0]}`,
-						quantity: p.quantity
+						quantity: p.quantity < 0 ? 0 : p.quantity
 					};
 				})
 			});
