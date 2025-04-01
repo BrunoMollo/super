@@ -67,12 +67,14 @@
 		raw_data = null;
 		tabs_value = 'stats';
 		prediction_data = null;
+		prediction_table_data = null;
 		current_category_avg_weekly_sales = 0;
 		current_category_sales_today = 0;
 
 		// destroy charts
 		if (bars_chart) bars_chart.destroy();
-		if (bars_chart) bars_chart.destroy();
+		if (line_chart) line_chart.destroy();
+		if (line_prediction_chart) line_prediction_chart.destroy();
 
 		await fetch('./api/category?name=' + search_query)
 			.then((res) => res.json())
@@ -103,12 +105,14 @@
 			raw_data = null;
 			tabs_value = 'stats';
 			prediction_data = null;
+			prediction_table_data = null;
 			current_category_avg_weekly_sales = 0;
 			current_category_sales_today = 0;
 
 			// destroy charts
 			if (bars_chart) bars_chart.destroy();
-			if (bars_chart) bars_chart.destroy();
+			if (line_chart) line_chart.destroy();
+			if (line_prediction_chart) line_prediction_chart.destroy();
 
 			// get product data and sales
 			[category_info, raw_data] = await Promise.all([
