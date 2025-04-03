@@ -44,6 +44,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (pathname == '/logout') {
 		return await resolve(event);
 	}
+	if (pathname == '/help') {
+		return await resolve(event);
+	}
 
 	/**
 	 * ELSE REDIRECT TO LOGIN

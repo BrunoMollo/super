@@ -7,6 +7,7 @@ type Router = Array<{
 		label: string;
 		href: NonNullable<LayoutRouteId> | '#';
 		confirmation?: string;
+		target?: '_blank';
 	}>;
 }>;
 
@@ -61,6 +62,11 @@ export const commands: Router = [
 		name: 'Mi cuenta',
 		place: ['command-palette', 'avatar-dropdown'],
 		hrefs: [
+			{
+				label: 'Ayuda',
+				href: '/help',
+				target: '_blank'
+			},
 			{
 				confirmation: '¿Seguro que quieres salir?',
 				label: 'Cerrar sesión',

@@ -55,8 +55,8 @@
 				<DropdownMenu.Group>
 					{#each commands as { hrefs, place }}
 						{#if place.includes('avatar-dropdown')}
-							{#each hrefs as { label, href }}
-								<DropdownMenu.Item {href}>{label}</DropdownMenu.Item>
+							{#each hrefs as { label, href, target }}
+								<DropdownMenu.Item {href} {target}>{label}</DropdownMenu.Item>
 							{/each}
 						{/if}
 					{/each}
