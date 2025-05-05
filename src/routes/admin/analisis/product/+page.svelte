@@ -450,7 +450,7 @@
 											<p>Código: {product_info?.bar_code}</p>
 										</li>
 										<li>
-											<p>Punto reposición: {product_info?.order_point}</p>
+											<p>Stock: {product_info?.order_point}</p>
 										</li>
 									</ul>
 								</Card.Content>

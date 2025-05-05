@@ -32,7 +32,7 @@
 		}),
 		table.column({
 			accessor: 'order_point',
-			header: 'Punto de pedido'
+			header: 'Stock'
 		}),
 		table.column({
 			accessor: 'categories',
