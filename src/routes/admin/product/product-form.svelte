@@ -84,7 +84,7 @@
 
 	<Form.Field {form} name="order_point">
 		<Form.Control let:attrs>
-			<Form.Label class="text-lg">Punto de pedido</Form.Label>
+			<Form.Label class="text-lg">Stock</Form.Label>
 			<Input {...attrs} bind:value={$formData.order_point} class="w-64" />
 		</Form.Control>
 		<Form.FieldErrors />
